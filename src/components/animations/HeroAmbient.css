@@ -1,0 +1,63 @@
+.hero-ambient {
+  overflow: hidden;
+}
+
+.hero-ambient__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: 0.35;
+  will-change: transform;
+}
+
+.hero-ambient__orb--a {
+  width: min(55vw, 520px);
+  height: min(55vw, 520px);
+  top: 10%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.55) 0%, transparent 70%);
+  animation: heroOrbDriftA 22s ease-in-out infinite;
+}
+
+.hero-ambient__orb--b {
+  width: min(45vw, 420px);
+  height: min(45vw, 420px);
+  bottom: 5%;
+  right: -5%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.45) 0%, transparent 70%);
+  animation: heroOrbDriftB 26s ease-in-out infinite;
+}
+
+.hero-ambient__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 75%);
+  opacity: 0.5;
+}
+
+.hero-ambient__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, #131313 100%);
+}
+
+@keyframes heroOrbDriftA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6%, 8%) scale(1.08); }
+}
+
+@keyframes heroOrbDriftB {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-8%, -6%) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ambient__orb--a,
+  .hero-ambient__orb--b {
+    animation: none;
+  }
+}

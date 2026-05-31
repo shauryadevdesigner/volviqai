@@ -1,0 +1,34 @@
+.scroll-stack-scroller {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.scroll-stack-inner {
+  position: relative;
+  padding: 5vh 0 35vh; /* Space to pin and scale nicely */
+  min-height: 100vh;
+}
+
+.scroll-stack-card-wrapper {
+  position: relative;
+}
+
+.scroll-stack-card {
+  transform-origin: top center;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  width: 100%;
+  box-sizing: border-box;
+  /* Improve mobile performance */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  position: relative;
+}
+
+.scroll-stack-end {
+  width: 100%;
+  height: 1px;
+}

@@ -1,0 +1,33 @@
+.volviq-motion-studio {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(28, 27, 27, 0.95) 0%, rgba(14, 14, 14, 0.98) 100%);
+  overflow: hidden;
+}
+
+.volviq-motion-studio::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(168, 85, 247, 0.12), transparent 55%);
+  pointer-events: none;
+}
+
+.volviq-motion-studio__canvas {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+}
+
+.volviq-motion-studio__placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(19, 19, 19, 0.6);
+}

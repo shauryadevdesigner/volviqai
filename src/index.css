@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #131313;
+  color: #e5e2e1;
+  overflow-x: hidden;
+  font-family: 'Sora', sans-serif;
+  margin: 0;
+}
+
+/* Monochrome filter for images */
+.img-mono {
+  filter: grayscale(100%) contrast(1.2);
+}
+
+/* Technical Grid Background with animation */
+.bg-tech-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: backgroundDrift 60s linear infinite;
+}
+
+@keyframes backgroundDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 64px 64px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-tech-grid {
+    animation: none;
+  }
+  .scanline {
+    animation: none;
+    opacity: 0.08;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Scanning Line Effect */
+.scanline {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+  position: absolute;
+  top: -10px;
+  left: 0;
+  animation: scan 6s linear infinite;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+@keyframes scan {
+  0% { top: -10px; }
+  100% { top: 100%; }
+}
+
+/* Blueprint Lines */
+.blueprint-line-h {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255,255,255,0.08);
+  position: absolute;
+}
+.blueprint-line-v {
+  width: 1px;
+  height: 100%;
+  background-color: rgba(255,255,255,0.08);
+  position: absolute;
+}
+
+/* Technical Noise Texture Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Glowing futuristic accents */
+.hologram-glow {
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+  filter: blur(40px);
+}
+
+.mesh-gradient {
+  background: radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.05) 0px, transparent 50%),
+              radial-gradient(at 50% 0%, rgba(255, 255, 255, 0.03) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.05) 0px, transparent 50%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #131313; 
+}
+::-webkit-scrollbar-thumb {
+  background: #353535; 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8e9192; 
+}
+
