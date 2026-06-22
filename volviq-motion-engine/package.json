@@ -48,6 +48,8 @@
     "monaco-jsx-syntax-highlight": "1.2.2",
     "motion": "^12.40.0",
     "next": "^16.2.7",
+    "ogl": "^1.0.11",
+    "postprocessing": "^6.39.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "remotion": "^4.0.471",
