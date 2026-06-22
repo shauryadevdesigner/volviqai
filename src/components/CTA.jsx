@@ -71,11 +71,11 @@ const CTA = () => {
 
           <div className="flex flex-wrap gap-4 pt-4">
             <Link
-              to="/request-access"
+              to="/signup"
               className="group relative overflow-hidden border border-primary bg-primary px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-surface"
             >
               <span className="relative z-10 flex items-center gap-3 transition-colors duration-300 group-hover:text-primary">
-                Request Access
+                Get Started
                 <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">
                   arrow_forward
                 </span>

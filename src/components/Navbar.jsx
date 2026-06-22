@@ -31,17 +31,24 @@ const Navbar = () => {
         />
       </div>
 
-      {/* Access Button */}
-      <Link
-        to="/request-access"
-        className="relative overflow-hidden group bg-primary text-surface px-6 py-2 rounded-full font-label-md text-label-md transition-all duration-300"
-      >
-        <span className="relative z-10 transition-colors duration-300 group-hover:text-primary">
-          Request Access
-        </span>
-        <span className="absolute inset-0 bg-surface scale-x-0 group-hover:scale-x-100 transition-transform origin-right duration-300 rounded-full" />
-        <span className="absolute inset-0 border border-transparent group-hover:border-primary rounded-full" />
-      </Link>
+      <div className="flex items-center gap-3">
+        <Link
+          to="/login"
+          className="font-label-md text-label-md text-on-surface-variant transition-colors hover:text-primary"
+        >
+          Sign in
+        </Link>
+        <Link
+          to="/signup"
+          className="relative overflow-hidden group bg-primary text-surface px-6 py-2 rounded-full font-label-md text-label-md transition-all duration-300"
+        >
+          <span className="relative z-10 transition-colors duration-300 group-hover:text-primary">
+            Get Started
+          </span>
+          <span className="absolute inset-0 bg-surface scale-x-0 group-hover:scale-x-100 transition-transform origin-right duration-300 rounded-full" />
+          <span className="absolute inset-0 border border-transparent group-hover:border-primary rounded-full" />
+        </Link>
+      </div>
     </nav>
   );
 };

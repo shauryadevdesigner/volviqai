@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+      <title>A high-end editorial product photograph of an exquisite silk scarf, woven with intricate silver and shimmering metallic cyan threads. The scarf is draped elegantly over a dark, matte obsidian pedestal. Dramatic, directional studio lighting accentuates the delicate woven texture and silver details against a dark midnight-blue background. Sharp focus, high contrast, luxury fashion campaign aesthetic.</title>
+      <defs>
+        <radialGradient id="lux-bg" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#141416" />
+          <stop offset="100%" stop-color="#08080a" />
+        </radialGradient>
+        <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#c5a880" />
+          <stop offset="50%" stop-color="#e5d0b1" />
+          <stop offset="100%" stop-color="#9a7e58" />
+        </linearGradient>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="30" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+      
+      <!-- Background -->
+      <rect width="1920" height="1080" fill="url(#lux-bg)" />
+      
+      <!-- Ambient Glows -->
+      <circle cx="960" cy="540" r="450" fill="#c5a880" opacity="0.03" filter="url(#glow)" />
+      <circle cx="400" cy="300" r="300" fill="#e5d0b1" opacity="0.01" filter="url(#glow)" />
+      
+      <!-- Elegant Concentric Geometry -->
+      <g stroke="url(#gold-grad)" stroke-width="1" fill="none" opacity="0.3" transform="translate(960, 540)">
+        <circle r="350" stroke-dasharray="10, 15" />
+        <circle r="300" opacity="0.5" />
+        <circle r="250" stroke-dasharray="5, 5" />
+        <circle r="180" opacity="0.7" />
+        <polygon points="0,-120 104,60 -104,60" opacity="0.4" stroke-width="1.5" />
+        <polygon points="0,120 -104,-60 104,-60" opacity="0.2" stroke-dasharray="8, 8" />
+        <circle r="40" stroke-width="2" />
+        <!-- Accent ticks -->
+        <path d="M 0,-300 L 0,-280" />
+        <path d="M 0,300 L 0,280" />
+        <path d="M -300,0 L -280,0" />
+        <path d="M 300,0 L 280,0" />
+      </g>
+
+      <!-- Soft border vignette -->
+      <rect width="1920" height="1080" fill="none" stroke="url(#gold-grad)" stroke-width="40" opacity="0.08" />
+    </svg>

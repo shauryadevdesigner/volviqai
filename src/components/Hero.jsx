@@ -173,6 +173,27 @@ const Hero = () => {
           />
         </h1>
 
+        {/* Partnership Badge */}
+        <div className="mt-6 flex items-center justify-center">
+          <a
+            href="https://petrutban.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Petrutban Technologies Partner"
+            className="transition-opacity duration-300 hover:opacity-80"
+            style={{ display: 'inline-block', lineHeight: 0, textDecoration: 'none' }}
+          >
+            <img
+              src="https://i.postimg.cc/FKQtkBBM/edited-photo-(3).webp"
+              width="155"
+              alt="Petrutban Technologies Partner"
+              loading="lazy"
+              decoding="async"
+              style={{ display: 'block', width: '155px', height: 'auto', border: 0, background: 'transparent' }}
+            />
+          </a>
+        </div>
+
         <p className="mt-10 max-w-2xl text-center font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
           Autonomous motion architecture for high-end cinematic production. Your AI motion graphics
           studio — from brief to broadcast-ready ads.
@@ -180,11 +201,11 @@ const Hero = () => {
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <Link
-            to="/request-access"
+            to="/signup"
             className="group relative overflow-hidden bg-primary px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-surface transition-all duration-300"
           >
             <span className="relative z-10 transition-colors duration-300 group-hover:text-primary">
-              Request Access
+              Get Started
             </span>
             <span className="absolute inset-0 origin-left scale-x-0 bg-surface transition-transform duration-300 group-hover:scale-x-100" />
             <span className="absolute inset-0 border border-transparent group-hover:border-primary" />

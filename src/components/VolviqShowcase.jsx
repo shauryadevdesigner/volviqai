@@ -144,11 +144,11 @@ const VolviqShowcase = () => {
 
             <div className="flex flex-wrap gap-4 pt-2">
               <Link
-                to="/request-access"
+                to="/signup"
                 className="group relative inline-flex items-center gap-2 overflow-hidden border border-primary bg-primary px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-surface transition-all duration-300"
               >
                 <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-primary">
-                  Request Early Access
+                  Get Started
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </span>
                 <span className="absolute inset-0 origin-left scale-x-0 bg-surface transition-transform duration-300 group-hover:scale-x-100" />

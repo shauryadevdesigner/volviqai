@@ -1,16 +1,56 @@
-# React + Vite
+# Volviq AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AI-powered motion graphics and advertisement generation platform — marketing site with early access signup.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+First, make sure to install dependencies in both the root folder (Vite landing/auth) and the subfolder (Next.js motion engine):
 
-## React Compiler
+```bash
+# Install root dependencies
+npm install
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Install dashboard/motion engine dependencies
+cd volviq-motion-engine
+npm install
+cd ..
+```
 
-## Expanding the ESLint configuration
+Ensure you have created and configured the `.env` files in both the root directory and the `volviq-motion-engine` directory.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+To run the apps:
+
+```bash
+# Start the landing page + onboarding + auth (on http://localhost:5173)
+npm run dev:landing
+
+# In a separate terminal, start the dashboard + prompt-to-video engine (on http://localhost:3000)
+npm run dev:dashboard
+```
+
+## Deploy to Vercel
+
+1. Push this repo to [github.com/shauryadevdesigner/volviq-ai](https://github.com/shauryadevdesigner/volviq-ai) (see below if push fails).
+2. Import the repo at [vercel.com/new](https://vercel.com/new).
+3. Framework preset: **Vite**
+4. Add environment variables:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+5. Deploy.
+
+`vercel.json` includes SPA rewrites for React Router (`/request-access`).
+
+## Push to GitHub (if you see 403)
+
+Git is using a different account than `shauryadevdesigner`. Fix credentials, then:
+
+```bash
+git remote set-url origin https://github.com/shauryadevdesigner/volviq-ai.git
+git push -u origin main
+```
+
+Or use GitHub Desktop / sign in as `shauryadevdesigner` in Windows Credential Manager.
+
+## Supabase
+
+Run `supabase/migrations/001_early_access_users.sql` in the Supabase SQL editor.

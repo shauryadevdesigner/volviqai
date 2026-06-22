@@ -1,0 +1,324 @@
+{
+  "Luxury": {
+    "category": "Luxury",
+    "typography": {
+      "heroFont": "Clash Display",
+      "secondaryFont": "General Sans",
+      "accentFont": "Cormorant Garamond",
+      "letterSpacing": "0.15em",
+      "lineHeight": "1.1",
+      "textShadow": "0 4px 20px rgba(0,0,0,0.4)"
+    },
+    "spacing": {
+      "xs": 12,
+      "sm": 24,
+      "md": 48,
+      "lg": 96,
+      "xl": 160
+    },
+    "motion": {
+      "damping": 28,
+      "stiffness": 120,
+      "motionStyle": "luxury_motion",
+      "cameraStyle": "zoom_reveal",
+      "energyLevel": "low"
+    },
+    "layout": {
+      "direction": "centered",
+      "compositionStyle": "hero_center",
+      "depthLayers": 4,
+      "cardOpacity": 0.03,
+      "cardBorderWidth": 1
+    },
+    "ctaDesign": {
+      "reflectionDuration": 2.5,
+      "hoverScale": 1.03,
+      "shadowGlow": "0 0 30px rgba(212, 175, 55, 0.2)"
+    },
+    "transitions": {
+      "family": "editorial_wipe",
+      "easing": "springTiming",
+      "duration": 45
+    },
+    "visualHierarchy": {
+      "heroScale": 1.1,
+      "headlineWeight": "400"
+    }
+  },
+  "Technology": {
+    "category": "Technology",
+    "typography": {
+      "heroFont": "Space Grotesk",
+      "secondaryFont": "Inter",
+      "accentFont": "Playfair Display",
+      "letterSpacing": "-0.02em",
+      "lineHeight": "1.2",
+      "textShadow": "0 0 25px rgba(56, 189, 248, 0.25)"
+    },
+    "spacing": {
+      "xs": 8,
+      "sm": 16,
+      "md": 32,
+      "lg": 64,
+      "xl": 120
+    },
+    "motion": {
+      "damping": 20,
+      "stiffness": 180,
+      "motionStyle": "futuristic_ui",
+      "cameraStyle": "layered_depth",
+      "energyLevel": "high"
+    },
+    "layout": {
+      "direction": "split-left",
+      "compositionStyle": "dynamic_grid",
+      "depthLayers": 4,
+      "cardOpacity": 0.05,
+      "cardBorderWidth": 1.5
+    },
+    "ctaDesign": {
+      "reflectionDuration": 1.8,
+      "hoverScale": 1.05,
+      "shadowGlow": "0 0 40px rgba(14, 165, 233, 0.3)"
+    },
+    "transitions": {
+      "family": "morph",
+      "easing": "springTiming",
+      "duration": 30
+    },
+    "visualHierarchy": {
+      "heroScale": 1.05,
+      "headlineWeight": "700"
+    }
+  },
+  "Corporate": {
+    "category": "Corporate",
+    "typography": {
+      "heroFont": "Montserrat ExtraBold",
+      "secondaryFont": "Inter",
+      "accentFont": "Playfair Display",
+      "letterSpacing": "0.0em",
+      "lineHeight": "1.3",
+      "textShadow": "none"
+    },
+    "spacing": {
+      "xs": 8,
+      "sm": 16,
+      "md": 32,
+      "lg": 64,
+      "xl": 120
+    },
+    "motion": {
+      "damping": 26,
+      "stiffness": 140,
+      "motionStyle": "corporate_modern",
+      "cameraStyle": "push_in",
+      "energyLevel": "medium"
+    },
+    "layout": {
+      "direction": "centered",
+      "compositionStyle": "hero_center",
+      "depthLayers": 2,
+      "cardOpacity": 0.04,
+      "cardBorderWidth": 1
+    },
+    "ctaDesign": {
+      "reflectionDuration": 2.2,
+      "hoverScale": 1.02,
+      "shadowGlow": "none"
+    },
+    "transitions": {
+      "family": "editorial_wipe",
+      "easing": "linearTiming",
+      "duration": 35
+    },
+    "visualHierarchy": {
+      "heroScale": 1.0,
+      "headlineWeight": "800"
+    }
+  },
+  "Startup": {
+    "category": "Startup",
+    "typography": {
+      "heroFont": "Satoshi",
+      "secondaryFont": "Plus Jakarta Sans",
+      "accentFont": "Great Vibes",
+      "letterSpacing": "-0.01em",
+      "lineHeight": "1.25",
+      "textShadow": "0 8px 32px rgba(99, 102, 241, 0.15)"
+    },
+    "spacing": {
+      "xs": 10,
+      "sm": 20,
+      "md": 40,
+      "lg": 80,
+      "xl": 140
+    },
+    "motion": {
+      "damping": 22,
+      "stiffness": 160,
+      "motionStyle": "app_demo",
+      "cameraStyle": "layered_depth",
+      "energyLevel": "medium"
+    },
+    "layout": {
+      "direction": "split-right",
+      "compositionStyle": "split_screen",
+      "depthLayers": 3,
+      "cardOpacity": 0.06,
+      "cardBorderWidth": 1.2
+    },
+    "ctaDesign": {
+      "reflectionDuration": 1.5,
+      "hoverScale": 1.06,
+      "shadowGlow": "0 0 35px rgba(99, 102, 241, 0.25)"
+    },
+    "transitions": {
+      "family": "layered_scale",
+      "easing": "springTiming",
+      "duration": 32
+    },
+    "visualHierarchy": {
+      "heroScale": 1.08,
+      "headlineWeight": "600"
+    }
+  },
+  "Editorial": {
+    "category": "Editorial",
+    "typography": {
+      "heroFont": "Clash Display",
+      "secondaryFont": "Poppins",
+      "accentFont": "Cormorant Garamond",
+      "letterSpacing": "0.05em",
+      "lineHeight": "1.15",
+      "textShadow": "0 2px 10px rgba(0,0,0,0.2)"
+    },
+    "spacing": {
+      "xs": 12,
+      "sm": 24,
+      "md": 48,
+      "lg": 96,
+      "xl": 160
+    },
+    "motion": {
+      "damping": 24,
+      "stiffness": 150,
+      "motionStyle": "editorial",
+      "cameraStyle": "parallax",
+      "energyLevel": "low"
+    },
+    "layout": {
+      "direction": "layered-overlap",
+      "compositionStyle": "editorial",
+      "depthLayers": 3,
+      "cardOpacity": 0.02,
+      "cardBorderWidth": 1
+    },
+    "ctaDesign": {
+      "reflectionDuration": 2.0,
+      "hoverScale": 1.02,
+      "shadowGlow": "none"
+    },
+    "transitions": {
+      "family": "directional_slide",
+      "easing": "springTiming",
+      "duration": 40
+    },
+    "visualHierarchy": {
+      "heroScale": 1.02,
+      "headlineWeight": "500"
+    }
+  },
+  "Social Media": {
+    "category": "Social Media",
+    "typography": {
+      "heroFont": "Bebas Neue",
+      "secondaryFont": "Poppins",
+      "accentFont": "Dancing Script",
+      "letterSpacing": "0.08em",
+      "lineHeight": "0.95",
+      "textShadow": "0 4px 15px rgba(0,0,0,0.5)"
+    },
+    "spacing": {
+      "xs": 6,
+      "sm": 12,
+      "md": 24,
+      "lg": 48,
+      "xl": 96
+    },
+    "motion": {
+      "damping": 14,
+      "stiffness": 220,
+      "motionStyle": "social_reel",
+      "cameraStyle": "tracking",
+      "energyLevel": "aggressive"
+    },
+    "layout": {
+      "direction": "centered",
+      "compositionStyle": "asymmetrical",
+      "depthLayers": 2,
+      "cardOpacity": 0.08,
+      "cardBorderWidth": 2
+    },
+    "ctaDesign": {
+      "reflectionDuration": 1.2,
+      "hoverScale": 1.08,
+      "shadowGlow": "0 0 50px rgba(244, 63, 94, 0.4)"
+    },
+    "transitions": {
+      "family": "liquid",
+      "easing": "springTiming",
+      "duration": 25
+    },
+    "visualHierarchy": {
+      "heroScale": 1.15,
+      "headlineWeight": "900"
+    }
+  },
+  "Product Advertising": {
+    "category": "Product Advertising",
+    "typography": {
+      "heroFont": "Clash Display",
+      "secondaryFont": "General Sans",
+      "accentFont": "Cormorant Garamond",
+      "letterSpacing": "0.02em",
+      "lineHeight": "1.1",
+      "textShadow": "0 4px 20px rgba(0,0,0,0.3)"
+    },
+    "spacing": {
+      "xs": 10,
+      "sm": 20,
+      "md": 40,
+      "lg": 80,
+      "xl": 140
+    },
+    "motion": {
+      "damping": 20,
+      "stiffness": 165,
+      "motionStyle": "product_showcase",
+      "cameraStyle": "orbit",
+      "energyLevel": "high"
+    },
+    "layout": {
+      "direction": "asymmetric-grid",
+      "compositionStyle": "product_focus",
+      "depthLayers": 4,
+      "cardOpacity": 0.04,
+      "cardBorderWidth": 1
+    },
+    "ctaDesign": {
+      "reflectionDuration": 2.0,
+      "hoverScale": 1.04,
+      "shadowGlow": "0 0 30px rgba(255, 255, 255, 0.15)"
+    },
+    "transitions": {
+      "family": "depth_shift",
+      "easing": "springTiming",
+      "duration": 36
+    },
+    "visualHierarchy": {
+      "heroScale": 1.06,
+      "headlineWeight": "700"
+    }
+  }
+}

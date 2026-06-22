@@ -11,5 +11,9 @@ export default defineConfig({
       filename: 'stats.html'
     })
   ],
+  server: {
+    port: 5173,
+    strictPort: true
+  },
   assetsInclude: ['**/*.glb'],
 })
