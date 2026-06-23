@@ -172,7 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     await signOut();
-    window.location.href = `/login`;
+    window.location.href = `https://volviq.xyz/login`;
   }, []);
 
   const value = useMemo(
@@ -204,17 +204,15 @@ export function useRequireAuth() {
   useEffect(() => {
     if (auth.loading) return;
     if (!isSupabaseConfigured()) {
-      window.location.href = `/login`;
+      window.location.href = `https://volviq.xyz/login`;
       return;
     }
     if (!auth.session) {
-      window.location.href = `/login`;
+      window.location.href = `https://volviq.xyz/login`;
       return;
     }
     if (auth.profile && !auth.profile.onboarding_completed_at) {
-      if (window.location.pathname !== "/onboarding") {
-        window.location.href = `/onboarding`;
-      }
+      window.location.href = `https://volviq.xyz/onboarding`;
     }
   }, [auth.loading, auth.session, auth.profile]);
 

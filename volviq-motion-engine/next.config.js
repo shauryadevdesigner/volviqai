@@ -32,6 +32,31 @@ const nextConfig = {
       },
     ];
   },
+  // Redirects to point auth/onboarding to main domain
+  async redirects() {
+    return [
+      {
+        source: "/login",
+        destination: "https://volviq.xyz/login",
+        permanent: true,
+      },
+      {
+        source: "/signup",
+        destination: "https://volviq.xyz/signup",
+        permanent: true,
+      },
+      {
+        source: "/onboarding",
+        destination: "https://volviq.xyz/onboarding",
+        permanent: true,
+      },
+      {
+        source: "/request-access",
+        destination: "https://volviq.xyz/request-access",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
