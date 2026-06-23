@@ -3,7 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "volviq-motion-engine"
+  ],
   "scripts": {
+    "build": "npm run build:landing",
     "dev:landing": "vite --port 5173",
     "dev:dashboard": "npm run dev --prefix volviq-motion-engine",
     "build:landing": "vite build",
