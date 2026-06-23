@@ -10,7 +10,7 @@
     "build": "npm run build:landing",
     "dev:landing": "vite --port 5173",
     "dev:dashboard": "npm run dev --prefix volviq-motion-engine",
-    "build:landing": "vite build",
+    "build:landing": "vite build && node -e \"const fs = require('fs'); fs.copyFileSync('vercel.json', 'dist/vercel.json');\"",
     "build:dashboard": "npm run build --prefix volviq-motion-engine",
     "start:dashboard": "npm run start --prefix volviq-motion-engine",
     "lint:landing": "eslint .",
