@@ -359,7 +359,7 @@ export function compileCode(code: string): CompilationResult {
 
     // Safe interpolate wrapper: validates that outputRange contains only numbers
     // AI often passes strings (colors, percentages) which crashes Remotion
-    const safeInterpolate: typeof interpolate = (input, inputRange, outputRange, options) => {
+    const safeInterpolate: any = (input: any, inputRange: any, outputRange: any, options: any) => {
       try {
         // Ensure all outputRange values are numbers
         const safeOutputRange = outputRange.map((v: any) => {
