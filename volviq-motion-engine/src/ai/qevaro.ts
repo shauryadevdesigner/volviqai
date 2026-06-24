@@ -11,6 +11,19 @@ import { logger } from "../lib/logger";
 import { usageStore } from "./usage-store";
 import { getModelConfig } from "./model-router";
 import type { QevaroCompletionParams, QevaroCompletionResponse, QevaroUsageMetrics } from "./types";
+import dotenv from "dotenv";
+import path from "path";
+
+// Load environment variables dynamically based on execution path
+if (!process.env.QEVARO_API_KEY) {
+  dotenv.config({ path: path.resolve(process.cwd(), "volviq-motion-engine/.env") });
+  if (!process.env.QEVARO_API_KEY) {
+    dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+  }
+}
+
+console.log("QEVARO_API_KEY loaded:", !!process.env.QEVARO_API_KEY);
+console.log("QEVARO_BASE_URL loaded:", !!process.env.QEVARO_BASE_URL);
 
 // ── Configuration ───────────────────────────────────────────────────────────
 

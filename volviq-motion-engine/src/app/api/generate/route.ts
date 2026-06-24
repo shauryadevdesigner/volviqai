@@ -327,10 +327,12 @@ export async function POST(req: Request) {
 
   if (!apiKey) {
     logger.error("generate", "QEVARO_API_KEY missing");
+    const isProd = process.env.NODE_ENV === "production";
     return new Response(
       JSON.stringify({
-        error:
-          "Qevaro is not configured. Add QEVARO_API_KEY to volviq-motion-engine/.env and restart the dev server.",
+        error: isProd
+          ? "Qevaro is not configured. Please ensure QEVARO_API_KEY is configured in your Vercel environment variables."
+          : "Qevaro is not configured. Add QEVARO_API_KEY to volviq-motion-engine/.env and restart the dev server.",
         type: "api_key_missing",
       }),
       {

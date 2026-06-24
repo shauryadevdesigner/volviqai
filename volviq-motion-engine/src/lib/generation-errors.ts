@@ -115,12 +115,16 @@ export function classifyGenerationError(
       "qevaro_api_key",
     ])
   ) {
+    const isProd = process.env.NODE_ENV === "production";
     return {
       code: "api_key_missing",
       title: "API Key Missing",
-      message:
-        "Qevaro is not configured. Add QEVARO_API_KEY to volviq-motion-engine/.env and restart the dev server.",
-      action: "Set your API key in .env, then run npm run dev again.",
+      message: isProd
+        ? "Qevaro is not configured. Please ensure QEVARO_API_KEY is configured in your Vercel environment variables."
+        : "Qevaro is not configured. Add QEVARO_API_KEY to volviq-motion-engine/.env and restart the dev server.",
+      action: isProd
+        ? "Configure QEVARO_API_KEY in your Vercel project settings and trigger a redeployment."
+        : "Set your API key in .env, then run npm run dev again.",
       type: "api",
       httpStatus: httpStatus ?? 400,
       detail: raw,

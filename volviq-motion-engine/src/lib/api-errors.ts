@@ -39,9 +39,11 @@ export function classifyProviderError(error: unknown): {
     lower.includes("invalid key") ||
     lower.includes("invalid api key")
   ) {
+    const isProd = process.env.NODE_ENV === "production";
     return {
-      message:
-        "Invalid or missing Qevaro API key. Check QEVARO_API_KEY in .env.",
+      message: isProd
+        ? "Invalid or missing Qevaro API key. Please check QEVARO_API_KEY in your Vercel project environment variables."
+        : "Invalid or missing Qevaro API key. Check QEVARO_API_KEY in .env.",
       type: "api_key_missing",
       status: 401,
     };
