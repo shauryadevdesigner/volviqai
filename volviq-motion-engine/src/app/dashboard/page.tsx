@@ -32,7 +32,11 @@ export default function DashboardPage() {
   const templates = getRecommendations(profile);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="relative flex h-screen overflow-hidden bg-background bg-tech-grid">
+      {/* Futuristic Background Accents */}
+      <div className="scanline" />
+      <div className="noise-overlay" />
+
       <DashboardSidebarMobileToggle onClick={() => setMobileNavOpen(true)} />
       <DashboardSidebar
         profile={profile}
@@ -41,7 +45,7 @@ export default function DashboardPage() {
         mobileOpen={mobileNavOpen}
         onMobileOpenChange={setMobileNavOpen}
       />
-      <main className="flex min-w-0 flex-1 flex-col">
+      <main className="relative flex min-w-0 flex-1 flex-col bg-background/30 backdrop-blur-md border-r border-border/40 z-10">
         <CenterWorkspace
           profile={profile}
           accessToken={accessToken}
