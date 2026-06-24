@@ -2,8 +2,8 @@ import { createClient, type Session, type SupabaseClient } from '@supabase/supab
 import type { EarlyAccessUserRow } from '../types/earlyAccess';
 import type { OnboardingData, UserProfile } from '../types/profile';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const MOTION_APP_URL =
   (import.meta.env.VITE_MOTION_APP_URL as string | undefined) || 'https://app.volviq.xyz';
@@ -13,7 +13,7 @@ let client: SupabaseClient | null = null;
 export function getSupabase(): SupabaseClient {
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error(
-      'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file.',
+      "Supabase environment variables are missing."
     );
   }
 
