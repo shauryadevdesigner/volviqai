@@ -89,7 +89,7 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
   const renderContent = () => {
     if (isStreaming) {
       return (
-        <div className="w-full aspect-video max-h-[calc(100%-80px)] flex flex-col justify-center items-center gap-4 bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
+        <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] flex flex-col justify-center items-center gap-4 bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
           <div className="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin" />
           <p className="text-muted-foreground text-sm">
             Waiting for code generation to finish...
@@ -100,7 +100,7 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
 
     if (isCompiling) {
       return (
-        <div className="w-full aspect-video max-h-[calc(100%-80px)] flex justify-center items-center bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
+        <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] flex justify-center items-center bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
           <div className="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin" />
         </div>
       );
@@ -119,7 +119,7 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
 
     if (!Component) {
       return (
-        <div className="w-full aspect-video max-h-[calc(100%-80px)] flex justify-center items-center bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)] text-muted-foreground-dim text-lg font-sans">
+        <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] flex justify-center items-center bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)] text-muted-foreground-dim text-lg font-sans">
           Select an example to get started
         </div>
       );
@@ -127,7 +127,7 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
 
     return (
       <>
-        <div className="w-full aspect-video max-h-[calc(100%-80px)] rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
+        <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
           <Player
             ref={playerRef}
             key={Component.toString()}
