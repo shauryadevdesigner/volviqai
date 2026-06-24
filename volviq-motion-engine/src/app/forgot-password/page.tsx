@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import AuthLayout from '@/components/auth/AuthLayout';
-import { getSupabase } from '@/lib/supabase';
+import { getSupabase, APP_URL } from '@/lib/supabase';
 import { motion } from 'motion/react';
 
 export default function ForgotPasswordPage() {
@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
 
     try {
       const supabase = getSupabase();
-      const redirectTo = `${window.location.origin}/otp`; // Redirect user to otp/password reset confirmation page
+      const redirectTo = `${APP_URL}/otp`; // Redirect user to otp/password reset confirmation page
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
       });

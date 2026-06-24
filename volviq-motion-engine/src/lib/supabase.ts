@@ -5,8 +5,14 @@ import type { EarlyAccessUserRow } from '../types/earlyAccess';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+export const APP_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://app.volviq.xyz'
+    : 'http://localhost:3000';
+
 export const MARKETING_APP_URL =
-  process.env.NEXT_PUBLIC_MARKETING_URL || 'http://localhost:5173';
+  process.env.NEXT_PUBLIC_MARKETING_URL ||
+  (process.env.NODE_ENV === 'production' ? 'https://volviq.xyz' : 'http://localhost:5173');
 
 let client: SupabaseClient | null = null;
 
@@ -68,7 +74,13 @@ export async function submitEarlyAccessUser(payload: {
 
 export async function signUp(email: string, password: string) {
   const supabase = getSupabase();
-  return supabase.auth.signUp({ email, password });
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${APP_URL}/dashboard`,
+    },
+  });
 }
 
 export async function signIn(email: string, password: string) {

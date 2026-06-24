@@ -5,8 +5,12 @@ import type { OnboardingData, UserProfile } from '../types/profile';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const MOTION_APP_URL =
-  (import.meta.env.VITE_MOTION_APP_URL as string | undefined) || 'https://app.volviq.xyz';
+export const APP_URL =
+  import.meta.env.PROD
+    ? 'https://app.volviq.xyz'
+    : 'http://localhost:3000';
+
+export const MOTION_APP_URL = APP_URL;
 
 let client: SupabaseClient | null = null;
 
@@ -62,7 +66,13 @@ export async function submitEarlyAccessUser(payload: {
 
 export async function signUp(email: string, password: string) {
   const supabase = getSupabase();
-  return supabase.auth.signUp({ email, password });
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${APP_URL}/dashboard`,
+    },
+  });
 }
 
 export async function signIn(email: string, password: string) {
