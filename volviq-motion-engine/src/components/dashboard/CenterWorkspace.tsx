@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Layers } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import {
   MotionWorkspace,
   type MotionWorkspaceRef,
@@ -120,9 +120,8 @@ export function CenterWorkspace({
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start max-w-6xl mx-auto w-full">
-        {/* Left/Middle: Prompt Input & Selection */}
-        <div className="lg:col-span-2 space-y-6">
+      <div className="max-w-3xl mx-auto w-full space-y-8">
+        <div className="space-y-6">
           <div className="mb-2 flex items-center gap-2 text-primary">
             <Sparkles className="h-5 w-5 animate-pulse" />
             <span className="text-xs font-semibold uppercase tracking-widest font-mono">
@@ -182,105 +181,13 @@ export function CenterWorkspace({
             </GlareHover>
           </BorderGlow>
 
-          {/* Modern Card Grid for Quick Actions */}
-          <div className="mt-8">
-            <h3 className="mb-4 text-xs font-mono uppercase tracking-wider text-muted-foreground-dim">
-              // Creative Blueprints
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {QUICK_ACTIONS.map((a) => (
-                <button
-                  key={a.label}
-                  type="button"
-                  onClick={() => beginGeneration(a.prompt)}
-                  className="group relative flex flex-col gap-1.5 rounded-xl border border-border/50 bg-background-elevated/40 p-4 text-left transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:translate-y-[-2px] overflow-hidden cursor-pointer"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors flex items-center justify-between w-full">
-                    {a.label}
-                    <Sparkles className="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 transition-all text-primary" />
-                  </span>
-                  <span className="text-xs text-muted-foreground leading-relaxed">
-                    {a.prompt}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right side: Real-time Telemetry Control Panel */}
-        <div className="space-y-6 lg:border-l lg:border-border/30 lg:pl-8">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Layers className="h-4 w-4 text-primary" />
-            <span className="text-xs font-mono uppercase tracking-widest">// Engine Telemetry</span>
-          </div>
-
-          <div className="rounded-xl border border-border/40 bg-background-elevated/30 backdrop-blur-md p-5 space-y-4">
-            <div className="flex justify-between items-center border-b border-border/30 pb-3">
-              <span className="text-[11px] font-mono text-muted-foreground">RENDER STAGE</span>
-              <span className="flex items-center gap-1.5 text-xs text-green-400 font-bold font-mono">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                ONLINE
-              </span>
-            </div>
-
-            {/* Render diagnostics progress bars */}
-            <div className="space-y-4 font-mono text-xs">
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[10px] text-muted-foreground">
-                  <span>GPU CALIBRATION (CUDA)</span>
-                  <span className="text-primary font-semibold">89%</span>
-                </div>
-                <div className="h-1 bg-muted-foreground-dim/15 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary w-[89%]" />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[10px] text-muted-foreground">
-                  <span>VRAM OCCUPANCY</span>
-                  <span className="text-primary font-semibold">4.2 GB / 16 GB</span>
-                </div>
-                <div className="h-1 bg-muted-foreground-dim/15 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary/80 w-[26%]" />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[10px] text-muted-foreground">
-                  <span>NODE COMPILER RATINGS</span>
-                  <span className="text-green-400 font-semibold">OPTIMAL</span>
-                </div>
-                <div className="h-1 bg-muted-foreground-dim/15 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500/80 w-[95%]" />
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-border/30 pt-3 mt-2 space-y-2 font-mono text-[10px]">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">API LATENCY:</span>
-                <span className="text-primary font-semibold">14ms</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">ACTIVE PIPELINES:</span>
-                <span className="text-primary font-semibold">4/4 Nodes</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">ENGINE CORE:</span>
-                <span className="text-primary">Stitch-v4.09</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Examples Selection */}
+          {/* Quick Examples Selection (Starter Seeds) */}
           <div className="space-y-3">
-            <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground-dim block">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground-dim block">
               // Starter Seeds
             </span>
-            <div className="flex flex-col gap-2">
-              {examples.slice(0, 3).map((ex) => (
+            <div className="flex flex-wrap gap-2">
+              {examples.map((ex) => (
                 <button
                   key={ex}
                   type="button"
@@ -288,12 +195,38 @@ export function CenterWorkspace({
                     setPrompt(ex);
                     beginGeneration(ex);
                   }}
-                  className="rounded-lg border border-border/40 bg-background-elevated/20 px-3 py-2 text-xs text-muted-foreground text-left transition-all duration-200 hover:border-primary/30 hover:text-foreground hover:bg-muted/10 truncate w-full block cursor-pointer"
+                  className="rounded-full border border-border/50 bg-background-elevated/30 px-3.5 py-1.5 text-xs text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:text-foreground hover:bg-primary/5 cursor-pointer"
                 >
-                  {ex}
+                  {ex.length > 50 ? `${ex.slice(0, 50)}…` : ex}
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Modern Card Grid for Quick Actions */}
+        <div className="space-y-4">
+          <h3 className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground-dim">
+            // Creative Blueprints
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {QUICK_ACTIONS.map((a) => (
+              <button
+                key={a.label}
+                type="button"
+                onClick={() => beginGeneration(a.prompt)}
+                className="group relative flex flex-col gap-1.5 rounded-xl border border-border/50 bg-background-elevated/40 p-4 text-left transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:translate-y-[-2px] overflow-hidden cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors flex items-center justify-between w-full">
+                  {a.label}
+                  <Sparkles className="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 transition-all text-primary" />
+                </span>
+                <span className="text-xs text-muted-foreground leading-relaxed">
+                  {a.prompt}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
