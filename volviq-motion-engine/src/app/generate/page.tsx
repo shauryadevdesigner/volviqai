@@ -214,6 +214,8 @@ function GeneratePageContent() {
       lastGenerationPromptRef.current = promptText;
       setLastFailedPrompt(promptText);
       addUserMessage(promptText, attachedImages);
+      // Reset error correction state for fresh user attempts
+      setErrorCorrection(null);
     },
     [addUserMessage],
   );
@@ -250,8 +252,6 @@ function GeneratePageContent() {
     if (streaming) {
       setGenerationError(null);
       setRuntimeError(null);
-      // Reset error correction state for fresh retry attempts
-      setErrorCorrection(null);
     }
   }, []);
 

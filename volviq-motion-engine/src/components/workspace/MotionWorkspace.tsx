@@ -214,6 +214,8 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
       lastGenerationPromptRef.current = promptText;
       setLastFailedPrompt(promptText);
       addUserMessage(promptText, attachedImages);
+      // Reset error correction state for fresh user attempts
+      setErrorCorrection(null);
     },
     [addUserMessage],
   );
@@ -254,7 +256,6 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
     if (streaming) {
       setGenerationError(null);
       setRuntimeError(null);
-      setErrorCorrection(null);
     }
   }, []);
 
