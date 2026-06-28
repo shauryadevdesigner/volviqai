@@ -321,7 +321,11 @@ export function getModelForProvider(modelName: string) {
   // Map internal Gemini model IDs to supported ones on Qevaro
   let targetModelName = modelName;
   if (modelName.includes("gemini")) {
-    targetModelName = "deepseek-v4-pro";
+    if (modelName === "gemini-3.5-flash") {
+      targetModelName = "kimi-k2.6";
+    } else {
+      targetModelName = "gpt-oss-120b";
+    }
   }
   return client.chat(targetModelName);
 }
