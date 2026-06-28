@@ -523,6 +523,16 @@ Analyze the request and decide: use targeted edits (type: "edit") for small chan
           taskType: "remotion_generation",
         });
         response = editResult.object;
+
+        if (!response || !response.type) {
+          throw new Error("Invalid AI response: 'type' is missing.");
+        }
+        if (response.type === "edit" && (!response.edits || response.edits.length === 0)) {
+          throw new Error("Invalid AI response: 'type' is 'edit' but 'edits' array is missing or empty.");
+        }
+        if (response.type === "full" && !response.code) {
+          throw new Error("Invalid AI response: 'type' is 'full' but 'code' is missing.");
+        }
       } catch (schemaError) {
         console.warn("Structured follow-up edit failed, falling back to simple full code generation:", schemaError);
         
