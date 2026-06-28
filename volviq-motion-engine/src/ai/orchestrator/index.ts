@@ -83,7 +83,7 @@ Final Quality Score: ${m.finalScore}/100`,
     onEvent({ type: "reasoning-start", phase: "briefing" });
     const briefComment = `/*
  * =======================================================================
- *                         VOLVIQ AI CREATIVE BRIEF (V4)
+ *                         VOLVIQ AI CREATIVE BRIEF (V10)
  * =======================================================================
  * TEMPLATE   : ${brief.template}
  * PALETTE    : ${brief.colorPalette}
@@ -326,7 +326,7 @@ Please fix these issues and output the refined complete React/Remotion component
       evaluation = await runStage10(finalCode, prompt);
       console.log("[Orchestrator] Audit Score:", evaluation);
 
-      if (evaluation.averageScore >= 80) {
+      if (evaluation.averageScore >= 85) {
         passedAudit = true;
         console.log(`[Orchestrator] Unified composition PASSED audit on attempt ${auditAttempts}!`);
       } else {
@@ -417,7 +417,7 @@ Please fix these issues and output the refined complete React/Remotion component
         failureCause:
           compileScore < 100
             ? `Compile error: ${lastCompileErrors.join("; ")}`
-            : evaluation?.averageScore >= 80
+            : evaluation?.averageScore >= 85
             ? null
             : `Audit failed: ${evaluation?.critique.join("; ")}`,
       },

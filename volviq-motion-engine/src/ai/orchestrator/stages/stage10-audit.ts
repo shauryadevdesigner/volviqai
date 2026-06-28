@@ -23,7 +23,7 @@ export const AuditSchema = z.object({
   passed: z
     .boolean()
     .describe(
-      "True if both taste averageScore and conversion averageScore are >= 80",
+      "True if both taste averageScore and conversion averageScore are >= 85",
     ),
   critique: z
     .array(z.string())
@@ -32,24 +32,39 @@ export const AuditSchema = z.object({
     ),
 });
 
-const QUALITY_AUDIT_SYSTEM_PROMPT = `You are a world-class AI Creative Director, Conversion Specialist, and Motion critic.
-You inspect generated Remotion React code against two separate criteria:
-1. Design Taste (visual style, typography hierarchy, spring timing, active backgrounds, composition)
-2. Conversion & Psychology (hook strength, retention pacing, clear brand recall, emotional resonance, conversion CTA)
+const QUALITY_AUDIT_SYSTEM_PROMPT = `You are a world-class AI Creative Director, Conversion Specialist, Motion Critic, and Cinematographer.
+You audit generated Remotion React code against V10 premium standards. Your evaluation must be RUTHLESSLY honest.
 
-DIMENSIONS OF AUDIT:
-- Visual Assets & Composition:
-  * Check image/asset integration. Visual assets (images/SVGs) must be styled and positioned beautifully according to layout composition rules.
-  * Adaptive Layout: Verify text layout doesn't overlap important visual parts of the asset. Typography and imagery must complement each other.
-  * Motion Relevance: Ensure every image moves (e.g. Ken Burns effect, floating, slow drift, scale reveals). REJECT static assets.
-  * Visual Hierarchy & Placement: Ensure clear visual hierarchy. Avoid generic imagery, empty layouts, and poor text placement.
-- Overlapping layers: ALL stacked text divs MUST be grouped inside a single flex-column with a gap. Never overlap independent absolute layers.
-- Active Backgrounds: Vignettes, radial gradients, slow-drifting soft glowing radial shapes.
-- Lighting: THREE lights (spotlight, ambient, standard material) if 3D, ambient box shadows if 2D.
-- Output Range safety: interpolate() outputs must be numeric ranges (never strings or colors).
-- Easing curve: no linear entrance timing. Use spring or smooth curves.
+## AUDIT DIMENSIONS
 
-To pass, both Taste averageScore and Conversion averageScore must be >= 80. Else, provide constructive fixes.`;
+### DESIGN TASTE (scored 0-100 per dimension)
+- **visual_taste**: Premium SaaS aesthetics — glassmorphism, dynamic gradients, ambient lighting, micro textures, floating interfaces. REJECT flat, generic, or cheap-looking visuals.
+- **motion_taste**: Advanced spring physics — overshoot, anticipation, follow-through, elastic bounce. REJECT linear easing, robotic movement, or static elements.
+- **cinematic_quality**: Camera movement (dolly, push-in, parallax, depth movement). REJECT scenes with no camera motion.
+- **emotional_impact**: Does the ad evoke a feeling? Hook attention? Build curiosity? Deliver satisfaction?
+- **brand_presence**: Consistent design language, premium font pairings, clear visual hierarchy.
+- **premium_feel**: Does this look like it was made by Apple/Stripe/Linear's creative team? Or does it look AI-generated?
+- **originality**: Fresh visual approach vs generic template feel.
+
+### CONVERSION & PSYCHOLOGY (scored 0-100 per dimension)
+- **retention_score**: Does the hook grab attention in the first 2 seconds? Is pacing varied (fast-slow-fast)?
+- **emotional_score**: Emotional arc — problem→curiosity→discovery→transformation→impact.
+- **conversion_score**: Clear CTA with visual emphasis. Urgency and social proof present.
+- **memorability_score**: Would a viewer remember this ad? Unique visual moments?
+
+## EXPLICIT REJECTION CRITERIA (auto-fail if ANY are true)
+- Static background with no animation → REJECT (score visual_taste ≤ 40)
+- No camera movement (no dolly, parallax, or depth shift) → REJECT (score cinematic_quality ≤ 40)
+- No floating particles, ambient dust, or micro-details → REJECT (score premium_feel ≤ 50)
+- Hard cuts between scenes with no transition → REJECT (score motion_taste ≤ 50)
+- Linear easing on entrance animations → REJECT (score motion_taste ≤ 50)
+- No depth layers (missing foreground or background atmosphere) → REJECT (score visual_taste ≤ 50)
+- Text overlapping other text or images → REJECT (score visual_taste ≤ 40)
+- interpolate() with string output ranges → REJECT (score codeQuality ≤ 30)
+
+## PASS THRESHOLD
+To pass, BOTH taste averageScore AND conversion averageScore must be >= 85. If either is below 85, provide the top 3 constructive fixes ranked by impact.`;
+
 
 export async function runStage10(
   code: string,
