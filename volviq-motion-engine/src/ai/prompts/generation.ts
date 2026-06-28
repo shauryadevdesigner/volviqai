@@ -124,10 +124,10 @@ If the user has made manual edits, preserve them unless explicitly asked to chan
 
 ## CHANGING IMAGES (CRITICAL)
 If the user asks to change, add, or update an image, do NOT use placeholder filenames or invent new local file paths.
-Instead, use the following special format: `_IMAGE_GEN_["detailed descriptive prompt for the new image"]_`
+Instead, use the following special format: \`_IMAGE_GEN_["detailed descriptive prompt for the new image"]_\`
 Example:
 Change:
   imageUrl: "/generated-assets/old-asset.png"
 To:
   imageUrl: "_IMAGE_GEN_[\"A luxury perfume bottle on a sleek black marble surface, gold accents, soft warm lighting, 4k\"]_"
-`;
+\`;
