@@ -161,7 +161,7 @@ Final Quality Score: ${m.finalScore}/100`,
       let sceneCode = "";
       let sceneCompileSuccess = false;
       let sceneCompileAttempts = 0;
-      const maxSceneCompileAttempts = 3;
+      const maxSceneCompileAttempts = 2;
       let sceneCompileErrors: string[] = [];
 
       while (sceneCompileAttempts < maxSceneCompileAttempts && !sceneCompileSuccess) {
@@ -247,7 +247,7 @@ Final Quality Score: ${m.finalScore}/100`,
     let passedAudit = false;
     let evaluation: any = null;
     let auditAttempts = 0;
-    const maxAuditAttempts = 3;
+    const maxAuditAttempts = 1;
 
     while (auditAttempts < maxAuditAttempts && !passedAudit) {
       auditAttempts++;
@@ -343,7 +343,7 @@ Please fix these issues and output the refined complete React/Remotion component
     onEvent({ type: "reasoning-start", phase: "compiling" });
     let compileResult = runStage12(finalCode);
     let repairAttempts = 0;
-    const maxRepairAttempts = 3;
+    const maxRepairAttempts = 2;
 
     // Stage 13: Auto Repair compilation loop
     while (!compileResult.success && repairAttempts < maxRepairAttempts) {
