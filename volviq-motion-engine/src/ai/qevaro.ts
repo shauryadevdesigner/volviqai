@@ -203,7 +203,7 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
     if (config?.category === "reasoning" || config?.category === "qa") {
       timeoutMs = 150_000; // 150s for heavy reasoning/QA models
     } else {
-      timeoutMs = 90_000; // 90s for standard and fast models (to survive degraded API latency)
+      timeoutMs = 120_000; // 120s for standard and fast models (increased to handle code generation)
     }
   }
 
@@ -328,11 +328,18 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       const attemptDuration = Date.now() - attemptStart;
 
       if (error.name === "AbortError") {
-        logger.error(`Qevaro API timeout on ${url} after ${attemptDuration}ms. Replacing model immediately.`);
+        logger.error(`Qevaro API timeout on ${url} after ${attemptDuration}ms (attempt ${attempt}/${maxRetries}).`);
+        if (attempt < maxRetries) {
+          logger.warn(`Retrying after timeout in ${delay}ms...`);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          delay *= 2;
+          continue;
+        }
+        // All retries exhausted — throw timeout error
         throw new Error(JSON.stringify({
           status: 408,
           statusText: "Timeout",
-          message: "Request to Qevaro timed out. Replacing model...",
+          message: "Request to Qevaro timed out after all retry attempts.",
           type: "timeout_error",
         }));
       }

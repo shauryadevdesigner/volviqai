@@ -94,8 +94,54 @@ function applyEdits(
     const edit = edits[i];
     const { old_string, new_string, description } = edit;
 
-    // Check if the old_string exists
+    // Check if the old_string exists (exact match)
     if (!result.includes(old_string)) {
+      // Fuzzy fallback: try trimmed whitespace match
+      const trimmedOld = old_string.trim();
+      const lines = result.split("\n");
+      let fuzzyMatchIndex = -1;
+      let fuzzyMatchLength = 0;
+
+      // Search for trimmed content line-by-line
+      for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+        if (lines[lineIdx].trim() === trimmedOld) {
+          fuzzyMatchIndex = lineIdx;
+          fuzzyMatchLength = 1;
+          break;
+        }
+        // Multi-line fuzzy: try matching consecutive trimmed lines
+        const oldLines = trimmedOld.split("\n").map(l => l.trim());
+        if (lines[lineIdx].trim() === oldLines[0]) {
+          let match = true;
+          for (let k = 1; k < oldLines.length && lineIdx + k < lines.length; k++) {
+            if (lines[lineIdx + k].trim() !== oldLines[k]) {
+              match = false;
+              break;
+            }
+          }
+          if (match && oldLines.length > 0) {
+            fuzzyMatchIndex = lineIdx;
+            fuzzyMatchLength = oldLines.length;
+            break;
+          }
+        }
+      }
+
+      if (fuzzyMatchIndex >= 0) {
+        // Replace the fuzzy-matched lines with new_string
+        const before = lines.slice(0, fuzzyMatchIndex);
+        const after = lines.slice(fuzzyMatchIndex + fuzzyMatchLength);
+        result = [...before, new_string, ...after].join("\n");
+        
+        enrichedEdits.push({
+          description,
+          old_string,
+          new_string,
+          lineNumber: fuzzyMatchIndex + 1,
+        });
+        continue; // Skip to next edit
+      }
+
       return {
         success: false,
         result: code,
