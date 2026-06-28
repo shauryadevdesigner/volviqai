@@ -321,10 +321,14 @@ export function getModelForProvider(modelName: string) {
   // Map internal Gemini model IDs to supported ones on Qevaro
   let targetModelName = modelName;
   if (modelName.includes("gemini")) {
-    if (modelName.includes("flash") || modelName.includes("lite")) {
-      targetModelName = "gemini-2.5-flash";
+    if (modelName === "gemini-3.5-flash") {
+      targetModelName = "deepseek-v4-flash";
+    } else if (modelName === "gemini-3-flash") {
+      targetModelName = "glm-4.7-flash";
+    } else if (modelName === "gemini-2.5-flash-lite") {
+      targetModelName = "glm-4.7-flash";
     } else {
-      targetModelName = "gemini-2.5-pro";
+      targetModelName = "deepseek-v4-pro";
     }
   }
   return client.chat(targetModelName);
