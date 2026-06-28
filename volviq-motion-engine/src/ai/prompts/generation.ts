@@ -72,6 +72,7 @@ You have direct, global access to these React components. DO NOT import them. Re
   * WRONG: \`interpolate(frame, [0,30], ["0%","100%"])\`
   * CORRECT: \`interpolate(frame, [0,30], [0,100])\` and use it as \`\${value}%\`
 - If \`userImages\` is present and contains base64 URLs (e.g. \`userImages && userImages.length > 0\`), render it beautifully inside a styled framing container (e.g. a \`<GlassCard>\` with an \`<Img src={userImages[0]} style={{ width: '100%', height: 'auto', borderRadius: BORDER_RADIUS.md }} />\`). If \`userImages\` is empty/undefined, do NOT render fake image URLs; use our premium typography, grids, and gradients.
+- Custom Motion Graphics & SVGs: If the user requests custom animation, custom shapes, illustrations, or graphics (e.g. a clock, solar system, particles, graphs, custom shapes) that are not covered by our pre-injected premium components, you are fully authorized and encouraged to build them using standard HTML5 tags (e.g. \`div\`, \`span\`, \`svg\`, \`path\`, \`circle\`, \`rect\`) and CSS inline styles (e.g. with \`transform\`, \`opacity\`, \`transition\`, and Remotion's \`interpolate\`/\`spring\`). Blend them seamlessly with the pre-injected design tokens and layout rules.
 - Output ONLY valid, compiled Remotion component code. Start with imports, and end with the default export statement.
 `;
 
@@ -130,4 +131,7 @@ Change:
   imageUrl: "/generated-assets/old-asset.png"
 To:
   imageUrl: "_IMAGE_GEN_[\"A luxury perfume bottle on a sleek black marble surface, gold accents, soft warm lighting, 4k\"]_"
+
+## CUSTOM GRAPHICS & EDITS (CRITICAL)
+If the user asks for a custom motion graphic, shape, transition, or animation style that is not supported by the premium components library, you MUST implement it using standard React/HTML5 tags (e.g. \`div\`, \`span\`, \`svg\`, \`path\`, \`circle\`, \`rect\`) and inline styles. Always output a valid, compileable component containing actual JSX layout and visual tags.
 `;
