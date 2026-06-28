@@ -1,8 +1,8 @@
 import type { PlanTier } from "@/types/profile";
 import { PREMIUM_FPS, DEFAULT_FPS } from "./video-duration";
 
-export const RENDER_WIDTH = 1920;
-export const RENDER_HEIGHT = 1080;
+export const RENDER_WIDTH = 3840;
+export const RENDER_HEIGHT = 2160;
 export const RENDER_CRF = 18;
 export const RENDER_PIXEL_FORMAT = "yuv420p" as const;
 export const RENDER_IMAGE_FORMAT = "png" as const;

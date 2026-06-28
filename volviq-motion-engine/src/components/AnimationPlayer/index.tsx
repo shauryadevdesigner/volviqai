@@ -134,8 +134,8 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
             component={Component}
             durationInFrames={durationInFrames}
             fps={fps}
-            compositionHeight={1080}
-            compositionWidth={1920}
+            compositionHeight={2160}
+            compositionWidth={3840}
             style={{
               width: "100%",
               height: "100%",

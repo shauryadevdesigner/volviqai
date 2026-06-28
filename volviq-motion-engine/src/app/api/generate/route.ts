@@ -21,6 +21,7 @@ import { SYSTEM_PROMPT, FOLLOW_UP_SYSTEM_PROMPT } from "@/ai/prompts/generation"
 import { verifyAndCompileServer } from "@/remotion/compiler-server";
 import { logGenerationAnalytics } from "@/lib/monitoring-server";
 import { runOrchestrator } from "@/ai/orchestrator";
+import { generateAsset } from "@/ai/image-generator";
 
 // Schema for follow-up edit responses
 // Note: Using a flat object schema for structured follow-up edits
@@ -289,7 +290,31 @@ CRITICAL RULES:
 - Keep all safety rules: outputRange in interpolate must contain ONLY numbers, clamp extrapolation.
 - Ensure any visual assets (images/SVGs) are integrated correctly, styled beautifully, and have dynamic motion (no static images).
 - Preserve all image asset URL paths, rendering logic, and custom media handling.
-- Output ONLY valid Remotion ES6 component code, starting with imports. No markdown wrappers.`;
+- Output ONLY valid, compiled Remotion component code, starting with imports. No markdown wrappers.`;
+
+async function processPlaceholderImages(code: string): Promise<string> {
+  const regex = /_IMAGE_GEN_\["([^"]+)"\]_/g;
+  let newCode = code;
+  let match;
+  
+  const matches: Array<{ placeholder: string; prompt: string }> = [];
+  while ((match = regex.exec(code)) !== null) {
+    matches.push({ placeholder: match[0], prompt: match[1] });
+  }
+
+  for (const item of matches) {
+    try {
+      console.log(`[Placeholder Image] Generating asset for prompt: "${item.prompt}"`);
+      const url = await generateAsset(item.prompt, "Luxury");
+      newCode = newCode.replaceAll(item.placeholder, url);
+    } catch (err) {
+      console.error(`[Placeholder Image Error] Failed to generate asset:`, err);
+      newCode = newCode.replaceAll(item.placeholder, "/cyberpunk.jpg");
+    }
+  }
+
+  return newCode;
+}
 
 export async function POST(req: Request) {
   const {
@@ -602,6 +627,10 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
           { status: 400, headers: { "Content-Type": "application/json" } },
         );
       }
+
+      // Process any placeholder image generation requests embedded in the edited code
+      finalCode = await processPlaceholderImages(finalCode);
+
       // ── JSX Validation & Auto-Repair for follow-up edits ──────────
       // Validate the generated code before quality evaluation
       const followUpValidation = validateAndRepairJSX(finalCode);

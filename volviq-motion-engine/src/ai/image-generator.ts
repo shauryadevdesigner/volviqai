@@ -305,6 +305,55 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
 
   ensureCacheDir();
 
+  // Try calling Qevaro image generation first (flux-1-schnell)
+  if (process.env.QEVARO_API_KEY) {
+    try {
+      const baseUrl = process.env.QEVARO_BASE_URL || "https://api.qevaro.com/v1";
+      console.log(`[Image API] Calling Qevaro flux-1-schnell...`);
+      const response = await fetch(`${baseUrl}/images/generations`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.QEVARO_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "flux-1-schnell",
+          prompt: `${prompt}, ${style}, 4k high quality, photographic style`,
+          n: 1,
+          size: "1024x1024"
+        })
+      });
+
+      if (response.ok) {
+        const data: any = await response.json();
+        const imageUrl = data.data?.[0]?.url;
+        if (imageUrl) {
+          console.log(`[Image API] Fetching generated image from Qevaro URL: ${imageUrl}`);
+          const imageResponse = await fetch(imageUrl);
+          if (imageResponse.ok) {
+            const arrayBuffer = await imageResponse.arrayBuffer();
+            const uint8Array = new Uint8Array(arrayBuffer);
+            fs.writeFileSync(localPath, uint8Array);
+            
+            manifest[hash] = {
+              prompt,
+              style,
+              url: relativeUrl,
+              timestamp: new Date().toISOString(),
+            };
+            writeManifest(manifest);
+            return relativeUrl;
+          }
+        }
+      } else {
+        const errText = await response.text();
+        console.warn(`[Image API Warning] Qevaro image generation returned status ${response.status}: ${errText}`);
+      }
+    } catch (qevaroErr) {
+      console.warn(`[Image API Warning] Qevaro image generation failed:`, qevaroErr);
+    }
+  }
+
   // Try calling the image generation API
   try {
     // We will call the public Pollinations AI image generator which uses Flux/Schnell

@@ -6,8 +6,8 @@ export const LONG_FORM_DURATION_MIN = 600;
 export const LONG_FORM_DURATION_MAX = 900;
 export const LONG_FORM_DURATION_DEFAULT = 750;
 
-export const DEFAULT_FPS = 30;
-export const PREMIUM_FPS = 60;
+export const DEFAULT_FPS = 100;
+export const PREMIUM_FPS = 100;
 
 const LONG_FORM_PATTERN =
   /\b(article|long[\s-]?form|explainer|documentary|storytelling|narration|podcast|tutorial|blog|essay|deep[\s-]?dive|case study|whitepaper|webinar)\b/i;
