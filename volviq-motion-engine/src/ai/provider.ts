@@ -297,7 +297,9 @@ export function getModelForProvider(modelName: string) {
     });
     // Map internal models to Gemini models
     let geminiModelName = "gemini-2.5-flash"; // default fallback
-    if (
+    if (modelName.includes("flash") || modelName.includes("lite")) {
+      geminiModelName = "gemini-2.5-flash";
+    } else if (
       modelName.includes("pro") ||
       modelName.includes("coder") ||
       modelName.includes("kimi") ||
@@ -308,8 +310,6 @@ export function getModelForProvider(modelName: string) {
       modelName.includes("gemini")
     ) {
       geminiModelName = "gemini-2.5-pro";
-    } else if (modelName.includes("flash") || modelName.includes("lite")) {
-      geminiModelName = "gemini-2.5-flash";
     }
     return client.chat(geminiModelName);
   }
@@ -318,5 +318,14 @@ export function getModelForProvider(modelName: string) {
   if (!client) {
     throw new Error("Qevaro client is not configured. Check QEVARO_API_KEY.");
   }
-  return client.chat(modelName);
+  // Map internal Gemini model IDs to supported ones on Qevaro
+  let targetModelName = modelName;
+  if (modelName.includes("gemini")) {
+    if (modelName.includes("flash") || modelName.includes("lite")) {
+      targetModelName = "gemini-2.5-flash";
+    } else {
+      targetModelName = "gemini-2.5-pro";
+    }
+  }
+  return client.chat(targetModelName);
 }
