@@ -130,4 +130,4 @@ Change:
   imageUrl: "/generated-assets/old-asset.png"
 To:
   imageUrl: "_IMAGE_GEN_[\"A luxury perfume bottle on a sleek black marble surface, gold accents, soft warm lighting, 4k\"]_"
-\`;
+`;
