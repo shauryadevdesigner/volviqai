@@ -17,8 +17,6 @@ import { executeApi } from "../../../../helpers/api-response";
 import { lambdaRenderQuality } from "@/lib/render-quality";
 import { clampDurationInFrames } from "@/lib/video-duration";
 
-import { bundle } from "@remotion/bundler";
-import { renderMedia, selectComposition } from "@remotion/renderer";
 import { webpackOverride } from "@/remotion/webpack-override.mjs";
 import path from "path";
 import fs from "fs";
@@ -45,6 +43,7 @@ async function getBundle() {
     return cachedBundleLocation;
   }
   const entryPoint = path.join(process.cwd(), "src/remotion/index.ts");
+  const { bundle } = await import("@remotion/bundler");
   cachedBundleLocation = await bundle({
     entryPoint,
     webpackOverride,
@@ -77,6 +76,7 @@ export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
       (async () => {
         try {
           const bundleLocation = await getBundle();
+          const { selectComposition, renderMedia } = await import("@remotion/renderer");
           const composition = await selectComposition({
             serveUrl: bundleLocation,
             id: COMP_NAME,
