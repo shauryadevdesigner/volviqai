@@ -90,14 +90,38 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
   }, [onFrameChange, Component]);
 
   const renderContent = () => {
+    // During silent auto-correction, show the error with a correction badge
+    // instead of hijacking the preview with a full-screen spinner
+    if (isStreaming && errorCorrection) {
+      return (
+        <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] flex flex-col justify-center items-center gap-4 bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
+          {error ? (
+            <ErrorDisplay
+              error={error}
+              title={errorTitles[errorType]}
+              variant="fullscreen"
+              size="lg"
+            />
+          ) : (
+            <div className="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin" />
+          )}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+            <div className="w-3 h-3 border-2 border-primary/50 border-t-primary rounded-full animate-spin" />
+            <p className="text-primary text-xs font-medium">
+              Auto-correcting (attempt {errorCorrection.attemptNumber}/{errorCorrection.maxAttempts})
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // Full-screen spinner only for user-initiated generations
     if (isStreaming) {
       return (
         <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] flex flex-col justify-center items-center gap-4 bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
           <div className="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin" />
           <p className="text-muted-foreground text-sm font-medium">
-            {errorCorrection
-              ? `Auto-correcting code error (attempt ${errorCorrection.attemptNumber}/${errorCorrection.maxAttempts})...`
-              : "Waiting for code generation to finish..."}
+            Waiting for code generation to finish...
           </p>
         </div>
       );

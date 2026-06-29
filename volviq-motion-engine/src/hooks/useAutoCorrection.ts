@@ -61,6 +61,8 @@ export function useAutoCorrection({
 }: AutoCorrectionConfig) {
   // Track whether last code change was from AI or user
   const lastChangeSourceRef = useRef<"ai" | "user">("ai");
+  // Guard against duplicate correction triggers
+  const correctionInProgressRef = useRef(false);
 
   // Mark code as AI-generated
   const markAsAiGenerated = useCallback(() => {
@@ -89,7 +91,8 @@ export function useAutoCorrection({
       !isCompiling &&
       !generationError &&
       code.trim() &&
-      shouldAutoCorrect()
+      shouldAutoCorrect() &&
+      !correctionInProgressRef.current
     ) {
       const nextAttempt = (errorCorrection?.attemptNumber ?? 0) + 1;
 
@@ -97,9 +100,11 @@ export function useAutoCorrection({
       const effectiveMaxAttempts = Math.min(maxAttempts, 2);
       if (nextAttempt > effectiveMaxAttempts) {
         console.log(`[AutoCorrection] Max attempts reached (${effectiveMaxAttempts}). Stopping auto-correction.`);
+        correctionInProgressRef.current = false;
         return;
       }
 
+      correctionInProgressRef.current = true;
       console.log(
         `Auto-correction attempt ${nextAttempt}/${effectiveMaxAttempts} for compilation error:`,
         compilationError,
@@ -119,6 +124,7 @@ export function useAutoCorrection({
 
     // Clear error correction state on successful compilation
     if (!compilationError && !isCompiling && errorCorrection) {
+      correctionInProgressRef.current = false;
       onClearErrorCorrection();
     }
   }, [
@@ -136,15 +142,18 @@ export function useAutoCorrection({
 
   // Handle generation/API errors
   useEffect(() => {
-    if (generationError && shouldAutoCorrect()) {
+    if (generationError && shouldAutoCorrect() && !correctionInProgressRef.current) {
       const nextAttempt = (errorCorrection?.attemptNumber ?? 0) + 1;
 
       // Hard cap: never exceed 2 auto-retry attempts
       const effectiveMaxAttempts = Math.min(maxAttempts, 2);
       if (nextAttempt > effectiveMaxAttempts) {
         console.log(`[AutoCorrection] Max retry attempts reached (${effectiveMaxAttempts}). Stopping.`);
+        correctionInProgressRef.current = false;
         return;
       }
+
+      correctionInProgressRef.current = true;
 
       console.log(
         `Auto-retry attempt ${nextAttempt}/${effectiveMaxAttempts} for generation error:`,

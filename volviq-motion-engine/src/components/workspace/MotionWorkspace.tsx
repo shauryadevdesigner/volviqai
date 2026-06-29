@@ -252,11 +252,27 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
     };
   }, []);
 
+  const streamingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleStreamingChange = useCallback((streaming: boolean) => {
     setIsStreaming(streaming);
+
+    // Clear any existing safety timeout
+    if (streamingTimeoutRef.current) {
+      clearTimeout(streamingTimeoutRef.current);
+      streamingTimeoutRef.current = null;
+    }
+
     if (streaming) {
       setGenerationError(null);
       setRuntimeError(null);
+
+      // Safety timeout: force-reset isStreaming after 90s to prevent permanently stuck spinner
+      streamingTimeoutRef.current = setTimeout(() => {
+        console.warn("[Safety] Streaming timeout reached (90s). Force-resetting isStreaming to false.");
+        setIsStreaming(false);
+        streamingTimeoutRef.current = null;
+      }, 90_000);
     }
   }, []);
 
