@@ -62,6 +62,9 @@ You audit generated Remotion React code against V10 premium standards. Your eval
 - Text overlapping other text or images → REJECT (score visual_taste ≤ 40)
 - interpolate() with string output ranges → REJECT (score codeQuality ≤ 30)
 
+## CRITICAL PROMPT ADHERENCE
+If the user's prompt requested a simple, static, or minimalist layout (e.g. "no animations", "no camera dolly/parallax", "just static text", "no particles"), do not reject or fail the audit for lacking camera movement, floating particles, transitions, or complex depth layers. Audit the code purely based on how well it satisfies the user's explicit prompt requirements.
+
 ## PASS THRESHOLD
 To pass, BOTH taste averageScore AND conversion averageScore must be >= 85. If either is below 85, provide the top 3 constructive fixes ranked by impact.`;
 
@@ -72,7 +75,7 @@ export async function runStage10(
 ): Promise<AuditScore> {
   try {
     const result = await generateContent({
-      model: "gemini-3.5-flash", // QA Auditor
+      model: "qwen3-coder-plus", // QA Auditor
       system: QUALITY_AUDIT_SYSTEM_PROMPT,
       prompt: `Audit the following generated Remotion React code for the user prompt: "${userPrompt}"\n\n\`\`\`tsx\n${code}\n\`\`\``,
       schema: AuditSchema,

@@ -44,6 +44,9 @@ Your task is to review the Storyboard and Resolved Design System, and plan/refin
 Specifically, review the image prompts and optimize them to produce stunning, ultra-premium visual quality (e.g., matching luxury, SaaS, or tech styling).
 Ensure prompts have detailed lighting description, surface details, composition, and are suited for AI generation (e.g. Flux-1 / Stable Diffusion).
 
+## CRITICAL PROMPT ADHERENCE
+If the user's prompt asks for a clean design, text-only layout, or explicitly specifies no images/illustrations, set \`requiresAssets\` to false and \`prompt\` to empty for all scenes. Do not force visual assets if they were not requested or if a text-only setup is preferred.
+
 You MUST produce a JSON object matching these EXACT keys:
 - scenes: array of objects, each containing:
   * sceneNumber: number (1-indexed)
@@ -59,7 +62,7 @@ export async function runStage5(
   const promptText = `Storyboard Brief: ${JSON.stringify(resolvedBrief)}`;
 
   const result = await generateContent({
-    model: "gemini-3.5-flash", // Asset planner
+    model: "deepseek-v4-pro", // Asset planner
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: AssetPlanSchema,

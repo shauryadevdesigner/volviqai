@@ -19,9 +19,6 @@ export type QevaroModel =
   | "gemma-4-26b-a4b-it"
   | "gemma-4-31b-it"
   // Fast Models
-  | "gemini-3.5-flash"
-  | "gemini-3-flash"
-  | "gemini-2.5-flash-lite"
   | "deepseek-v4-flash"
   | "glm-4.7-flash"
   | "gpt-5-nano"

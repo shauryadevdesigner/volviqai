@@ -12,7 +12,6 @@ import {
   GenerateObjectResult,
   StreamTextResult,
 } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
 import { getQevaroClient } from "./qevaro";
 import { getModelChain, getModelFallbackChain } from "./model-router";
 import { usageStore } from "./usage-store";
@@ -66,13 +65,13 @@ const generationQueue = new TaskQueue(5);
 // ── Default Models ──────────────────────────────────────────────────────────
 
 /** Primary model for fast operations (validation, skill detection, etc.) */
-export const PRIMARY_MODEL = "gemini-3.5-flash";
+export const PRIMARY_MODEL = "deepseek-v4-flash";
 
 /** Fallback model for fast operations */
-export const FALLBACK_MODEL = "gemini-3-flash";
+export const FALLBACK_MODEL = "gpt-5-nano";
 
 /** Final fallback for critical operations */
-export const FINAL_FALLBACK_MODEL = "gemini-3-flash";
+export const FINAL_FALLBACK_MODEL = "gpt-oss-120b";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -205,7 +204,7 @@ export async function generateContent(params: GenerateContentParams): Promise<an
             const rawText = err.text || (err.cause && err.cause.text) || "";
             if (rawText) {
               try {
-                const repairModelInstance = getModelForProvider("gemini-3.5-flash");
+                 const repairModelInstance = getModelForProvider("deepseek-v4-flash");
                 const repairResult = await sdkGenerateObject({
                   model: repairModelInstance,
                   system: "Convert the following output into valid JSON matching the required schema exactly.",
@@ -215,10 +214,10 @@ export async function generateContent(params: GenerateContentParams): Promise<an
                   mode: "json",
                 } as any);
                 const repairDuration = Date.now() - start;
-                logger.info(`JSON repair succeeded using gemini-3.5-flash in ${repairDuration}ms`);
+                logger.info(`JSON repair succeeded using deepseek-v4-flash in ${repairDuration}ms`);
 
                 usageStore.recordRequest({
-                  model: "gemini-3.5-flash",
+                  model: "deepseek-v4-flash",
                   taskType: "json_repair",
                   latencyMs: repairDuration,
                   promptTokens: (repairResult as any).usage?.promptTokens ?? 0,
@@ -289,39 +288,9 @@ export async function generateContent(params: GenerateContentParams): Promise<an
  * Returns an AI SDK model instance for the given model name via Qevaro.
  */
 export function getModelForProvider(modelName: string) {
-  const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-  if (geminiKey) {
-    const client = createOpenAI({
-      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-      apiKey: geminiKey,
-    });
-    // Map internal models to Gemini models
-    let geminiModelName = "gemini-2.5-flash"; // default fallback
-    if (
-      modelName.includes("pro") ||
-      modelName.includes("coder") ||
-      modelName.includes("kimi") ||
-      modelName.includes("oss") ||
-      modelName.includes("llama") ||
-      modelName.includes("mistral") ||
-      modelName.includes("gpt") ||
-      modelName.includes("gemini")
-    ) {
-      geminiModelName = "gemini-2.5-pro";
-    } else if (modelName.includes("flash") || modelName.includes("lite")) {
-      geminiModelName = "gemini-2.5-flash";
-    }
-    return client.chat(geminiModelName);
-  }
-
   const client = getQevaroClient();
   if (!client) {
     throw new Error("Qevaro client is not configured. Check QEVARO_API_KEY.");
   }
-  // Map internal Gemini model IDs to supported ones on Qevaro
-  let targetModelName = modelName;
-  if (modelName.includes("gemini")) {
-    targetModelName = "gpt-oss-120b";
-  }
-  return client.chat(targetModelName);
+  return client.chat(modelName);
 }

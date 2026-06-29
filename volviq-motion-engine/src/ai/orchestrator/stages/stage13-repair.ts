@@ -32,7 +32,7 @@ ${code}
 CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct, and all variables and imports exist. Return only the corrected ES6 React/Remotion component code starting with imports.`;
 
   const result = await generateContent({
-    model: "gemini-3.5-flash", // Auto-repair agent
+    model: "qwen3-coder-plus", // Auto-repair agent
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: AutoRepairSchema,

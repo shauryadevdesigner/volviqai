@@ -47,12 +47,12 @@ interface UsageData {
 // ── Model Router Reference ──────────────────────────────────────────────────
 
 const TASK_MODEL_MAP = [
-  { task: "Storyboarding", model: "gemini-3.5-flash", fallback: "gemini-3-flash" },
-  { task: "Remotion Generation", model: "gemini-3.5-flash", fallback: "gemini-3-flash" },
-  { task: "Fast Operations", model: "gemini-3.5-flash", fallback: "gemini-3-flash" },
-  { task: "Quality Assurance", model: "gemini-3.5-flash", fallback: "gemini-3-flash" },
-  { task: "Validation", model: "gemini-3.5-flash", fallback: "gemini-3-flash" },
-  { task: "Skill Detection", model: "gemini-3.5-flash", fallback: "gemini-3-flash" },
+  { task: "Storyboarding", model: "deepseek-v4-pro", fallback: "kimi-k2.6" },
+  { task: "Remotion Generation", model: "qwen3-coder-plus", fallback: "gemma-4-31b-it" },
+  { task: "Fast Operations", model: "deepseek-v4-flash", fallback: "glm-4.7-flash" },
+  { task: "Quality Assurance", model: "qwen3-coder-plus", fallback: "gemma-4-31b-it" },
+  { task: "Validation", model: "deepseek-v4-flash", fallback: "glm-4.7-flash" },
+  { task: "Skill Detection", model: "deepseek-v4-flash", fallback: "glm-4.7-flash" },
 ];
 
 // ── Dashboard Page ──────────────────────────────────────────────────────────

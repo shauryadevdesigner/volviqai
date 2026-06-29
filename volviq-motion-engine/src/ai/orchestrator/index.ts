@@ -271,7 +271,7 @@ Preserve all image asset URL paths, rendering logic, and custom media handling.
 Output ONLY valid Remotion ES6 component code, starting with imports.`;
 
           const refinedResult = await generateContent({
-            model: "gemini-3.5-flash",
+            model: "qwen3-coder-plus",
             system: REFINEMENT_SYSTEM_PROMPT,
             prompt: `## USER REQUEST:
 ${prompt}

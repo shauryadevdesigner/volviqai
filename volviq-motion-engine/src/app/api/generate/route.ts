@@ -365,7 +365,7 @@ async function processPlaceholderImages(code: string): Promise<string> {
 export async function POST(req: Request) {
   const {
     prompt,
-    model = "gemini-3.5-flash",
+    model = "deepseek-v4-flash",
     currentCode,
     conversationHistory = [],
     isFollowUp = false,

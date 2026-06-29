@@ -47,6 +47,9 @@ export const IntentSchema = z.object({
 const SYSTEM_PROMPT = `You are a world-class Marketing Strategist and Intent Engine.
 Your job is to analyze the user's prompt and extract the high-level advertising intents, audience demographics, and format objectives.
 
+## CRITICAL PROMPT ADHERENCE
+If the user's prompt requests a single-scene, simple static slide, minimalist layout, or specifies no animations, select the lowest possible complexity ('low') and appropriate platform, and respect their intent.
+
 You MUST produce a JSON object with these EXACT keys (no other keys, no nesting):
 - type: one of "ad" | "product_launch" | "explainer" | "kinetic_typography" | "saas_promo" | "luxury_reveal" | "corporate" | "brand_film" | "social"
 - audience: string describing the target user base profile
@@ -59,7 +62,7 @@ You MUST produce a JSON object with these EXACT keys (no other keys, no nesting)
 
 export async function runStage0(prompt: string): Promise<IntentData> {
   const result = await generateContent({
-    model: "gemini-3.5-flash", // Low-latency Intent classifier
+    model: "deepseek-v4-flash", // Low-latency Intent classifier
     system: SYSTEM_PROMPT,
     prompt: `Analyze the user's requirements for a motion graphic generation: "${prompt}"`,
     schema: IntentSchema,

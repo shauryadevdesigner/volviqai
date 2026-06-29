@@ -24,6 +24,9 @@ export const MarketingStrategySchema = z.object({
 const SYSTEM_PROMPT = `You are a Direct-Response Marketing Copywriter and conversion strategist.
 Your task is to take the Creative Brief and Intent Data, and output a premium marketing copywriting structure.
 
+## CRITICAL PROMPT ADHERENCE
+If the user specifies particular text, headlines, or call-to-actions in their prompt, you MUST use them directly and not alter them or invent new ones. If they request a simple layout, make sure the hooks and copy correspond only to the requested structure.
+
 You MUST produce a JSON object with these EXACT keys (no other keys, no nesting):
 - hooks: array of strings containing 3-5 alternative hook concepts
 - headlineCopy: array of strings containing high-impact headlines for each transition/scene
@@ -40,7 +43,7 @@ export async function runStage2(
 Creative Brief: ${JSON.stringify(creativeBrief)}`;
 
   const result = await generateContent({
-    model: "gemini-3.5-flash", // Primary strategist
+    model: "deepseek-v4-pro", // Primary strategist
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: MarketingStrategySchema,

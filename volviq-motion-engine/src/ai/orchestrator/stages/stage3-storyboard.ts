@@ -35,9 +35,9 @@ export const StoryboardBriefSchema = z.object({
 
   sceneCount: z
     .number()
-    .min(3)
+    .min(1)
     .max(10)
-    .describe("Optimal scene count: Short: 3-5, Default Ad: 4, Product Launch: 5-8, Explainer: 6-10, Social Ad: 4-6, Luxury Reveal: 4-7"),
+    .describe("Optimal scene count: Short: 1-3, Default Ad: 4, Product Launch: 5-8, Explainer: 6-10, Social Ad: 4-6, Luxury Reveal: 4-7"),
 
   audienceProfile: z.object({
     audience: z.string().describe("Primary target audience group"),
@@ -198,6 +198,9 @@ export const StoryboardBriefSchema = z.object({
 const SYSTEM_PROMPT = `You are a world-class Motion Storyboard Director.
 Your task is to take the Marketing Copy Strategy and Intent Data, and output a detailed scene-by-scene Storyboard Brief.
 
+## CRITICAL PROMPT ADHERENCE
+If the user asks for a simple video with just 1 or 2 scenes, or explicitly specifies the number of scenes, set \`sceneCount\` to that exact number and output exactly that number of scene objects. Do not invent extra scenes or unrequested visual concepts.
+
 You MUST produce a JSON object matching these EXACT keys (no other keys at root):
 - template: one of "Luxury Reveal" | "Bold Kinetic Typography" | "SaaS Promo" | "Tech Product Launch" | "E-Commerce Showcase" | "Corporate Presentation" | "Startup Launch" | "Social Media Promo" | "Futuristic Brand Campaign" | "App Promo" | "Motion Graphics Reel" | "Premium Product Spotlight"
 - colorPalette: one of "Midnight Royal" | "Cyber Neon" | "Sunset Editorial" | "Minimal Slate" | "Luxury Gold" | "Monochrome Premium" | "Tech Sapphire" | "Crimson Luxury"
@@ -232,7 +235,7 @@ ${
 }`;
 
   const result = await generateContent({
-    model: "gemini-3.5-flash", // Primary strategist
+    model: "deepseek-v4-pro", // Primary strategist
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: StoryboardBriefSchema,

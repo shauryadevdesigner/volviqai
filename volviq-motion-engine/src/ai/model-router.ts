@@ -82,26 +82,6 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
   },
 
   // ── Fast Models ───────────────────────────────────────────────────────
-  "gemini-3.5-flash": {
-    id: "gemini-3.5-flash",
-    name: "Gemini 3.5 Flash",
-    category: "fast",
-    maxTokens: 4000,
-    fallback: "gemini-3-flash",
-  },
-  "gemini-3-flash": {
-    id: "gemini-3-flash",
-    name: "Gemini 3 Flash",
-    category: "fast",
-    maxTokens: 4000,
-  },
-  "gemini-2.5-flash-lite": {
-    id: "gemini-2.5-flash-lite",
-    name: "Gemini 2.5 Flash Lite",
-    category: "fast",
-    maxTokens: 4000,
-    fallback: "glm-4.7-flash",
-  },
   "deepseek-v4-flash": {
     id: "deepseek-v4-flash",
     name: "DeepSeek V4 Flash",
@@ -171,14 +151,14 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
  * derived from the model's `fallback` field in the registry.
  */
 const TASK_MODEL_MAP: Record<TaskType, QevaroModel> = {
-  storyboarding: "gemini-3.5-flash",
-  remotion_generation: "gemini-3.5-flash",
-  fast_operation: "gemini-3.5-flash",
-  quality_assurance: "gemini-3.5-flash",
-  validation: "gemini-3.5-flash",
-  skill_detection: "gemini-3.5-flash",
-  image_generation: "gemini-3.5-flash", // Placeholder for future
-  vision_analysis: "gemini-3.5-flash", // Placeholder for future
+  storyboarding: "deepseek-v4-pro",
+  remotion_generation: "qwen3-coder-plus",
+  fast_operation: "deepseek-v4-flash",
+  quality_assurance: "qwen3-coder-plus",
+  validation: "deepseek-v4-flash",
+  skill_detection: "deepseek-v4-flash",
+  image_generation: "deepseek-v4-flash", // Placeholder for future
+  vision_analysis: "deepseek-v4-flash", // Placeholder for future
 };
 
 /**

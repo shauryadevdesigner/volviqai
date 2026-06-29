@@ -131,7 +131,7 @@ export const HeroHeadline: React.FC<{
           style={{
             fontFamily: accentFont,
             fontStyle: "italic",
-            fontSize: "2.2rem",
+            fontSize: "64px",
             color: colorPalette.accent,
             opacity: interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             transform: `translateY(${interpolate(frame, [delay, delay + 15], [15, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
@@ -147,7 +147,7 @@ export const HeroHeadline: React.FC<{
         style={{
           fontFamily: heroFont,
           fontWeight: 800,
-          fontSize: "4.5rem",
+          fontSize: "140px",
           lineHeight: 1.1,
           color: colorPalette.text,
           margin: 0,
@@ -200,9 +200,9 @@ export const HeroHeadline: React.FC<{
           style={{
             fontFamily: secondaryFont,
             fontWeight: 400,
-            fontSize: "1.6rem",
+            fontSize: "52px",
             color: "rgba(248, 250, 252, 0.7)",
-            maxWidth: "600px",
+            maxWidth: "1800px",
             margin: 0,
             lineHeight: 1.5,
             opacity: interpolate(frame, [delay + 18, delay + 33], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
@@ -276,8 +276,8 @@ export const FeatureGrid: React.FC<{
         display: "grid",
         gridTemplateColumns: `repeat(${Math.min(items.length, 3)}, 1fr)`,
         gap: SPACING.md,
-        width: "85%",
-        maxWidth: "1100px",
+        width: "90%",
+        maxWidth: "2400px",
         zIndex: 10,
         position: "relative",
       }}
@@ -294,14 +294,14 @@ export const FeatureGrid: React.FC<{
               flexDirection: "column",
               alignItems: "flex-start",
               textAlign: "left",
-              padding: SPACING.md,
+              padding: "48px",
             }}
           >
             <div
               style={{
                 fontFamily: heroFont,
                 fontWeight: 700,
-                fontSize: "1.8rem",
+                fontSize: "56px",
                 color: "#f8fafc",
                 marginBottom: SPACING.xs,
               }}
@@ -312,7 +312,7 @@ export const FeatureGrid: React.FC<{
               style={{
                 fontFamily: secondaryFont,
                 fontWeight: 400,
-                fontSize: "1.1rem",
+                fontSize: "36px",
                 color: "rgba(248, 250, 252, 0.6)",
                 lineHeight: 1.5,
               }}
@@ -380,13 +380,13 @@ export const PremiumCTA: React.FC<{
         style={{
           fontFamily: secondaryFont,
           fontWeight: 700,
-          fontSize: "1.2rem",
+          fontSize: "38px",
           letterSpacing: "0.08em",
           color: colorPalette.text,
           backgroundColor: colorPalette.accent,
           border: "none",
-          borderRadius: BORDER_RADIUS.md,
-          padding: `${SPACING.sm}px ${SPACING.lg}px`,
+          borderRadius: BORDER_RADIUS.lg,
+          padding: "24px 72px",
           cursor: "pointer",
           boxShadow: `0 8px 32px rgba(${colorPalette.accent === "#38bdf8" ? "56, 189, 248" : "212, 175, 55"}, 0.4)`,
           position: "relative",
@@ -522,13 +522,13 @@ export const LogoWall: React.FC<{
       <div
         style={{
           fontFamily: secondaryFont,
-          fontSize: "0.9rem",
+          fontSize: "28px",
           fontWeight: 600,
           letterSpacing: "0.15em",
           color: "rgba(248, 250, 252, 0.4)",
           textTransform: "uppercase",
           textAlign: "center",
-          marginBottom: 4,
+          marginBottom: 12,
         }}
       >
         Trusted by industry leaders
@@ -545,7 +545,7 @@ export const LogoWall: React.FC<{
         <div
           style={{
             display: "flex",
-            gap: "80px",
+            gap: "120px",
             transform: `translateX(-${scrollOffset}px)`,
             whiteSpace: "nowrap",
           }}
@@ -557,10 +557,10 @@ export const LogoWall: React.FC<{
               style={{
                 fontFamily: secondaryFont,
                 fontWeight: 600,
-                fontSize: "1.4rem",
+                fontSize: "44px",
                 color: "rgba(248, 250, 252, 0.6)",
                 display: "inline-block",
-                width: "120px",
+                width: "240px",
                 textAlign: "center",
               }}
             >

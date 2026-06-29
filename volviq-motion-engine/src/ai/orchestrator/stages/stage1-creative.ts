@@ -56,6 +56,9 @@ Every brief must specify:
 - Color psychology (what emotions each palette choice evokes)
 - Typography energy (bold and kinetic vs elegant and restrained)
 
+## CRITICAL PROMPT ADHERENCE
+Always prioritize the user's prompt constraints. If they ask for simple, text-only, or static slides, DO NOT enforce Apple/Pixar multi-scene narrative arcs or high-energy camera movements. Focus on designing a simple brief matching their instructions.
+
 You MUST produce a JSON object with these EXACT keys (no other keys, no nesting):
 - campaignStrategy: string describing the core strategic positioning for the ad/promo campaign
 - emotionalPositioning: string describing how we anchor the emotional goals of the prompt in visual pacing/atmosphere
@@ -72,7 +75,7 @@ export async function runStage1(
 Extracted Intent: ${JSON.stringify(intent)}`;
 
   const result = await generateContent({
-    model: "gemini-3.5-flash", // Primary strategist
+    model: "deepseek-v4-pro", // Primary strategist
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: CreativeBriefSchema,

@@ -74,12 +74,14 @@ This scene MUST satisfy ALL of the following or it will be REJECTED:
 
 4. ADVANCED MOTION: Use spring() with overshoot configs (damping 10-16, stiffness 160-220). Elements must anticipate, overshoot, and settle. NO linear interpolation for entrances.
 
-5. TYPOGRAPHY: Headlines must use word-by-word staggered reveals (split text, delay each word by 3-5 frames). Use tight letter-spacing (-0.02em). Font sizes 48-80px for heroes.
+5. TYPOGRAPHY: Headlines must use word-by-word staggered reveals (split text, delay each word by 3-5 frames). Use tight letter-spacing (-0.02em). Since the composition runs at a 4K resolution (3840x2160), use prominent medium-to-large sizing: 130px to 200px (or 8-12rem) for heroes, 56px to 80px (or 3.5-5rem) for subtitles, and 36px to 48px for details/descriptions. Ensure all text and elements are sized generously to fill and cover the screen beautifully.
 
 6. BREATHING IDLE: All elements not actively animating must have subtle breathing: scale: 1 + Math.sin(frame * 0.03) * 0.008 or gentle translateY float.
 
 7. NO STATIC ANYTHING: Every visible element must have at least subtle continuous motion.
-`;
+
+## USER PROMPT OVERRIDE (HIGHEST PRIORITY)
+If the user's prompt indicates a preference for simplicity, minimalism, static elements, or specific layout/styling (e.g. "no animations", "no floating particles", "just static text", "single scene", "no camera pans"), prioritize these constraints over the default requirements above. Do NOT add floating particles, camera zooms, or text splits if they contradict the user's explicit instructions.`;
 
   const scenePrompt = `Generate a single React component Scene${scene.sceneNumber} for Scene ${scene.sceneNumber} of this ad.
 User Prompt Context: "${userPrompt}"
@@ -121,7 +123,7 @@ Return only the single React/Remotion component Scene${scene.sceneNumber} matchi
       : `${scenePrompt}\n\nCRITICAL: Compilation failed on previous attempt. Fix these compilation errors:\n${compileErrors?.join("\n")}\n\nReturn ONLY the fixed component declaration code.`;
 
   const codeResult = await generateContent({
-    model: "gemini-3.5-flash", // Primary coder model
+    model: "qwen3-coder-plus", // Primary coder model
     system: systemPromptWithRef,
     prompt: promptText,
     schema: SceneGenerationSchema,
