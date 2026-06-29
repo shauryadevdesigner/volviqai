@@ -395,6 +395,7 @@ function GeneratePageContent() {
                   code={code}
                   onRuntimeError={handleRuntimeError}
                   onFrameChange={setCurrentFrame}
+                  errorCorrection={errorCorrection ?? undefined}
                 />
               }
               timelineContent={

@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { ErrorDisplay, type ErrorType } from "../ErrorDisplay";
 import { RenderControls } from "./RenderControls";
 import { SettingsModal } from "./SettingsModal";
+import type { ErrorCorrectionContext } from "@/types/conversation";
 
 const errorTitles: Record<ErrorType, string> = {
   validation: "Invalid Prompt",
@@ -36,6 +37,7 @@ interface AnimationPlayerProps {
   code: string;
   onRuntimeError?: (error: string) => void;
   onFrameChange?: (frame: number) => void;
+  errorCorrection?: ErrorCorrectionContext;
 }
 
 export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
@@ -51,6 +53,7 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
   code,
   onRuntimeError,
   onFrameChange,
+  errorCorrection,
 }) => {
   const playerRef = useRef<PlayerRef>(null);
 
@@ -91,8 +94,10 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
       return (
         <div className="w-[72%] mx-auto aspect-video max-h-[calc(100%-80px)] flex flex-col justify-center items-center gap-4 bg-background-elevated rounded-lg overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)]">
           <div className="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin" />
-          <p className="text-muted-foreground text-sm">
-            Waiting for code generation to finish...
+          <p className="text-muted-foreground text-sm font-medium">
+            {errorCorrection
+              ? `Auto-correcting code error (attempt ${errorCorrection.attemptNumber}/${errorCorrection.maxAttempts})...`
+              : "Waiting for code generation to finish..."}
           </p>
         </div>
       );

@@ -698,7 +698,7 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
       // ── Compilation Safety Verification & Auto-Repair ──
       let compileValidation = verifyAndCompileServer(finalCode);
       let compileAttempts = 0;
-      const maxCompileAttempts = 3;
+      const maxCompileAttempts = errorCorrection ? 2 : 3;
       
       while (!compileValidation.success && compileAttempts < maxCompileAttempts) {
         compileAttempts++;
@@ -740,7 +740,11 @@ CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct
       }
 
       // Evaluate visual taste and conversion quality of follow-up edit
-      let evaluation = await evaluateCodeQuality(finalCode, prompt);
+      // Skip visual taste & conversion refinement for error-correction/self-healing runs to prevent timeouts and latency
+      const shouldSkipRefinement = Boolean(errorCorrection);
+      let evaluation = shouldSkipRefinement 
+        ? { passed: true, taste: { averageScore: 100 }, conversion: { averageScore: 100 }, critique: [] }
+        : await evaluateCodeQuality(finalCode, prompt);
       let refinementAttempt = 0;
       const maxRefinementAttempts = 2;
 

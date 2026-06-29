@@ -357,6 +357,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
               code={code}
               onRuntimeError={handleRuntimeError}
               onFrameChange={setCurrentFrame}
+              errorCorrection={errorCorrection ?? undefined}
             />
           }
           timelineContent={
