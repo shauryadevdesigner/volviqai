@@ -111,7 +111,13 @@ function GeneratePageContent() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isStreamingRef = useRef(isStreaming);
   const lastGenerationPromptRef = useRef("");
-  const [chatSidebar, setChatSidebar] = useState<ChatSidebarRef | null>(null);
+  const chatSidebarRef = useRef<ChatSidebarRef | null>(null);
+  const [chatSidebarLoaded, setChatSidebarLoaded] = useState(false);
+
+  const setChatSidebar = useCallback((instance: ChatSidebarRef | null) => {
+    chatSidebarRef.current = instance;
+    setChatSidebarLoaded(Boolean(instance));
+  }, []);
 
   // Auto-correction hook - use combined code error (compilation + runtime)
   const { markAsAiGenerated, markAsUserEdited } = useAutoCorrection({
@@ -133,13 +139,13 @@ function GeneratePageContent() {
         setTimeout(() => {
           // Use silent mode to avoid showing retry as a user message
           // Include images from the last user message so image-based requests can be retried
-          chatSidebar?.triggerGeneration({
+          chatSidebarRef.current?.triggerGeneration({
             silent: true,
             attachedImages: lastImages,
           });
         }, 100);
       },
-      [getLastUserAttachedImages, chatSidebar],
+      [getLastUserAttachedImages],
     ),
     onAddErrorMessage: addErrorMessage,
     onClearGenerationError: useCallback(() => setGenerationError(null), []),
@@ -266,9 +272,9 @@ function GeneratePageContent() {
     setGenerationError(null);
     setPrompt(lastFailedPrompt);
     setTimeout(() => {
-      chatSidebar?.triggerGeneration({ silent: true });
+      chatSidebarRef.current?.triggerGeneration({ silent: true });
     }, 50);
-  }, [lastFailedPrompt, chatSidebar]);
+  }, [lastFailedPrompt]);
 
   // Handle runtime errors from the Player (e.g., "cannot access variable before initialization")
   const handleRuntimeError = useCallback((errorMessage: string) => {
@@ -279,7 +285,7 @@ function GeneratePageContent() {
 
   // Auto-trigger generation if prompt came from URL
   useEffect(() => {
-    if (initialPrompt && !hasAutoStarted && chatSidebar) {
+    if (initialPrompt && !hasAutoStarted && chatSidebarLoaded && chatSidebarRef.current) {
       setHasAutoStarted(true);
       // Check for initial attached images from sessionStorage
       const storedImagesJson = sessionStorage.getItem("initialAttachedImages");
@@ -293,12 +299,12 @@ function GeneratePageContent() {
         sessionStorage.removeItem("initialAttachedImages");
       }
       setTimeout(() => {
-        chatSidebar.triggerGeneration({
+        chatSidebarRef.current?.triggerGeneration({
           attachedImages: storedImages,
         });
       }, 100);
     }
-  }, [initialPrompt, hasAutoStarted, chatSidebar]);
+  }, [initialPrompt, hasAutoStarted, chatSidebarLoaded]);
 
   // Load project by ID if provided
   useEffect(() => {

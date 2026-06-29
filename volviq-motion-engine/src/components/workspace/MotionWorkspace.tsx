@@ -120,13 +120,19 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
   const isStreamingRef = useRef(isStreaming);
   const lastGenerationPromptRef = useRef("");
   const conversationIdRef = useRef(`conv-${Date.now()}`);
-  const [chatSidebar, setChatSidebar] = useState<ChatSidebarRef | null>(null);
+  const chatSidebarRef = useRef<ChatSidebarRef | null>(null);
+  const [chatSidebarLoaded, setChatSidebarLoaded] = useState(false);
+
+  const setChatSidebar = useCallback((instance: ChatSidebarRef | null) => {
+    chatSidebarRef.current = instance;
+    setChatSidebarLoaded(Boolean(instance));
+  }, []);
 
   useImperativeHandle(ref, () => ({
     triggerGeneration: (opts) =>
-      chatSidebar?.triggerGeneration(opts),
+      chatSidebarRef.current?.triggerGeneration(opts),
     setPrompt: (p) => setPrompt(p),
-  }), [chatSidebar]);
+  }));
 
   const { markAsAiGenerated, markAsUserEdited } = useAutoCorrection({
     maxAttempts: MAX_CORRECTION_ATTEMPTS,
@@ -144,13 +150,13 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
         setPrompt(correctionPrompt);
         const lastImages = getLastUserAttachedImages();
         setTimeout(() => {
-          chatSidebar?.triggerGeneration({
+          chatSidebarRef.current?.triggerGeneration({
             silent: true,
             attachedImages: lastImages,
           });
         }, 100);
       },
-      [getLastUserAttachedImages, chatSidebar],
+      [getLastUserAttachedImages],
     ),
     onAddErrorMessage: addErrorMessage,
     onClearGenerationError: useCallback(() => setGenerationError(null), []),
@@ -271,22 +277,22 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
     setGenerationError(null);
     setPrompt(lastFailedPrompt);
     setTimeout(() => {
-      chatSidebar?.triggerGeneration({ silent: true });
+      chatSidebarRef.current?.triggerGeneration({ silent: true });
     }, 50);
-  }, [lastFailedPrompt, chatSidebar]);
+  }, [lastFailedPrompt]);
 
   const handleRuntimeError = useCallback((errorMessage: string) => {
     setRuntimeError(errorMessage);
   }, []);
 
   useEffect(() => {
-    if (initialPrompt && autoStart && !hasAutoStarted && chatSidebar) {
+    if (initialPrompt && autoStart && !hasAutoStarted && chatSidebarLoaded && chatSidebarRef.current) {
       setHasAutoStarted(true);
       setTimeout(() => {
-        chatSidebar.triggerGeneration();
+        chatSidebarRef.current?.triggerGeneration();
       }, 100);
     }
-  }, [initialPrompt, autoStart, hasAutoStarted, chatSidebar]);
+  }, [initialPrompt, autoStart, hasAutoStarted, chatSidebarLoaded]);
 
   return (
     <div
