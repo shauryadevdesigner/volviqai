@@ -118,16 +118,15 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isStreamingRef = useRef(isStreaming);
-  const codeRef = useRef(code);
   const lastGenerationPromptRef = useRef("");
   const conversationIdRef = useRef(`conv-${Date.now()}`);
-  const chatSidebarRef = useRef<ChatSidebarRef>(null);
+  const [chatSidebar, setChatSidebar] = useState<ChatSidebarRef | null>(null);
 
   useImperativeHandle(ref, () => ({
     triggerGeneration: (opts) =>
-      chatSidebarRef.current?.triggerGeneration(opts),
+      chatSidebar?.triggerGeneration(opts),
     setPrompt: (p) => setPrompt(p),
-  }));
+  }), [chatSidebar]);
 
   const { markAsAiGenerated, markAsUserEdited } = useAutoCorrection({
     maxAttempts: MAX_CORRECTION_ATTEMPTS,
@@ -145,13 +144,13 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
         setPrompt(correctionPrompt);
         const lastImages = getLastUserAttachedImages();
         setTimeout(() => {
-          chatSidebarRef.current?.triggerGeneration({
+          chatSidebar?.triggerGeneration({
             silent: true,
             attachedImages: lastImages,
           });
         }, 100);
       },
-      [getLastUserAttachedImages],
+      [getLastUserAttachedImages, chatSidebar],
     ),
     onAddErrorMessage: addErrorMessage,
     onClearGenerationError: useCallback(() => setGenerationError(null), []),
@@ -159,8 +158,13 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
   });
 
   useEffect(() => {
-    codeRef.current = code;
-  }, [code]);
+    const wasStreaming = isStreamingRef.current;
+    isStreamingRef.current = isStreaming;
+    if (wasStreaming && !isStreaming) {
+      markAsAiGenerated();
+      compileCode(code);
+    }
+  }, [isStreaming, code, compileCode, markAsAiGenerated]);
 
   const lastImages = getLastUserAttachedImages();
   useEffect(() => {
@@ -168,15 +172,6 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
       (window as unknown as Record<string, unknown>).__userImages = lastImages || [];
     }
   }, [lastImages]);
-
-  useEffect(() => {
-    const wasStreaming = isStreamingRef.current;
-    isStreamingRef.current = isStreaming;
-    if (wasStreaming && !isStreaming) {
-      markAsAiGenerated();
-      compileCode(codeRef.current);
-    }
-  }, [isStreaming, compileCode, markAsAiGenerated]);
 
   const handleCodeChange = useCallback(
     (newCode: string) => {
@@ -276,29 +271,29 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
     setGenerationError(null);
     setPrompt(lastFailedPrompt);
     setTimeout(() => {
-      chatSidebarRef.current?.triggerGeneration({ silent: true });
+      chatSidebar?.triggerGeneration({ silent: true });
     }, 50);
-  }, [lastFailedPrompt]);
+  }, [lastFailedPrompt, chatSidebar]);
 
   const handleRuntimeError = useCallback((errorMessage: string) => {
     setRuntimeError(errorMessage);
   }, []);
 
   useEffect(() => {
-    if (initialPrompt && autoStart && !hasAutoStarted && chatSidebarRef.current) {
+    if (initialPrompt && autoStart && !hasAutoStarted && chatSidebar) {
       setHasAutoStarted(true);
       setTimeout(() => {
-        chatSidebarRef.current?.triggerGeneration();
+        chatSidebar.triggerGeneration();
       }, 100);
     }
-  }, [initialPrompt, autoStart, hasAutoStarted]);
+  }, [initialPrompt, autoStart, hasAutoStarted, chatSidebar]);
 
   return (
     <div
       className={`flex min-h-0 flex-1 flex-col overflow-hidden min-[1000px]:flex-row ${compact ? "" : ""}`}
     >
       <ChatSidebar
-        ref={chatSidebarRef}
+        ref={setChatSidebar}
         messages={messages}
         pendingMessage={pendingMessage}
         isCollapsed={isSidebarCollapsed}

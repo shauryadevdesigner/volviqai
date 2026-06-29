@@ -107,12 +107,11 @@ function GeneratePageContent() {
   // Combined error for display - either compilation or runtime error
   const codeError = compilationError || runtimeError;
 
-  // Refs
+  // Refs & States
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isStreamingRef = useRef(isStreaming);
-  const codeRef = useRef(code);
   const lastGenerationPromptRef = useRef("");
-  const chatSidebarRef = useRef<ChatSidebarRef>(null);
+  const [chatSidebar, setChatSidebar] = useState<ChatSidebarRef | null>(null);
 
   // Auto-correction hook - use combined code error (compilation + runtime)
   const { markAsAiGenerated, markAsUserEdited } = useAutoCorrection({
@@ -134,23 +133,18 @@ function GeneratePageContent() {
         setTimeout(() => {
           // Use silent mode to avoid showing retry as a user message
           // Include images from the last user message so image-based requests can be retried
-          chatSidebarRef.current?.triggerGeneration({
+          chatSidebar?.triggerGeneration({
             silent: true,
             attachedImages: lastImages,
           });
         }, 100);
       },
-      [getLastUserAttachedImages],
+      [getLastUserAttachedImages, chatSidebar],
     ),
     onAddErrorMessage: addErrorMessage,
     onClearGenerationError: useCallback(() => setGenerationError(null), []),
     onClearErrorCorrection: useCallback(() => setErrorCorrection(null), []),
   });
-
-  // Sync refs
-  useEffect(() => {
-    codeRef.current = code;
-  }, [code]);
 
   useEffect(() => {
     const wasStreaming = isStreamingRef.current;
@@ -159,9 +153,9 @@ function GeneratePageContent() {
     // Compile when streaming ends - mark as AI change
     if (wasStreaming && !isStreaming) {
       markAsAiGenerated();
-      compileCode(codeRef.current);
+      compileCode(code);
     }
-  }, [isStreaming, compileCode, markAsAiGenerated]);
+  }, [isStreaming, code, compileCode, markAsAiGenerated]);
 
   const handleCodeChange = useCallback(
     (newCode: string) => {
@@ -272,9 +266,9 @@ function GeneratePageContent() {
     setGenerationError(null);
     setPrompt(lastFailedPrompt);
     setTimeout(() => {
-      chatSidebarRef.current?.triggerGeneration({ silent: true });
+      chatSidebar?.triggerGeneration({ silent: true });
     }, 50);
-  }, [lastFailedPrompt]);
+  }, [lastFailedPrompt, chatSidebar]);
 
   // Handle runtime errors from the Player (e.g., "cannot access variable before initialization")
   const handleRuntimeError = useCallback((errorMessage: string) => {
@@ -285,7 +279,7 @@ function GeneratePageContent() {
 
   // Auto-trigger generation if prompt came from URL
   useEffect(() => {
-    if (initialPrompt && !hasAutoStarted && chatSidebarRef.current) {
+    if (initialPrompt && !hasAutoStarted && chatSidebar) {
       setHasAutoStarted(true);
       // Check for initial attached images from sessionStorage
       const storedImagesJson = sessionStorage.getItem("initialAttachedImages");
@@ -299,12 +293,12 @@ function GeneratePageContent() {
         sessionStorage.removeItem("initialAttachedImages");
       }
       setTimeout(() => {
-        chatSidebarRef.current?.triggerGeneration({
+        chatSidebar.triggerGeneration({
           attachedImages: storedImages,
         });
       }, 100);
     }
-  }, [initialPrompt, hasAutoStarted]);
+  }, [initialPrompt, hasAutoStarted, chatSidebar]);
 
   // Load project by ID if provided
   useEffect(() => {
@@ -337,7 +331,7 @@ function GeneratePageContent() {
         <div className="flex-1 flex flex-col min-[1000px]:flex-row min-w-0 overflow-hidden mt-12 md:mt-0">
           {/* Chat History Sidebar */}
           <ChatSidebar
-            ref={chatSidebarRef}
+            ref={setChatSidebar}
             messages={messages}
             pendingMessage={pendingMessage}
             isCollapsed={isSidebarCollapsed}
