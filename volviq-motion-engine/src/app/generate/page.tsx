@@ -262,12 +262,12 @@ function GeneratePageContent() {
       setGenerationError(null);
       setRuntimeError(null);
 
-      // Safety timeout: force-reset isStreaming after 90s to prevent permanently stuck spinner
+      // Safety timeout: force-reset isStreaming after 300s to prevent permanently stuck spinner
       streamingTimeoutRef.current = setTimeout(() => {
-        console.warn("[Safety] Streaming timeout reached (90s). Force-resetting isStreaming to false.");
+        console.warn("[Safety] Streaming timeout reached (300s). Force-resetting isStreaming to false.");
         setIsStreaming(false);
         streamingTimeoutRef.current = null;
-      }, 90_000);
+      }, 300_000);
     }
   }, []);
 

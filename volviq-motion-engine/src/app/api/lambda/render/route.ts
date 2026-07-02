@@ -1,3 +1,6 @@
+export const maxDuration = 300; // 5 minutes
+export const dynamic = "force-dynamic";
+
 import {
   AwsRegion,
   renderMediaOnLambda,
@@ -38,12 +41,19 @@ const globalObj = globalThis as GlobalWithLocalRenders;
 const localRenders = (globalObj.localRenders = globalObj.localRenders || new Map<string, LocalRenderJob>());
 let cachedBundleLocation = globalObj.cachedBundleLocation || null;
 
+const isServerless = !!(
+  process.env.VERCEL ||
+  process.env.LAMBDA_TASK_ROOT ||
+  process.env.AWS_EXECUTION_ENV
+);
+
 async function getBundle() {
   if (cachedBundleLocation && fs.existsSync(cachedBundleLocation)) {
     return cachedBundleLocation;
   }
-  const entryPoint = path.join(process.cwd(), "src/remotion/index.ts");
-  const { bundle } = await import("@remotion/bundler");
+  const entryPoint = path.join(/*turbopackIgnore: true*/ process.cwd(), "src/remotion/index.ts");
+  const bundlerModuleName = "@remotion/bundler";
+  const { bundle } = (await import(bundlerModuleName)) as typeof import("@remotion/bundler");
   cachedBundleLocation = await bundle({
     entryPoint,
     webpackOverride,
@@ -65,6 +75,12 @@ export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
     };
 
     if (!hasAwsCredentials) {
+      if (isServerless) {
+        throw new Error(
+          "AWS credentials are not configured. Local rendering fallback is not supported in serverless environments (Vercel/Lambda)."
+        );
+      }
+
       // Local rendering fallback
       const renderId = "local-" + Math.random().toString(36).substring(2, 9);
       localRenders.set(renderId, {
@@ -76,14 +92,15 @@ export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
       (async () => {
         try {
           const bundleLocation = await getBundle();
-          const { selectComposition, renderMedia } = await import("@remotion/renderer");
+          const rendererModuleName = "@remotion/renderer";
+          const { selectComposition, renderMedia } = (await import(rendererModuleName)) as typeof import("@remotion/renderer");
           const composition = await selectComposition({
             serveUrl: bundleLocation,
             id: COMP_NAME,
             inputProps,
           });
 
-          const publicDir = path.join(process.cwd(), "public");
+          const publicDir = path.join(/*turbopackIgnore: true*/ process.cwd(), "public");
           const rendersDir = path.join(publicDir, "renders");
           if (!fs.existsSync(rendersDir)) {
             fs.mkdirSync(rendersDir, { recursive: true });
