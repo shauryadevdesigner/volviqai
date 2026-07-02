@@ -19,13 +19,26 @@ export function classifyProviderError(error: unknown): {
   
   // Try to parse structured error from our qevaro fetch wrapper
   try {
-    const parsed = JSON.parse(msg);
-    if (parsed.status && parsed.message) {
-      return {
-        message: parsed.message,
-        type: parsed.type || "qevaro_error",
-        status: parsed.status,
-      };
+    const jsonStart = msg.indexOf("{");
+    if (jsonStart !== -1) {
+      const jsonStr = msg.slice(jsonStart);
+      const parsed = JSON.parse(jsonStr);
+      if (parsed.status && parsed.message) {
+        return {
+          message: parsed.message,
+          type: parsed.type || "qevaro_error",
+          status: parsed.status,
+        };
+      }
+    } else {
+      const parsed = JSON.parse(msg);
+      if (parsed.status && parsed.message) {
+        return {
+          message: parsed.message,
+          type: parsed.type || "qevaro_error",
+          status: parsed.status,
+        };
+      }
     }
   } catch {
     // Message is not JSON, proceed with string matching

@@ -58,11 +58,22 @@ export function classifyGenerationError(
 
   // Try to parse structured JSON error from Qevaro custom fetch
   try {
-    const parsed = JSON.parse(raw);
-    if (parsed.status && parsed.message) {
-      raw = parsed.message;
-      httpStatus = parsed.status;
-      apiType = parsed.type;
+    const jsonStart = raw.indexOf("{");
+    if (jsonStart !== -1) {
+      const jsonStr = raw.slice(jsonStart);
+      const parsed = JSON.parse(jsonStr);
+      if (parsed.status && parsed.message) {
+        raw = parsed.message;
+        httpStatus = parsed.status;
+        apiType = parsed.type;
+      }
+    } else {
+      const parsed = JSON.parse(raw);
+      if (parsed.status && parsed.message) {
+        raw = parsed.message;
+        httpStatus = parsed.status;
+        apiType = parsed.type;
+      }
     }
   } catch {
     // Error is not JSON, proceed
