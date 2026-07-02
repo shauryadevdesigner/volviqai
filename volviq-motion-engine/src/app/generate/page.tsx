@@ -266,10 +266,15 @@ function GeneratePageContent() {
       streamingTimeoutRef.current = setTimeout(() => {
         console.warn("[Safety] Streaming timeout reached (300s). Force-resetting isStreaming to false.");
         setIsStreaming(false);
+        setGenerationError({
+          message: "Generation timed out. The request took longer than 5 minutes.",
+          type: "api",
+        });
+        clearPendingMessage();
         streamingTimeoutRef.current = null;
       }, 300_000);
     }
-  }, []);
+  }, [clearPendingMessage]);
 
   const handleError = useCallback(
     (
