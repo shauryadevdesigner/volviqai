@@ -23,7 +23,7 @@ import type {
   StreamPhase,
 } from "@/types/generation";
 import { logger } from "@/utils/logger";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface FailedEditInfo {
   description: string;
