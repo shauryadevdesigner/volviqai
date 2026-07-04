@@ -14,7 +14,7 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     name: "DeepSeek V4 Pro",
     category: "reasoning",
     maxTokens: 8000,
-    fallback: "kimi-k2.6",
+    fallback: "claude-opus-4.5",
   },
   "deepseek-v3.1": {
     id: "deepseek-v3.1",
@@ -22,6 +22,13 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     category: "reasoning",
     maxTokens: 8000,
     fallback: "kimi-k2.6",
+  },
+  "deepseek-v3.2": {
+    id: "deepseek-v3.2",
+    name: "DeepSeek V3.2",
+    category: "reasoning",
+    maxTokens: 8000,
+    fallback: "deepseek-v3.1",
   },
   "kimi-k2.6": {
     id: "kimi-k2.6",
@@ -33,6 +40,13 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
   "qwen3-next-80b-a3b-instruct": {
     id: "qwen3-next-80b-a3b-instruct",
     name: "Qwen3 Next 80B",
+    category: "reasoning",
+    maxTokens: 8000,
+    fallback: "gpt-oss-120b",
+  },
+  "qwen3-235b": {
+    id: "qwen3-235b",
+    name: "Qwen3 235B",
     category: "reasoning",
     maxTokens: 8000,
     fallback: "gpt-oss-120b",
@@ -50,6 +64,13 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     maxTokens: 8000,
     fallback: "kimi-k2.6",
   },
+  "minimax-m2.1": {
+    id: "minimax-m2.1",
+    name: "MiniMax M2.1",
+    category: "reasoning",
+    maxTokens: 8000,
+    fallback: "minimax-m2.7",
+  },
 
   // ── Coding Models ─────────────────────────────────────────────────────
   "qwen3-coder-plus": {
@@ -57,7 +78,7 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     name: "Qwen3 Coder Plus",
     category: "coding",
     maxTokens: 8000,
-    fallback: "gemma-4-31b-it",
+    fallback: "claude-opus-4.5",
   },
   "qwen3-coder-480b": {
     id: "qwen3-coder-480b",
@@ -87,6 +108,20 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     name: "DeepSeek V4 Flash",
     category: "fast",
     maxTokens: 4000,
+    fallback: "gemini-3-flash",
+  },
+  "gemini-3-flash": {
+    id: "gemini-3-flash",
+    name: "Gemini 3 Flash",
+    category: "fast",
+    maxTokens: 8000,
+    fallback: "gpt-5-mini",
+  },
+  "gpt-5-mini": {
+    id: "gpt-5-mini",
+    name: "GPT-5 Mini",
+    category: "fast",
+    maxTokens: 8000,
     fallback: "glm-4.7-flash",
   },
   "glm-4.7-flash": {
@@ -96,15 +131,43 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     maxTokens: 4000,
     fallback: "gpt-5-nano",
   },
+  "glm-4.7": {
+    id: "glm-4.7",
+    name: "GLM 4.7",
+    category: "fast",
+    maxTokens: 4000,
+    fallback: "gpt-5-nano",
+  },
   "gpt-5-nano": {
     id: "gpt-5-nano",
     name: "GPT-5 Nano",
+    category: "fast",
+    maxTokens: 4000,
+    fallback: "mimo-v2-flash",
+  },
+  "mimo-v2-flash": {
+    id: "mimo-v2-flash",
+    name: "Mimo V2 Flash",
     category: "fast",
     maxTokens: 4000,
     fallback: "gpt-oss-120b",
   },
 
   // ── General Purpose ───────────────────────────────────────────────────
+  "gpt-5.5": {
+    id: "gpt-5.5",
+    name: "GPT-5.5",
+    category: "general",
+    maxTokens: 8000,
+    fallback: "gpt-5.2",
+  },
+  "gpt-5.2": {
+    id: "gpt-5.2",
+    name: "GPT-5.2",
+    category: "general",
+    maxTokens: 8000,
+    fallback: "gpt-5",
+  },
   "gpt-5": {
     id: "gpt-5",
     name: "GPT-5",
@@ -133,8 +196,22 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
     maxTokens: 8000,
     fallback: "gpt-oss-120b",
   },
+  "gemini-3.1-pro": {
+    id: "gemini-3.1-pro",
+    name: "Gemini 3.1 Pro",
+    category: "general",
+    maxTokens: 8000,
+    fallback: "gpt-oss-120b",
+  },
 
-  // ── Future (Locked) ───────────────────────────────────────────────────
+  // ── Advanced Reasoning & Creative ─────────────────────────────────────
+  "claude-opus-4.5": {
+    id: "claude-opus-4.5",
+    name: "Claude Opus 4.5",
+    category: "reasoning",
+    maxTokens: 8000,
+    fallback: "gpt-5.5",
+  },
   "claude-opus-4.8": {
     id: "claude-opus-4.8",
     name: "Claude Opus 4.8",
@@ -151,10 +228,10 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
  * derived from the model's `fallback` field in the registry.
  */
 const TASK_MODEL_MAP: Record<TaskType, QevaroModel> = {
-  storyboarding: "deepseek-v4-pro",
+  storyboarding: "claude-opus-4.5",
   remotion_generation: "qwen3-coder-plus",
   fast_operation: "deepseek-v4-flash",
-  quality_assurance: "qwen3-coder-plus",
+  quality_assurance: "claude-opus-4.5",
   validation: "deepseek-v4-flash",
   skill_detection: "deepseek-v4-flash",
   image_generation: "deepseek-v4-flash", // Placeholder for future

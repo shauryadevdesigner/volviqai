@@ -9,10 +9,13 @@ export type QevaroModel =
   // Reasoning Models
   | "deepseek-v4-pro"
   | "deepseek-v3.1"
+  | "deepseek-v3.2"
   | "kimi-k2.6"
   | "qwen3-next-80b-a3b-instruct"
+  | "qwen3-235b"
   | "nemotron-3-super-120b-a12b"
   | "minimax-m2.7"
+  | "minimax-m2.1"
   // Coding Models
   | "qwen3-coder-plus"
   | "qwen3-coder-480b"
@@ -21,13 +24,21 @@ export type QevaroModel =
   // Fast Models
   | "deepseek-v4-flash"
   | "glm-4.7-flash"
+  | "glm-4.7"
   | "gpt-5-nano"
-  // General Purpose
+  | "gpt-5-mini"
+  | "gemini-3-flash"
+  | "mimo-v2-flash"
+  // General Purpose / Multimodal / Large
   | "gpt-5"
+  | "gpt-5.2"
+  | "gpt-5.5"
   | "gpt-oss-120b"
   | "llama-3.3-70b-instruct"
   | "mistral-medium-latest"
-  // Future (locked)
+  | "gemini-3.1-pro"
+  // Advanced Reasoning & Creative
+  | "claude-opus-4.5"
   | "claude-opus-4.8";
 
 /**
