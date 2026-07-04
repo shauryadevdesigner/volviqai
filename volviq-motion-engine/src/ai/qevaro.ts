@@ -327,10 +327,18 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       const duration = Date.now() - start;
       const attemptDuration = Date.now() - attemptStart;
 
-      if (error.name === "AbortError") {
-        logger.error(`Qevaro API timeout on ${url} after ${attemptDuration}ms (attempt ${attempt}/${maxRetries}).`);
+      const errorMessage = error.message || "";
+      const isAbortOrTimeout = 
+        error.name === "AbortError" || 
+        errorMessage.includes("aborted") || 
+        errorMessage.includes("timeout") ||
+        errorMessage.includes("Timeout") ||
+        errorMessage.includes("BodyStreamBuffer");
+
+      if (isAbortOrTimeout) {
+        logger.error(`Qevaro API timeout or abort on ${url} after ${attemptDuration}ms (attempt ${attempt}/${maxRetries}): ${errorMessage}`);
         if (attempt < maxRetries) {
-          logger.warn(`Retrying after timeout in ${delay}ms...`);
+          logger.warn(`Retrying after timeout/abort in ${delay}ms...`);
           await new Promise((resolve) => setTimeout(resolve, delay));
           delay *= 2;
           continue;
@@ -339,7 +347,7 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
         throw new Error(JSON.stringify({
           status: 408,
           statusText: "Timeout",
-          message: "Request to Qevaro timed out after all retry attempts.",
+          message: `Request to Qevaro timed out or was aborted: ${errorMessage}`,
           type: "timeout_error",
         }));
       }
