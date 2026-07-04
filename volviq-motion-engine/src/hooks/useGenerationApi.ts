@@ -79,6 +79,7 @@ interface UseGenerationApiReturn {
     callbacks: GenerationCallbacks,
     options?: { silent?: boolean },
   ) => Promise<void>;
+  abortActiveRequest: () => void;
 }
 
 function parseApiErrorBody(
@@ -185,6 +186,7 @@ export function useGenerationApi(
   const [isLoading, setIsLoading] = useState(false);
   // Use a ref to strictly prevent concurrent calls across renders
   const isGeneratingRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const runGeneration = useCallback(
     async (
@@ -196,6 +198,13 @@ export function useGenerationApi(
     ) => {
       // Check both state and ref for robustness
       if (!prompt.trim() || isLoading || isGeneratingRef.current) return;
+
+      // Abort any existing active request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
 
       const {
         currentCode,
@@ -262,6 +271,7 @@ export function useGenerationApi(
           method: "POST",
           headers,
           body: JSON.stringify(requestBody),
+          signal: abortController.signal,
         });
 
         const contentType = response.headers.get("content-type") || "";
@@ -447,6 +457,9 @@ export function useGenerationApi(
           meta: { code: userError.code },
         });
       } finally {
+        if (abortControllerRef.current === abortController) {
+          abortControllerRef.current = null;
+        }
         isGeneratingRef.current = false;
         setIsLoading(false);
         onStreamingChange?.(false);
@@ -457,8 +470,25 @@ export function useGenerationApi(
     [isLoading, accessToken],
   );
 
+  const abortActiveRequest = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+  }, []);
+
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   return {
     isLoading,
     runGeneration,
+    abortActiveRequest,
   };
 }

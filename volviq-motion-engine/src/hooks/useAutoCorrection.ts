@@ -80,9 +80,11 @@ export function useAutoCorrection({
       hasGeneratedOnce &&
       !isStreaming &&
       lastChangeSourceRef.current === "ai" &&
-      (errorCorrection?.attemptNumber ?? 0) < maxAttempts
+      (errorCorrection?.attemptNumber ?? 0) < maxAttempts &&
+      // Do not auto-correct general validation errors (such as empty code or no JSX)
+      generationError?.type !== "validation"
     );
-  }, [hasGeneratedOnce, isStreaming, errorCorrection, maxAttempts]);
+  }, [hasGeneratedOnce, isStreaming, errorCorrection, maxAttempts, generationError]);
 
   // Handle compilation errors
   useEffect(() => {

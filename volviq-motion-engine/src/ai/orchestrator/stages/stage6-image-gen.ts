@@ -10,7 +10,7 @@ export async function runStage6(
     { imageUrl: string; isFallbackSvg: boolean }
   > = {};
 
-  for (const scene of assetPlan.scenes) {
+  const promises = assetPlan.scenes.map(async (scene) => {
     if (scene.requiresAssets && scene.prompt) {
       if (onProgress) {
         onProgress(
@@ -46,7 +46,8 @@ export async function runStage6(
         };
       }
     }
-  }
+  });
 
+  await Promise.all(promises);
   return { sceneAssets };
 }

@@ -35,6 +35,7 @@ export interface ChatSidebarRef {
     silent?: boolean;
     attachedImages?: string[];
   }) => void;
+  abortActiveRequest?: () => void;
 }
 
 interface ChatSidebarProps {
@@ -123,7 +124,7 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
     const [model, setModel] = useState<ModelId>(DEFAULT_MODEL_ID);
     const promptRef = useRef<string>("");
 
-    const { isLoading, runGeneration } = useGenerationApi({ accessToken });
+    const { isLoading, runGeneration, abortActiveRequest } = useGenerationApi({ accessToken });
 
     // Keep prompt ref in sync for use in triggerGeneration
     useEffect(() => {
@@ -166,9 +167,10 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
       );
     };
 
-    // Expose triggerGeneration via ref
+    // Expose triggerGeneration and abortActiveRequest via ref
     useImperativeHandle(ref, () => ({
       triggerGeneration: handleGeneration,
+      abortActiveRequest,
     }));
 
     return (
