@@ -76,13 +76,23 @@ export function useAutoCorrection({
 
   // Check if we should attempt auto-correction
   const shouldAutoCorrect = useCallback(() => {
+    if (!generationError) return false;
+
+    const msg = (generationError.message || "").toLowerCase();
+    const isTimeoutOrAbort = 
+      msg.includes("timeout") || 
+      msg.includes("timed out") || 
+      msg.includes("aborted") || 
+      msg.includes("bodystreambuffer");
+
     return (
       hasGeneratedOnce &&
       !isStreaming &&
       lastChangeSourceRef.current === "ai" &&
       (errorCorrection?.attemptNumber ?? 0) < maxAttempts &&
-      // Do not auto-correct general validation errors (such as empty code or no JSX)
-      generationError?.type !== "validation"
+      // Do not auto-correct general validation errors or timeouts/aborts
+      generationError.type !== "validation" &&
+      !isTimeoutOrAbort
     );
   }, [hasGeneratedOnce, isStreaming, errorCorrection, maxAttempts, generationError]);
 
