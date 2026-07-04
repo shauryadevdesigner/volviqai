@@ -65,10 +65,10 @@ const generationQueue = new TaskQueue(5);
 // ── Default Models ──────────────────────────────────────────────────────────
 
 /** Primary model for fast operations (validation, skill detection, etc.) */
-export const PRIMARY_MODEL = "deepseek-v4-flash";
+export const PRIMARY_MODEL = "gemini-3-flash";
 
 /** Fallback model for fast operations */
-export const FALLBACK_MODEL = "gpt-5-nano";
+export const FALLBACK_MODEL = "gpt-5-mini";
 
 /** Final fallback for critical operations */
 export const FINAL_FALLBACK_MODEL = "gpt-oss-120b";

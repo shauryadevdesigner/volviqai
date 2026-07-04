@@ -230,12 +230,12 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
 const TASK_MODEL_MAP: Record<TaskType, QevaroModel> = {
   storyboarding: "claude-opus-4.5",
   remotion_generation: "qwen3-coder-plus",
-  fast_operation: "deepseek-v4-flash",
+  fast_operation: "gemini-3-flash",
   quality_assurance: "claude-opus-4.5",
-  validation: "deepseek-v4-flash",
-  skill_detection: "deepseek-v4-flash",
-  image_generation: "deepseek-v4-flash", // Placeholder for future
-  vision_analysis: "deepseek-v4-flash", // Placeholder for future
+  validation: "gemini-3-flash",
+  skill_detection: "gemini-3-flash",
+  image_generation: "gemini-3-flash", // Placeholder for future
+  vision_analysis: "gemini-3-flash", // Placeholder for future
 };
 
 /**
