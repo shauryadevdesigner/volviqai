@@ -19,6 +19,7 @@ import { SYSTEM_PROMPT } from "../prompts/generation";
 import { startTimer } from "../../lib/monitoring";
 import { z } from "zod";
 import { generateContent } from "../provider";
+import { getModelForTask } from "../model-router";
 
 export interface OrchestratorParams {
   prompt: string;
@@ -271,7 +272,7 @@ Preserve all image asset URL paths, rendering logic, and custom media handling.
 Output ONLY valid Remotion ES6 component code, starting with imports.`;
 
           const refinedResult = await generateContent({
-            model: "qwen3-coder-plus",
+            model: getModelForTask("remotion_generation").id, // Refinement model (resolves to gemini-3-flash)
             system: REFINEMENT_SYSTEM_PROMPT,
             prompt: `## USER REQUEST:
 ${prompt}

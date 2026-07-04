@@ -2,6 +2,7 @@ import { z } from "zod";
 import { generateContent } from "../../provider";
 import { ResolvedBrief, ResolvedScene } from "../../design-system";
 import { GeneratedAssetItem, SceneLayoutItem } from "../types";
+import { getModelForTask } from "../../model-router";
 
 export const SceneGenerationSchema = z.object({
   code: z
@@ -123,7 +124,7 @@ Return only the single React/Remotion component Scene${scene.sceneNumber} matchi
       : `${scenePrompt}\n\nCRITICAL: Compilation failed on previous attempt. Fix these compilation errors:\n${compileErrors?.join("\n")}\n\nReturn ONLY the fixed component declaration code.`;
 
   const codeResult = await generateContent({
-    model: "qwen3-coder-plus", // Primary coder model
+    model: getModelForTask("remotion_generation").id, // Dynamically resolved coder model
     system: systemPromptWithRef,
     prompt: promptText,
     schema: SceneGenerationSchema,

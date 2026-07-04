@@ -229,7 +229,7 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
  */
 const TASK_MODEL_MAP: Record<TaskType, QevaroModel> = {
   storyboarding: "claude-opus-4.5",
-  remotion_generation: "qwen3-coder-plus",
+  remotion_generation: "gemini-3-flash",
   fast_operation: "gemini-3-flash",
   quality_assurance: "claude-opus-4.5",
   validation: "gemini-3-flash",

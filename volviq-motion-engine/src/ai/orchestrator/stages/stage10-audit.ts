@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { generateContent } from "../../provider";
 import { AuditScore } from "../types";
+import { getModelForTask } from "../../model-router";
 
 export const AuditSchema = z.object({
   taste: z.object({
@@ -75,7 +76,7 @@ export async function runStage10(
 ): Promise<AuditScore> {
   try {
     const result = await generateContent({
-      model: "qwen3-coder-plus", // QA Auditor
+      model: getModelForTask("quality_assurance").id, // QA Auditor (resolves to Claude Opus 4.5)
       system: QUALITY_AUDIT_SYSTEM_PROMPT,
       prompt: `Audit the following generated Remotion React code for the user prompt: "${userPrompt}"\n\n\`\`\`tsx\n${code}\n\`\`\``,
       schema: AuditSchema,

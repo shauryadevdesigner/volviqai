@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { generateContent } from "../../provider";
 import { AutoRepairResult } from "../types";
+import { getModelForTask } from "../../model-router";
 
 export const AutoRepairSchema = z.object({
   code: z
@@ -32,7 +33,7 @@ ${code}
 CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct, and all variables and imports exist. Return only the corrected ES6 React/Remotion component code starting with imports.`;
 
   const result = await generateContent({
-    model: "qwen3-coder-plus", // Auto-repair agent
+    model: getModelForTask("remotion_generation").id, // Auto-repair agent (resolves to gemini-3-flash)
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: AutoRepairSchema,
