@@ -4,6 +4,7 @@ import BlurText from './animations/BlurText';
 import BorderGlow from './animations/BorderGlow';
 import ScrollStack, { ScrollStackItem } from './animations/ScrollStack';
 import GlareHover from './animations/GlareHover';
+import { ease, spring } from '../utils/motionConfig';
 
 const AIHub = () => {
   const capabilities = [
@@ -19,10 +20,18 @@ const AIHub = () => {
     <section className="relative py-32 px-margin-mobile md:px-margin-desktop border-b border-outline-variant bg-surface" id="capabilities-hub">
       <div className="scanline"></div>
       <div className="max-w-container-max mx-auto">
+
+        {/* Header — depth-of-field camera focus effect */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 text-left">
-          <div className="space-y-6 max-w-2xl">
+          <motion.div
+            className="space-y-6 max-w-2xl"
+            initial={{ scale: 0.85, opacity: 0, filter: 'blur(14px)' }}
+            whileInView={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 1.2, ease: ease.outExpo }}
+          >
             <div className="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-ping"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-full cinema-heartbeat"></span>
               04 // COGNITION
             </div>
             <h2 className="font-display-massive text-display-massive text-primary uppercase leading-none tracking-tight">
@@ -32,10 +41,18 @@ const AIHub = () => {
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
               Six autonomous vector engines calibrated to completely replace conventional linear production pipelines.
             </p>
-          </div>
-          <div className="mt-8 md:mt-0 font-code-md text-code-md text-surface-variant/80 border border-outline-variant p-4 bg-surface-container-low/50 select-none">
+          </motion.div>
+
+          {/* Right sidebar — spring overshoot entrance */}
+          <motion.div
+            className="mt-8 md:mt-0 font-code-md text-code-md text-surface-variant/80 border border-outline-variant p-4 bg-surface-container-low/50 select-none"
+            initial={{ opacity: 0, x: 60, scale: 0.9 }}
+            whileInView={{ opacity: 1, x: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ ...spring.bouncy, delay: 0.4 }}
+          >
             ENGINE_STATE: OPERATIONAL <br />STITCH.AI.ARCHITECTURE
-          </div>
+          </motion.div>
         </div>
 
         <ScrollStack
@@ -83,24 +100,24 @@ const AIHub = () => {
                       <div>
                         <div className="flex justify-between items-center mb-6 pb-3 border-b border-outline-variant/30">
                           <span className="font-code-md text-label-sm text-primary tracking-widest font-bold">{cap.num} //</span>
-                          <span className="font-code-md text-[10px] text-surface-variant group-hover:text-primary border border-outline-variant/50 px-3 py-1 transition-colors duration-300 uppercase">{cap.tag}</span>
+                          <span className="font-code-md text-[10px] text-surface-variant group-hover:text-primary border border-outline-variant/50 px-3 py-1 transition-colors duration-500 ease-out-expo uppercase">{cap.tag}</span>
                         </div>
-                        <h3 className="font-headline-lg text-2xl md:text-3xl text-primary uppercase mb-4 tracking-wider leading-snug group-hover:text-white transition-colors">
+                        <h3 className="font-headline-lg text-2xl md:text-3xl text-primary uppercase mb-4 tracking-wider leading-snug group-hover:text-white transition-colors duration-500 ease-out-expo">
                           {cap.title}
                         </h3>
-                        <p className="text-sm md:text-base text-on-surface-variant leading-relaxed max-w-xl group-hover:text-on-surface transition-colors">
+                        <p className="text-sm md:text-base text-on-surface-variant leading-relaxed max-w-xl group-hover:text-on-surface transition-colors duration-500 ease-out-expo">
                           {cap.desc}
                         </p>
                       </div>
                     </div>
 
                     {/* Right Column: Telemetry Dashboard Panel */}
-                    <div className="w-full md:w-80 flex flex-col justify-between bg-surface/50 border border-outline-variant/40 p-6 rounded-xl relative overflow-hidden group-hover:border-primary/30 transition-colors">
+                    <div className="w-full md:w-80 flex flex-col justify-between bg-surface/50 border border-outline-variant/40 p-6 rounded-xl relative overflow-hidden group-hover:border-primary/30 transition-colors duration-500 ease-out-expo">
                       <div className="absolute inset-0 bg-tech-grid opacity-10" />
                       <div className="relative space-y-4">
                         <div className="flex justify-between items-center border-b border-outline-variant/20 pb-2">
                           <span className="text-[10px] font-mono tracking-widest text-surface-variant uppercase">// NODE DIAGNOSTIC</span>
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full cinema-heartbeat"></span>
                         </div>
                         
                         <div className="space-y-3 font-mono text-xs">
@@ -121,7 +138,7 @@ const AIHub = () => {
                       
                       <div className="relative mt-6 pt-3 border-t border-outline-variant/20 flex justify-between items-center text-[9px] font-mono tracking-widest text-surface-variant">
                         <span>STITCH.COGNITION.v4</span>
-                        <span className="text-[10px] text-primary/40 group-hover:text-primary transition-colors">SECURE_LINK //</span>
+                        <span className="text-[10px] text-primary/40 group-hover:text-primary transition-colors duration-500 ease-out-expo">SECURE_LINK //</span>
                       </div>
                     </div>
                   </div>
@@ -136,4 +153,3 @@ const AIHub = () => {
 };
 
 export default AIHub;
-

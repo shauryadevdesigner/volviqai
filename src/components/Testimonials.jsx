@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { gsap } from 'gsap';
 import BlurText from './animations/BlurText';
 import GlareHover from './animations/GlareHover';
 import './animations/ChromaGrid.css';
+import { ease } from '../utils/motionConfig';
 
 const Testimonials = () => {
   const rootRef = useRef(null);
@@ -133,13 +134,20 @@ const Testimonials = () => {
       className="relative py-32 px-margin-mobile md:px-margin-desktop border-b border-outline-variant bg-surface select-none overflow-hidden" 
       id="testimonials"
       style={{
-        '--r': '320px'
+        '--r': '380px'
       }}
     >
       <div className="scanline"></div>
 
+      {/* Header — depth-of-field with stronger hierarchy */}
       <div className="max-w-container-max mx-auto mb-20 text-left flex flex-col md:flex-row md:items-end justify-between relative z-20">
-        <div className="space-y-6 max-w-xl">
+        <motion.div
+          className="space-y-6 max-w-xl"
+          initial={{ scale: 1.15, opacity: 0, filter: 'blur(10px)' }}
+          whileInView={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 1.0, ease: ease.outExpo }}
+        >
           <div className="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
             08 // VALIDATION
@@ -151,16 +159,29 @@ const Testimonials = () => {
           <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
             Spotlight track logs verified across high-performance enterprise media pipelines. Hover cursor to focus illumination.
           </p>
-        </div>
+        </motion.div>
         
-        <div className="mt-6 md:mt-0 font-code-md text-code-md text-surface-variant text-right border-l border-outline-variant pl-6 select-none">
+        {/* Right panel — clip-path wipe entrance */}
+        <motion.div
+          className="mt-6 md:mt-0 font-code-md text-code-md text-surface-variant text-right border-l border-outline-variant pl-6 select-none"
+          initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
+          whileInView={{ clipPath: 'inset(0 0% 0 0)', opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.0, ease: ease.inOutCubic, delay: 0.4 }}
+        >
           SYSTEM: HIGHLY CONNECTED <br />
           INTEGRITY: COMPLIANT
-        </div>
+        </motion.div>
       </div>
 
-      {/* Looping Row 1 (Left to Right) */}
-      <div className="relative flex gap-6 overflow-hidden w-full pb-8 z-10">
+      {/* Row 1 — enters from left with easeOutExpo */}
+      <motion.div
+        className="relative flex gap-6 overflow-hidden w-full pb-8 z-10"
+        initial={{ x: -200, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 1.2, ease: ease.outExpo }}
+      >
         <div className="flex gap-6 animate-marquee-left-to-right whitespace-nowrap min-w-full">
           {itemsRow1.map((c, i) => (
             <article
@@ -198,10 +219,16 @@ const Testimonials = () => {
             </article>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Looping Row 2 (Right to Left) */}
-      <div className="relative flex gap-6 overflow-hidden w-full pt-4 z-10">
+      {/* Row 2 — enters from right (opposing direction) */}
+      <motion.div
+        className="relative flex gap-6 overflow-hidden w-full pt-4 z-10"
+        initial={{ x: 200, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 1.2, ease: ease.outExpo, delay: 0.15 }}
+      >
         <div className="flex gap-6 animate-marquee-right-to-left whitespace-nowrap min-w-full">
           {itemsRow2.map((c, i) => (
             <article
@@ -239,7 +266,7 @@ const Testimonials = () => {
             </article>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Chroma Spotlight overlays */}
       <div className="chroma-overlay" />

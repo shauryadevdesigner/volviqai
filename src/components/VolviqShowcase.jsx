@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import { ArrowRight, Sparkles, Zap, Film, Layers } from 'lucide-react';
 import BlurText from './animations/BlurText';
 import GlareHover from './animations/GlareHover';
@@ -9,6 +9,8 @@ import VolviqMotionStudio from './animations/VolviqMotionStudio';
 import { usePerformanceProfile } from '../hooks/usePerformanceProfile';
 import { scrollToTarget } from '../utils/scrollTo';
 import MagicRings from './animations/MagicRings';
+import { ease, spring } from '../utils/motionConfig';
+import { useRef } from 'react';
 
 const STATS = [
   { icon: Zap, label: '10× faster', sub: 'vs traditional motion pipelines' },
@@ -17,10 +19,27 @@ const STATS = [
 ];
 
 const VolviqShowcase = () => {
-  const { noWebGL } = usePerformanceProfile();
+  const { noWebGL, lowEffects } = usePerformanceProfile();
+  const sectionRef = useRef(null);
+
+  // Scroll-driven parallax — left panel scrolls slower than right
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const leftY = useSpring(
+    useTransform(scrollYProgress, [0, 1], [40, -40]),
+    { stiffness: 100, damping: 30 }
+  );
+  const rightY = useSpring(
+    useTransform(scrollYProgress, [0, 1], [60, -20]),
+    { stiffness: 100, damping: 30 }
+  );
 
   return (
     <section
+      ref={sectionRef}
       className="relative overflow-hidden border-b border-outline-variant bg-surface py-28 md:py-36 px-margin-mobile md:px-margin-desktop"
       id="showcase"
     >
@@ -28,7 +47,15 @@ const VolviqShowcase = () => {
       <div className="pointer-events-none absolute inset-0 bg-tech-grid opacity-[0.07]" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-container-max">
-        <div className="mb-14 flex flex-col items-center text-center">
+
+        {/* Header — camera push-in */}
+        <motion.div
+          className="mb-14 flex flex-col items-center text-center"
+          initial={{ scale: 1.2, opacity: 0, filter: 'blur(10px)' }}
+          whileInView={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 1.0, ease: ease.outExpo }}
+        >
           <div className="mb-6 flex items-center gap-2 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" aria-hidden="true" />
             09 // CREATIVE PROOF
@@ -36,20 +63,27 @@ const VolviqShowcase = () => {
           <h2 className="max-w-4xl font-display-massive text-[34px] uppercase leading-none tracking-tight text-primary sm:text-[48px]">
             <BlurText text="Motion that sells." animateBy="words" delay={90} className="text-primary" />
           </h2>
-          <p className="mt-6 max-w-2xl font-body-md text-[15px] leading-relaxed text-on-surface-variant sm:text-[17px]">
+          <motion.p
+            className="mt-6 max-w-2xl font-body-md text-[15px] leading-relaxed text-on-surface-variant sm:text-[17px]"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: ease.outExpo, delay: 0.3 }}
+          >
             Volviq turns briefs into broadcast-ready ads — storyboard, motion, voice, and export in one
             intelligent flow. See the engine work in real time.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         <div className="relative grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2 lg:gap-14">
-          {/* Motion graphic stage */}
+          {/* Motion graphic stage — spring scale-up with parallax */}
           <motion.div
             className="relative min-h-[360px] lg:min-h-[420px]"
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            style={lowEffects ? undefined : { y: leftY }}
+            initial={{ opacity: 0, scale: 0.85, x: -30 }}
+            whileInView={{ opacity: 1, scale: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ ...spring.heavy }}
           >
             {!noWebGL && (
               <div className="pointer-events-none absolute -left-8 top-1/2 z-0 hidden h-[380px] w-[280px] -translate-y-1/2 opacity-60 lg:block">
@@ -97,13 +131,14 @@ const VolviqShowcase = () => {
             </div>
           </motion.div>
 
-          {/* Story + CTA */}
+          {/* Story + CTA — parallax offset */}
           <motion.div
             className="flex flex-col justify-center space-y-8"
-            initial={{ opacity: 0, x: 24 }}
+            style={lowEffects ? undefined : { y: rightY }}
+            initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: ease.outExpo, delay: 0.15 }}
           >
             <div className="flex items-center gap-2 font-code-md text-[9px] uppercase tracking-wider text-purple-400">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
@@ -116,15 +151,16 @@ const VolviqShowcase = () => {
               />
             </div>
 
+            {/* Stats — staggered slide-in from left with easeOutExpo */}
             <ul className="space-y-5">
               {STATS.map(({ icon: Icon, label, sub }, i) => (
                 <motion.li
                   key={label}
                   className="flex gap-4 border-l-2 border-purple-500/40 pl-4"
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -40 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.15 + i * 0.08 }}
+                  transition={{ duration: 0.7, ease: ease.outExpo, delay: 0.2 + i * 0.12 }}
                 >
                   <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-outline-variant/50 bg-surface-container-low text-purple-400">
                     <Icon className="h-4 w-4" aria-hidden="true" />
@@ -137,25 +173,38 @@ const VolviqShowcase = () => {
               ))}
             </ul>
 
-            <p className="font-body-md text-[14px] leading-relaxed text-on-surface-variant">
+            <motion.p
+              className="font-body-md text-[14px] leading-relaxed text-on-surface-variant"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: ease.outExpo, delay: 0.5 }}
+            >
               Join teams shipping weekly campaigns without a full motion department. Early access includes
               priority features and direct input on the roadmap.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-wrap gap-4 pt-2">
+            {/* CTAs — with shimmer effect after delay */}
+            <motion.div
+              className="flex flex-wrap gap-4 pt-2"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: ease.outBack, delay: 0.6 }}
+            >
               <Link
                 to="/signup"
-                className="group relative inline-flex items-center gap-2 overflow-hidden border border-primary bg-primary px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-surface transition-all duration-300"
+                className="group relative inline-flex items-center gap-2 overflow-hidden border border-primary bg-primary px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-surface transition-all duration-500 ease-out-expo cinema-shimmer"
               >
                 <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-primary">
                   Get Started
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-500 ease-out-expo group-hover:translate-x-1.5" aria-hidden="true" />
                 </span>
-                <span className="absolute inset-0 origin-left scale-x-0 bg-surface transition-transform duration-300 group-hover:scale-x-100" />
+                <span className="absolute inset-0 origin-left scale-x-0 bg-surface transition-transform duration-500 ease-out-expo group-hover:scale-x-100" />
               </Link>
               <a
                 href="#engine"
-                className="border border-outline-variant px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-primary transition-all duration-300 hover:border-primary hover:bg-surface-variant/30"
+                className="border border-outline-variant px-8 py-4 font-label-md text-label-md uppercase tracking-widest text-primary transition-all duration-500 ease-out-expo hover:border-primary hover:bg-surface-variant/30"
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToTarget('#engine');
@@ -163,7 +212,7 @@ const VolviqShowcase = () => {
               >
                 Watch Demo
               </a>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
