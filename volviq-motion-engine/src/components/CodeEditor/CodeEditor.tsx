@@ -309,6 +309,33 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         }>;
         export const AnimatedNumber: React.FC<{ value: number; suffix?: string; heroFont?: string; delay?: number }>;
         export const LogoWall: React.FC<{ logos: string[]; secondaryFont?: string; delay?: number }>;
+        
+        // Rive & Motion Engine additions
+        export const RivePlayer: React.FC<{
+          src: string;
+          artboard?: string;
+          animation?: string;
+          stateMachine?: string;
+          inputs?: Record<string, number | boolean>;
+          fit?: "contain" | "cover" | "fill" | "fitWidth" | "fitHeight" | "none" | "scaleDown";
+          alignment?: "center" | "topLeft" | "topCenter" | "topRight" | "centerLeft" | "centerRight" | "bottomLeft" | "bottomCenter" | "bottomRight";
+          className?: string;
+          style?: React.CSSProperties;
+        }>;
+        export const RiveLoader: React.FC<{
+          src: string;
+          fallback?: React.ReactNode;
+          children: (resolvedSrc: string) => React.ReactNode;
+        }>;
+        export const MotionWrapper: React.FC<{
+          children: React.ReactNode;
+          animationType: "scale-in" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "blur-in" | "drift-parallax" | "breathing-idle" | "none";
+          duration?: number;
+          delay?: number;
+          intensity?: number;
+          style?: React.CSSProperties;
+          className?: string;
+        }>;
       }`,
       "components-library.d.ts",
     );

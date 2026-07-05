@@ -90,6 +90,15 @@ Template Style: ${resolvedBrief.template}
 Color Palette: ${resolvedBrief.colorPalette}
 Scene Purpose: ${scene.purpose}
 ${SCENE_QUALITY_DIRECTIVE}
+
+## RIVE & MOTION ENGINE (NEW CAPABILITY)
+You can embed high-fidelity Rive vector animations using:
+<RivePlayer src={staticFile("assets/rive/filename.riv")} animation="play" fit="contain" style={{ width: "100%", height: "100%" }} />
+For wrapping standard HTML/React elements with high-end spring entrance animations, use:
+<MotionWrapper animationType="scale-in" delay={5} duration={30} intensity={1.1}>Your Element</MotionWrapper>
+Available animationTypes: "scale-in" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "blur-in" | "drift-parallax" | "breathing-idle" | "none".
+Use these primitives instead of custom CSS/JS animations where possible.
+
 Scene Storyboard Details:
 - Primary Copy: "${scene.copyText}"
 - Secondary Subtext: "${scene.subtext || ""}"
@@ -147,7 +156,7 @@ export function buildUnifiedComposition(
     "import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate, Img } from 'remotion';",
   );
   importLines.push(
-    "import { GradientBackground, HeroHeadline, GlassCard, FeatureGrid, PremiumCTA, KineticText, AnimatedNumber, LogoWall } from '../ai/components-library';",
+    "import { GradientBackground, HeroHeadline, GlassCard, FeatureGrid, PremiumCTA, KineticText, AnimatedNumber, LogoWall, RivePlayer, RiveLoader, MotionWrapper } from '../ai/components-library';",
   );
   importLines.push(
     "import { SPRINGS, SPACING, BORDER_RADIUS, SHADOWS, GLOWS, BLURS } from '../ai/design-tokens';",

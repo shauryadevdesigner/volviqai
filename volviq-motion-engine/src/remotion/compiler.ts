@@ -37,6 +37,7 @@ import {
   AnimatedNumber,
   LogoWall
 } from "../ai/components-library";
+import { RivePlayer, RiveLoader, MotionWrapper } from "../components/rive";
 
 // Safe wrapper for ThreeCanvas that auto-injects width/height from useVideoConfig
 // This prevents runtime errors when AI-generated code omits these required props
@@ -467,6 +468,9 @@ export function compileCode(code: string): CompilationResult {
       "KineticText",
       "AnimatedNumber",
       "LogoWall",
+      "RivePlayer",
+      "RiveLoader",
+      "MotionWrapper",
       wrappedCode,
     );
 
@@ -558,6 +562,9 @@ export function compileCode(code: string): CompilationResult {
       KineticText,
       AnimatedNumber,
       LogoWall,
+      RivePlayer,
+      RiveLoader,
+      MotionWrapper,
     );
 
     if (typeof Component !== "function") {
