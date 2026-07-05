@@ -310,6 +310,10 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
     try {
       const baseUrl = process.env.QEVARO_BASE_URL || "https://api.qevaro.com/v1";
       console.log(`[Image API] Calling Qevaro flux-1-schnell...`);
+      
+      const genController = new AbortController();
+      const genTimeoutId = setTimeout(() => genController.abort(), 20000); // 20s timeout
+
       const response = await fetch(`${baseUrl}/images/generations`, {
         method: "POST",
         headers: {
@@ -321,15 +325,23 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
           prompt: `${prompt}, ${style}, 4k high quality, photographic style`,
           n: 1,
           size: "1024x1024"
-        })
+        }),
+        signal: genController.signal
       });
+      clearTimeout(genTimeoutId);
 
       if (response.ok) {
         const data: any = await response.json();
         const imageUrl = data.data?.[0]?.url;
         if (imageUrl) {
           console.log(`[Image API] Fetching generated image from Qevaro URL: ${imageUrl}`);
-          const imageResponse = await fetch(imageUrl);
+          
+          const imgController = new AbortController();
+          const imgTimeoutId = setTimeout(() => imgController.abort(), 20000); // 20s timeout
+
+          const imageResponse = await fetch(imageUrl, { signal: imgController.signal });
+          clearTimeout(imgTimeoutId);
+
           if (imageResponse.ok) {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const uint8Array = new Uint8Array(arrayBuffer);
@@ -346,7 +358,7 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
           }
         }
       } else {
-        const errText = await response.text();
+        const errText = await response.text().catch(() => "");
         console.warn(`[Image API Warning] Qevaro image generation returned status ${response.status}: ${errText}`);
       }
     } catch (qevaroErr) {

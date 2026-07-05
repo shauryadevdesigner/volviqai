@@ -260,38 +260,54 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 
         logger.error(`Qevaro API error on ${url} (attempt ${attempt}): Status ${response.status}`, errorData);
 
-        // Retry on rate limits (429) or temporary server errors (5xx)
-        if ((response.status === 429 || response.status >= 500) && attempt < maxRetries) {
-          let cooldownMs = delay;
-          if (response.status === 429) {
-            const remainingMinute = response.headers.get("x-ratelimit-remaining-requests-minute");
-            const remainingHour = response.headers.get("x-ratelimit-remaining-requests-hour");
-            const retryAfter = response.headers.get("retry-after");
+        const errorMsg = errorData.error?.message || errorData.message || "";
+        const errorType = errorData.error?.type || errorData.type || "";
+        const combinedErrorStr = `${errorMsg} ${errorType}`.toLowerCase();
+        
+        const isDailyLimit = combinedErrorStr.includes("daily_request_limit") || 
+                             combinedErrorStr.includes("daily model limit") ||
+                             combinedErrorStr.includes("daily limit") ||
+                             combinedErrorStr.includes("daily_limit_exceeded");
+                             
+        const isModelNotAvailable = response.status === 404 && (
+          combinedErrorStr.includes("model") ||
+          combinedErrorStr.includes("not found") ||
+          combinedErrorStr.includes("not available") ||
+          combinedErrorStr.includes("not enabled")
+        );
 
-            if (retryAfter) {
-              cooldownMs = parseInt(retryAfter, 10) * 1000 || delay;
-            } else if (remainingMinute === "0") {
-              cooldownMs = 60000; // wait 1 minute
-            } else if (remainingHour === "0") {
-              cooldownMs = 120000; // wait 2 minutes (capped to avoid hanging indefinitely)
-            }
-            logger.warn(`Rate limit (429) hit on Qevaro request. Cooldown applied: ${cooldownMs}ms. Remaining Minute: ${remainingMinute}, Remaining Hour: ${remainingHour}`);
-          } else {
-            logger.warn(`Retrying Qevaro request in ${delay}ms due to status ${response.status}...`);
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, cooldownMs));
-          delay = cooldownMs * 2; // Exponential backoff based on cooldown
-          continue;
+        // Do NOT retry on permanent daily limits or model-not-available errors
+        if ((isDailyLimit || isModelNotAvailable) || !((response.status === 429 || response.status >= 500) && attempt < maxRetries)) {
+          throw new Error(JSON.stringify({
+            status: response.status,
+            statusText: response.statusText,
+            message: errorData.error?.message || errorData.message || "Unknown Qevaro API error",
+            type: errorData.error?.type || "qevaro_api_error",
+          }));
         }
 
-        // Throw structured error
-        throw new Error(JSON.stringify({
-          status: response.status,
-          statusText: response.statusText,
-          message: errorData.error?.message || errorData.message || "Unknown Qevaro API error",
-          type: errorData.error?.type || "qevaro_api_error",
-        }));
+        // Retry on rate limits (429) or temporary server errors (5xx)
+        let cooldownMs = delay;
+        if (response.status === 429) {
+          const remainingMinute = response.headers.get("x-ratelimit-remaining-requests-minute");
+          const remainingHour = response.headers.get("x-ratelimit-remaining-requests-hour");
+          const retryAfter = response.headers.get("retry-after");
+
+          if (retryAfter) {
+            cooldownMs = parseInt(retryAfter, 10) * 1000 || delay;
+          } else if (remainingMinute === "0") {
+            cooldownMs = 60000; // wait 1 minute
+          } else if (remainingHour === "0") {
+            cooldownMs = 120000; // wait 2 minutes (capped to avoid hanging indefinitely)
+          }
+          logger.warn(`Rate limit (429) hit on Qevaro request. Cooldown applied: ${cooldownMs}ms. Remaining Minute: ${remainingMinute}, Remaining Hour: ${remainingHour}`);
+        } else {
+          logger.warn(`Retrying Qevaro request in ${delay}ms due to status ${response.status}...`);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, cooldownMs));
+        delay = cooldownMs * 2; // Exponential backoff based on cooldown
+        continue;
       }
 
       logger.logQevaroResponse("QevaroRequest", duration, true);
@@ -510,50 +526,67 @@ export async function createQevaroCompletion(
         }
 
         const errorMsg = errorData.error?.message || errorData.message || `Qevaro API error: ${response.status}`;
+        const errorType = errorData.error?.type || errorData.type || "";
+        const combinedErrorStr = `${errorMsg} ${errorType}`.toLowerCase();
 
-        // Retry on rate limits or server errors
-        if ((response.status === 429 || response.status >= 500) && attempt < retries) {
-          let cooldownMs = delay;
-          if (response.status === 429) {
-            const remainingMinute = response.headers.get("x-ratelimit-remaining-requests-minute");
-            const remainingHour = response.headers.get("x-ratelimit-remaining-requests-hour");
-            const retryAfter = response.headers.get("retry-after");
+        const isDailyLimit = combinedErrorStr.includes("daily_request_limit") || 
+                             combinedErrorStr.includes("daily model limit") ||
+                             combinedErrorStr.includes("daily limit") ||
+                             combinedErrorStr.includes("daily_limit_exceeded");
+                             
+        const isModelNotAvailable = response.status === 404 && (
+          combinedErrorStr.includes("model") ||
+          combinedErrorStr.includes("not found") ||
+          combinedErrorStr.includes("not available") ||
+          combinedErrorStr.includes("not enabled")
+        );
 
-            if (retryAfter) {
-              cooldownMs = parseInt(retryAfter, 10) * 1000 || delay;
-            } else if (remainingMinute === "0") {
-              cooldownMs = 60000; // wait 1 minute
-            } else if (remainingHour === "0") {
-              cooldownMs = 120000; // wait 2 minutes
-            }
-            logger.warn(`Rate limit (429) hit on Qevaro completion. Cooldown applied: ${cooldownMs}ms. Remaining Minute: ${remainingMinute}, Remaining Hour: ${remainingHour}`);
-          } else {
-            logger.warn(`Qevaro API error ${response.status}, retrying in ${delay}ms (attempt ${attempt}/${retries})`);
-          }
+        // Do NOT retry on permanent daily limits or model-not-available errors
+        if ((isDailyLimit || isModelNotAvailable) || !((response.status === 429 || response.status >= 500) && attempt < retries)) {
+          const latencyMs = Date.now() - start;
+          usageStore.recordRequest({
+            model: params.model,
+            taskType: "direct_completion",
+            latencyMs,
+            promptTokens: 0,
+            completionTokens: 0,
+            totalTokens: 0,
+            success: false,
+            error: errorMsg,
+          });
 
-          await new Promise((resolve) => setTimeout(resolve, cooldownMs));
-          delay = cooldownMs * 2;
-          continue;
+          throw new Error(JSON.stringify({
+            status: response.status,
+            statusText: response.statusText,
+            message: errorMsg,
+            type: errorData.error?.type || "qevaro_api_error",
+          }));
         }
 
-        const latencyMs = Date.now() - start;
-        usageStore.recordRequest({
-          model: params.model,
-          taskType: "direct_completion",
-          latencyMs,
-          promptTokens: 0,
-          completionTokens: 0,
-          totalTokens: 0,
-          success: false,
-          error: errorMsg,
-        });
+        // Retry on rate limits or server errors
 
-        throw new Error(JSON.stringify({
-          status: response.status,
-          statusText: response.statusText,
-          message: errorMsg,
-          type: errorData.error?.type || "qevaro_api_error",
-        }));
+        // Retry on rate limits or server errors
+        let cooldownMs = delay;
+        if (response.status === 429) {
+          const remainingMinute = response.headers.get("x-ratelimit-remaining-requests-minute");
+          const remainingHour = response.headers.get("x-ratelimit-remaining-requests-hour");
+          const retryAfter = response.headers.get("retry-after");
+
+          if (retryAfter) {
+            cooldownMs = parseInt(retryAfter, 10) * 1000 || delay;
+          } else if (remainingMinute === "0") {
+            cooldownMs = 60000; // wait 1 minute
+          } else if (remainingHour === "0") {
+            cooldownMs = 120000; // wait 2 minutes
+          }
+          logger.warn(`Rate limit (429) hit on Qevaro completion. Cooldown applied: ${cooldownMs}ms. Remaining Minute: ${remainingMinute}, Remaining Hour: ${remainingHour}`);
+        } else {
+          logger.warn(`Qevaro API error ${response.status}, retrying in ${delay}ms (attempt ${attempt}/${retries})`);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, cooldownMs));
+        delay = cooldownMs * 2;
+        continue;
       }
 
       const data = await response.json();
