@@ -324,11 +324,17 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
               const cleanedContent = cleanContent(originalContent);
               data.choices[0].message.content = cleanedContent;
               
+              // Clean headers that no longer apply to the uncompressed, modified body
+              const cleanedHeaders = new Headers(response.headers);
+              cleanedHeaders.delete("content-length");
+              cleanedHeaders.delete("content-encoding");
+              cleanedHeaders.delete("transfer-encoding");
+
               // Return new Response with the cleaned content
               return new Response(JSON.stringify(data), {
                 status: response.status,
                 statusText: response.statusText,
-                headers: response.headers,
+                headers: cleanedHeaders,
               });
             }
           }
