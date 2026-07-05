@@ -176,6 +176,7 @@ export const AnimationPlayer: React.FC<AnimationPlayerProps> = ({
             errorFallback={renderErrorFallback}
             spaceKeyToPlayOrPause={false}
             clickToPlay={false}
+            acknowledgeRemotionLicense
           />
         </div>
         <div className="flex items-center justify-between gap-6 mt-4">

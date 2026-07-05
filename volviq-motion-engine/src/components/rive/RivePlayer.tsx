@@ -1,5 +1,5 @@
 import React from "react";
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { useVideoConfig } from "remotion";
 
 // Helper to safely detect if we are rendering inside a Remotion composition
 export function isRemotionContext(): boolean {

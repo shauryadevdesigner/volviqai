@@ -861,8 +861,17 @@ Please fix these issues, improve layout safety and motion visual quality to meet
     const stream = new ReadableStream({
       async start(controller) {
         const sendEvent = (eventObj: Record<string, unknown>) => {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(eventObj)}\n\n`));
+          try {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(eventObj)}\n\n`));
+          } catch (e) {
+            // Stream may already be closed
+          }
         };
+
+        // Start a keep-alive heartbeat interval to prevent gateway timeouts/connection resets
+        const heartbeatInterval = setInterval(() => {
+          sendEvent({ type: "ping", timestamp: Date.now() });
+        }, 8000); // Send ping every 8 seconds
 
         try {
           const finalCode = await runOrchestrator({
@@ -898,15 +907,18 @@ Please fix these issues, improve layout safety and motion visual quality to meet
           console.error("Orchestrator streaming error:", err);
           sendEvent({ type: "error", error: errorMessage });
           controller.close();
+        } finally {
+          clearInterval(heartbeatInterval);
         }
       },
     });
 
     return new Response(stream, {
       headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
       },
     });
   } catch (error) {
