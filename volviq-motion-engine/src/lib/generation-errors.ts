@@ -4,6 +4,8 @@ export type GenerationErrorCode =
   | "api_key_missing"
   | "api_unavailable"
   | "rate_limit"
+  | "daily_limit_exceeded"
+  | "model_not_available"
   | "auth_failed"
   | "invalid_prompt"
   | "network_error"
@@ -142,6 +144,58 @@ export function classifyGenerationError(
     };
   }
 
+  // ── 429: Daily model request limit ──────────────────────────────────
+  // Must be checked BEFORE generic rate_limit to provide accurate message
+  if (
+    httpStatus === 429 &&
+    includesAny(combined, [
+      "model_daily_request_limit_exceeded",
+      "daily_request_limit",
+      "daily model limit",
+      "daily limit",
+      "daily request",
+    ])
+  ) {
+    return {
+      code: "daily_limit_exceeded",
+      title: "Daily Model Limit Reached",
+      message:
+        "You have reached the daily request limit for this model. Your quota will reset tomorrow.",
+      action:
+        "Wait until your daily quota resets, or switch to a different model that still has available requests.",
+      type: "api",
+      httpStatus: 429,
+      detail: raw,
+    };
+  }
+
+  // ── 404: Model not available / not enabled ─────────────────────────
+  if (
+    httpStatus === 404 &&
+    includesAny(combined, [
+      "model",
+      "not found",
+      "not available",
+      "not enabled",
+      "does not exist",
+      "unsupported model",
+    ])
+  ) {
+    return {
+      code: "model_not_available",
+      title: "Model Not Available",
+      message:
+        combined ||
+        "The requested model is not available or not enabled for your API key.",
+      action:
+        "Select a different model, or contact support to enable this model for your key.",
+      type: "api",
+      httpStatus: 404,
+      detail: raw,
+    };
+  }
+
+  // ── Generic rate limit (429 without daily-specific message) ────────
   if (
     includesAny(combined, [
       "rate limit",

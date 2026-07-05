@@ -88,13 +88,37 @@ function parseApiErrorBody(
 ): UserFacingGenerationError {
   const apiType =
     typeof errorData.type === "string" ? errorData.type : undefined;
-  const message =
-    typeof errorData.error === "string"
-      ? errorData.error
-      : `API error: ${status}`;
+
+  // Extract the error message from various response shapes
+  // Qevaro / OpenAI-style: { error: { message: "...", type: "..." } }
+  // Flat style:            { error: "..." }
+  // Alt flat:              { message: "..." }
+  let message: string;
+  if (
+    errorData.error &&
+    typeof errorData.error === "object" &&
+    typeof (errorData.error as Record<string, unknown>).message === "string"
+  ) {
+    message = (errorData.error as Record<string, unknown>).message as string;
+  } else if (typeof errorData.error === "string") {
+    message = errorData.error;
+  } else if (typeof errorData.message === "string") {
+    message = errorData.message;
+  } else {
+    message = `API error: ${status}`;
+  }
+
+  // Derive the effective API error type (prefer nested type from Qevaro)
+  const effectiveApiType =
+    apiType ||
+    (errorData.error &&
+      typeof errorData.error === "object" &&
+      typeof (errorData.error as Record<string, unknown>).type === "string"
+        ? ((errorData.error as Record<string, unknown>).type as string)
+        : undefined);
 
   if (
-    apiType === "api_key_missing" ||
+    effectiveApiType === "api_key_missing" ||
     (status === 400 && (message.toLowerCase().includes("gemini is not configured") || message.toLowerCase().includes("qevaro is not configured")))
   ) {
     return classifyGenerationError(message, {
@@ -106,7 +130,7 @@ function parseApiErrorBody(
 
   return classifyGenerationError(message, {
     httpStatus: status,
-    apiType,
+    apiType: effectiveApiType,
     responseBody: errorData,
   });
 }
@@ -277,6 +301,11 @@ export function useGenerationApi(
         const contentType = response.headers.get("content-type") || "";
         let errorData: Record<string, unknown> = {};
 
+        // ── STEP 1: Check HTTP status BEFORE treating response as stream ──
+        // API errors (429, 404, etc.) return valid JSON error bodies.
+        // We MUST parse them here instead of falling through to stream
+        // handling, which would misinterpret the JSON as an aborted stream
+        // and show a misleading "Network Error".
         if (!response.ok) {
           try {
             errorData = (await response.json()) as Record<string, unknown>;
@@ -293,6 +322,14 @@ export function useGenerationApi(
 
           const userError = parseApiErrorBody(errorData, response.status);
 
+          // Log the real error code so devs can see what actually happened
+          logger.warn("generation", `API returned ${response.status}: ${userError.code}`, {
+            status: response.status,
+            errorCode: userError.code,
+            errorTitle: userError.title,
+            apiType: errorData.type,
+          });
+
           if (errorData.type === "edit_failed") {
             const failedEdit = errorData.failedEdit as
               | FailedEditInfo
@@ -303,7 +340,7 @@ export function useGenerationApi(
               kind: "generation_failure",
               durationMs: endTimer(),
               success: false,
-              meta: { code: userError.code },
+              meta: { code: userError.code, httpStatus: response.status },
             });
             return;
           }
@@ -315,13 +352,27 @@ export function useGenerationApi(
               kind: "generation_failure",
               durationMs: endTimer(),
               success: false,
-              meta: { code: userError.code },
+              meta: { code: userError.code, httpStatus: response.status },
             });
             return;
           }
 
-          throw new GenerationError(userError);
+          // For 429/404 and other API errors: surface the real error
+          // through onError so the UI displays the accurate message
+          // instead of a generic "Network Error".
+          onError?.(userError.message, userError.type, undefined, userError);
+          onErrorMessage?.(userError.message, "api");
+          trackMetric({
+            kind: "generation_failure",
+            durationMs: endTimer(),
+            success: false,
+            meta: { code: userError.code, httpStatus: response.status },
+          });
+          return;
         }
+
+        // ── STEP 2: Only handle successful (200) responses below ──
+        // At this point response.ok is true (HTTP 200-299).
 
         if (contentType.includes("application/json")) {
           const data = await response.json();
@@ -346,6 +397,14 @@ export function useGenerationApi(
             success: true,
           });
           return;
+        }
+
+        // ── STEP 3: Stream handling — only for valid 200 streaming responses ──
+        if (!contentType.includes("text/event-stream") && !contentType.includes("text/plain")) {
+          // Unexpected content type on a 200 response — don't blindly stream
+          logger.warn("generation", "Unexpected content-type on 200 response", {
+            contentType,
+          });
         }
 
         const reader = response.body?.getReader();
@@ -431,6 +490,18 @@ export function useGenerationApi(
           meta: { streamed: true },
         });
       } catch (error) {
+        // Skip error handling for user-initiated abort (e.g. cancel button)
+        if (error instanceof DOMException && error.name === "AbortError") {
+          logger.info("generation", "Request aborted by user");
+          trackMetric({
+            kind: "generation_failure",
+            durationMs: endTimer(),
+            success: false,
+            meta: { code: "user_aborted" },
+          });
+          return;
+        }
+
         const userError =
           error instanceof GenerationError
             ? error.userError
