@@ -289,11 +289,12 @@ export function classifyGenerationError(
   }
 
   if (combined === "Error" || !combined) {
+    const detailText = raw && raw !== "Error" ? `: ${raw}` : "";
     return {
       code: "unknown",
       title: "Generation Failed",
       message:
-        "An unexpected error occurred during generation. Check the browser console for FULL GENERATION ERROR logs.",
+        `An unexpected error occurred during generation${detailText}. Check the browser console for logs.`,
       action: "Open DevTools → Console, then retry. Ensure QEVARO_API_KEY is set.",
       type: "api",
       detail: raw || "Empty error message",
