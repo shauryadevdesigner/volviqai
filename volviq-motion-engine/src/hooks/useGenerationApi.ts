@@ -428,6 +428,11 @@ export function useGenerationApi(
         const accumulatedText = { value: "" };
         let buffer = "";
         const streamMetadata: AssistantMetadata = {};
+        // Track stream lifecycle to detect truncation
+        let receivedTextStart = false;
+        let receivedTextDeltaCount = 0;
+        let lastStreamPhase = "reasoning";
+        let receivedDoneEvent = false;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -440,7 +445,11 @@ export function useGenerationApi(
           for (const line of lines) {
             if (!line.startsWith("data: ")) continue;
             const data = line.slice(6).trim();
-            if (!data || data === "[DONE]") continue;
+            if (!data) continue;
+            if (data === "[DONE]") {
+              receivedDoneEvent = true;
+              continue;
+            }
 
             let event: unknown;
             try {
@@ -463,6 +472,13 @@ export function useGenerationApi(
               );
             }
 
+            // Track stream lifecycle events
+            if (eventObj.type === "text-start") receivedTextStart = true;
+            if (eventObj.type === "text-delta") receivedTextDeltaCount++;
+            if (eventObj.type === "reasoning-start" && typeof eventObj.phase === "string") {
+              lastStreamPhase = eventObj.phase;
+            }
+
             processStreamEvent(eventObj, {
               onStreamPhaseChange,
               onPendingMessage,
@@ -475,6 +491,37 @@ export function useGenerationApi(
 
         let finalCode = stripMarkdownFences(accumulatedText.value);
         finalCode = extractComponentCode(finalCode);
+
+        // ── Truncated Stream Detection ────────────────────────────────
+        // When Vercel kills the serverless function (timeout), the stream
+        // closes WITHOUT sending { type: "error" }. The accumulated text
+        // only contains the brief comment header. Detect this and show
+        // a real timeout error instead of the misleading "Invalid Prompt".
+        const looksLikeOnlyComment =
+          accumulatedText.value.trim().startsWith("/*") &&
+          !accumulatedText.value.includes("export ") &&
+          !accumulatedText.value.includes("import ") &&
+          !/<[A-Z]/.test(accumulatedText.value);
+
+        const streamWasTruncated =
+          looksLikeOnlyComment &&
+          lastStreamPhase !== "idle" &&
+          !receivedDoneEvent;
+
+        if (streamWasTruncated) {
+          console.error(
+            `[Client] Stream truncated. Phase="${lastStreamPhase}", textDeltas=${receivedTextDeltaCount}, textLength=${accumulatedText.value.length}`
+          );
+          const truncationError = classifyGenerationError(
+            `Generation was interrupted during the "${lastStreamPhase}" phase. ` +
+            `The server function likely timed out. This usually happens on Vercel's Hobby plan ` +
+            `(max 60s) when the AI pipeline needs more time. ` +
+            `Try upgrading to Vercel Pro, or retry — the pipeline may complete faster on a second attempt.`,
+            { apiType: "stream_error" },
+          );
+          onError?.(truncationError.message, truncationError.type, undefined, truncationError);
+          return;
+        }
 
         // ── Client-Side JSX Validation & Auto-Repair ──────────────────
         // Run structural validation on the final accumulated code.
