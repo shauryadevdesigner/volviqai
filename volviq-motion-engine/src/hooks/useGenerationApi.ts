@@ -382,15 +382,25 @@ export function useGenerationApi(
           });
 
           const { code, summary, metadata } = data;
-          onCodeGenerated?.(code);
-          onGenerationComplete?.(code, summary, metadata);
+
+          // Run final JSX validation before completing
           const validation = validateGptResponse(code);
           if (!validation.isValid && validation.error) {
             const userError = classifyGenerationError(validation.error, {
               apiType: "validation",
             });
             onError?.(validation.error, "validation", undefined, userError);
+            trackMetric({
+              kind: "generation_failure",
+              durationMs: endTimer(),
+              success: false,
+              meta: { code: "invalid_prompt", httpStatus: response.status },
+            });
+            return;
           }
+
+          onCodeGenerated?.(code);
+          onGenerationComplete?.(code, summary, metadata);
           trackMetric({
             kind: "generation_success",
             durationMs: endTimer(),
@@ -445,7 +455,15 @@ export function useGenerationApi(
 
             if (!event || typeof event !== "object") continue;
 
-            processStreamEvent(event as Record<string, unknown>, {
+            const eventObj = event as Record<string, unknown>;
+            if (eventObj.type === "error") {
+              const errMsg = typeof eventObj.error === "string" ? eventObj.error : "Streaming pipeline failed";
+              throw new GenerationError(
+                classifyGenerationError(errMsg, { apiType: "stream_error" }),
+              );
+            }
+
+            processStreamEvent(eventObj, {
               onStreamPhaseChange,
               onPendingMessage,
               onCodeGenerated,
@@ -467,6 +485,17 @@ export function useGenerationApi(
           finalCode = jsxValidation.code;
         }
 
+        // Run final JSX sanity check before completing
+        const validation = validateGptResponse(finalCode);
+        if (!validation.isValid && validation.error) {
+          const userError = classifyGenerationError(validation.error, {
+            apiType: "validation",
+          });
+          onError?.(validation.error, "validation", undefined, userError);
+          // Return early to prevent triggering complete state with invalid code
+          return;
+        }
+
         onCodeGenerated?.(finalCode);
         onClearPendingMessage?.();
         onGenerationComplete?.(
@@ -474,14 +503,6 @@ export function useGenerationApi(
           undefined,
           streamMetadata.skills?.length ? streamMetadata : undefined,
         );
-
-        const validation = validateGptResponse(finalCode);
-        if (!validation.isValid && validation.error) {
-          const userError = classifyGenerationError(validation.error, {
-            apiType: "validation",
-          });
-          onError?.(validation.error, "validation", undefined, userError);
-        }
 
         trackMetric({
           kind: "generation_success",
