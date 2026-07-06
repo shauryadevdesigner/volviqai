@@ -228,10 +228,10 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
  * derived from the model's `fallback` field in the registry.
  */
 const TASK_MODEL_MAP: Record<TaskType, QevaroModel> = {
-  storyboarding: "claude-opus-4.5",
+  storyboarding: "gemini-3-flash",
   remotion_generation: "gemini-3-flash",
   fast_operation: "gemini-3-flash",
-  quality_assurance: "claude-opus-4.5",
+  quality_assurance: "gemini-3-flash",
   validation: "gemini-3-flash",
   skill_detection: "gemini-3-flash",
   image_generation: "gemini-3-flash", // Placeholder for future

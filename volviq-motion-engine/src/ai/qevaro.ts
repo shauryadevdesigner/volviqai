@@ -28,8 +28,8 @@ console.log("QEVARO_BASE_URL loaded:", !!process.env.QEVARO_BASE_URL);
 // ── Configuration ───────────────────────────────────────────────────────────
 
 const DEFAULT_BASE_URL = "https://api.qevaro.com/v1";
-const DEFAULT_TIMEOUT_MS = 120_000; // Increased to 120s
-const DEFAULT_MAX_RETRIES = 5; // Increased to 5
+const DEFAULT_TIMEOUT_MS = 60_000; // Reduced to 60s
+const DEFAULT_MAX_RETRIES = 2; // Reduced to 2
 const MAX_TOKENS_CAP = 16000;
 
 // ── Simple LRU Response Cache ───────────────────────────────────────────────
@@ -201,14 +201,14 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
   if (modelName) {
     const config = getModelConfig(modelName);
     if (config?.category === "reasoning" || config?.category === "qa") {
-      timeoutMs = 150_000; // 150s for heavy reasoning/QA models
+      timeoutMs = 90_000; // 90s for heavy reasoning/QA models
     } else {
-      timeoutMs = 120_000; // 120s for standard and fast models (increased to handle code generation)
+      timeoutMs = 60_000; // 60s for standard and fast models
     }
   }
 
   let attempt = 0;
-  const maxRetries = 3; // Retry up to 3 times on timeouts or network errors
+  const maxRetries = DEFAULT_MAX_RETRIES; // Use the configured default max retries (2)
   let delay = 2000;
 
   while (attempt < maxRetries) {

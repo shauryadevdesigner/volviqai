@@ -262,21 +262,21 @@ function GeneratePageContent() {
       setGenerationError(null);
       setRuntimeError(null);
 
-      // Safety timeout: force-reset isStreaming after 300s to prevent permanently stuck spinner
+      // Safety timeout: force-reset isStreaming after 600s to prevent permanently stuck spinner
       streamingTimeoutRef.current = setTimeout(() => {
-        console.warn("[Safety] Streaming timeout reached (300s). Force-resetting isStreaming to false.");
+        console.warn("[Safety] Streaming timeout reached (600s). Force-resetting isStreaming to false.");
         setIsStreaming(false);
         // Abort the active generation request
         if (chatSidebarRef.current?.abortActiveRequest) {
           chatSidebarRef.current.abortActiveRequest();
         }
         setGenerationError({
-          message: "Generation timed out. The request took longer than 5 minutes.",
+          message: "Generation timed out. The request took longer than 10 minutes.",
           type: "api",
         });
         clearPendingMessage();
         streamingTimeoutRef.current = null;
-      }, 300_000);
+      }, 600_000);
     }
   }, [clearPendingMessage]);
 
