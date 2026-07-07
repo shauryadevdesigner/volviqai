@@ -362,7 +362,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
         <TabPanel
           codeContent={
             <CodeEditor
-              code={hasGeneratedOnce && !generationError ? code : ""}
+              code={hasGeneratedOnce ? code : ""}
               onChange={handleCodeChange}
               isStreaming={isStreaming}
               streamPhase={streamPhase}
@@ -370,7 +370,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
           }
           previewContent={
             <AnimationPlayer
-              Component={generationError ? null : Component}
+              Component={Component}
               durationInFrames={durationInFrames}
               fps={fps}
               onDurationChange={setDurationInFrames}

@@ -434,7 +434,7 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
       console.error(`[SVG Fallback Critical] SVG generation failed:`, svgError);
       
       // Ultimate absolute fallback: standard public placeholder or standard gradient SVG
-      return "/cyberpunk.jpg";
+      return "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800";
     }
   }
 }

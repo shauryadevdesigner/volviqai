@@ -358,7 +358,7 @@ async function processPlaceholderImages(code: string): Promise<string> {
       newCode = newCode.replaceAll(item.placeholder, url);
     } catch (err) {
       console.error(`[Placeholder Image Error] Failed to generate asset:`, err);
-      newCode = newCode.replaceAll(item.placeholder, "/cyberpunk.jpg");
+      newCode = newCode.replaceAll(item.placeholder, "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800");
     }
   }
 

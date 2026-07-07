@@ -102,6 +102,18 @@ export function classifyGenerationError(
     };
   }
 
+  if (apiType === "stream_error") {
+    return {
+      code: "api_unavailable",
+      title: "Generation Interrupted",
+      message: combined || "The generation stream was interrupted.",
+      action: "Try retrying your prompt or upgrading your deployment resources.",
+      type: "api",
+      httpStatus,
+      detail: raw,
+    };
+  }
+
   if (apiType === "limit" || httpStatus === 402) {
     return {
       code: "limit_reached",

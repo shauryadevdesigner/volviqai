@@ -41,7 +41,7 @@ export async function runStage6(
           error,
         );
         sceneAssets[scene.sceneNumber] = {
-          imageUrl: "/cyberpunk.jpg", // fallback
+          imageUrl: "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800", // fallback
           isFallbackSvg: false,
         };
       }

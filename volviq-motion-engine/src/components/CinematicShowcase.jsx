@@ -9,7 +9,7 @@ const CinematicShowcase = () => {
     {
       id: 'SCENE.01',
       title: 'Procedural Cyberpunk City',
-      img: '/cyberpunk.jpg',
+      img: 'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800',
       aspect: 'aspect-video',
       span: 'md:col-span-2',
       nodes: '64M POLYGONS'
@@ -17,7 +17,7 @@ const CinematicShowcase = () => {
     {
       id: 'SCENE.02',
       title: 'Holographic Node Array',
-      img: '/cyberpunk.jpg',
+      img: 'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800',
       aspect: 'aspect-square md:aspect-auto',
       span: 'md:col-span-1',
       nodes: '24M STRUCTS'

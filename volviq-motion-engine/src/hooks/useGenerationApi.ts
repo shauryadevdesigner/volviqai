@@ -494,17 +494,9 @@ export function useGenerationApi(
 
         // ── Truncated Stream Detection ────────────────────────────────
         // When Vercel kills the serverless function (timeout), the stream
-        // closes WITHOUT sending { type: "error" }. The accumulated text
-        // only contains the brief comment header. Detect this and show
-        // a real timeout error instead of the misleading "Invalid Prompt".
-        const looksLikeOnlyComment =
-          accumulatedText.value.trim().startsWith("/*") &&
-          !accumulatedText.value.includes("export ") &&
-          !accumulatedText.value.includes("import ") &&
-          !/<[A-Z]/.test(accumulatedText.value);
-
+        // closes WITHOUT sending { type: "error" }. If the stream closes
+        // before reaching the idle phase and without a done event, it was truncated.
         const streamWasTruncated =
-          looksLikeOnlyComment &&
           lastStreamPhase !== "idle" &&
           !receivedDoneEvent;
 

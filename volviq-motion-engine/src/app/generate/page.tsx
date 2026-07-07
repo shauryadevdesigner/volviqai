@@ -400,7 +400,7 @@ function GeneratePageContent() {
             <TabPanel
               codeContent={
                 <CodeEditor
-                  code={hasGeneratedOnce && !generationError ? code : ""}
+                  code={hasGeneratedOnce ? code : ""}
                   onChange={handleCodeChange}
                   isStreaming={isStreaming}
                   streamPhase={streamPhase}
@@ -408,7 +408,7 @@ function GeneratePageContent() {
               }
               previewContent={
                 <AnimationPlayer
-                  Component={generationError ? null : Component}
+                  Component={Component}
                   durationInFrames={durationInFrames}
                   fps={fps}
                   onDurationChange={setDurationInFrames}

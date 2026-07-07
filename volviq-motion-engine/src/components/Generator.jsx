@@ -42,7 +42,7 @@ const Generator = () => {
                   <img 
                     alt="Holographic data streams and nodes" 
                     className="w-full h-auto img-mono transition-all duration-700 group-hover:filter-none" 
-                    src="/cyberpunk.jpg"
+                    src="https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800"
                   />
                   
                   <div className="absolute top-8 left-8 font-code-md text-code-md text-primary bg-black/60 px-3 py-1.5 backdrop-blur-sm border border-outline-variant">
