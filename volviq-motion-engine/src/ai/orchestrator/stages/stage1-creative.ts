@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { generateContent } from "../../provider";
+import { getModelForTask } from "../../model-router";
 
 export const ConsolidatedBriefSchema = z.object({
   // From Stage 0 (Intent)
@@ -202,7 +203,7 @@ export async function runConsolidatedBrief(
 ${memoryExamples ? `\nDraw inspiration from these historical examples:\n${memoryExamples}` : ""}`;
 
   const result = await generateContent({
-    model: "deepseek-v4-pro", // Heavy reasoning strategist model
+    model: getModelForTask("storyboarding").id, // Dynamically resolved task model (resolves to gemini-3-flash)
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: ConsolidatedBriefSchema,

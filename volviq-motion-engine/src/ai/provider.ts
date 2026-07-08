@@ -13,7 +13,7 @@ import {
   StreamTextResult,
 } from "ai";
 import { getQevaroClient } from "./qevaro";
-import { getModelChain, getModelFallbackChain } from "./model-router";
+import { getModelChain, getModelFallbackChain, getModelForTask } from "./model-router";
 import { usageStore } from "./usage-store";
 import { logger } from "../lib/logger";
 import type { TaskType } from "./types";
@@ -204,7 +204,8 @@ export async function generateContent(params: GenerateContentParams): Promise<an
             const rawText = err.text || (err.cause && err.cause.text) || "";
             if (rawText) {
               try {
-                 const repairModelInstance = getModelForProvider("deepseek-v4-flash");
+                const repairModelId = getModelForTask("validation").id;
+                const repairModelInstance = getModelForProvider(repairModelId);
                 const repairResult = await sdkGenerateObject({
                   model: repairModelInstance,
                   system: "Convert the following output into valid JSON matching the required schema exactly.",
@@ -214,10 +215,10 @@ export async function generateContent(params: GenerateContentParams): Promise<an
                   mode: "json",
                 } as any);
                 const repairDuration = Date.now() - start;
-                logger.info(`JSON repair succeeded using deepseek-v4-flash in ${repairDuration}ms`);
+                logger.info(`JSON repair succeeded using ${repairModelId} in ${repairDuration}ms`);
 
                 usageStore.recordRequest({
-                  model: "deepseek-v4-flash",
+                  model: repairModelId,
                   taskType: "json_repair",
                   latencyMs: repairDuration,
                   promptTokens: (repairResult as any).usage?.promptTokens ?? 0,
