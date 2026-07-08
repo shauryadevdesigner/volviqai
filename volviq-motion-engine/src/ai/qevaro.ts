@@ -276,8 +276,12 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
           combinedErrorStr.includes("not enabled")
         );
 
-        // Do NOT retry on permanent daily limits or model-not-available errors
-        if ((isDailyLimit || isModelNotAvailable) || !((response.status === 429 || response.status >= 500) && attempt < maxRetries)) {
+        // Fail-fast: only retry on transient errors (429 rate-limit, 5xx server errors).
+        // All client errors (400, 401, 403, 404) are permanent and must not be retried.
+        const isTransient = (response.status === 429 || response.status >= 500);
+        const shouldRetry = isTransient && !isDailyLimit && !isModelNotAvailable && attempt < maxRetries;
+
+        if (!shouldRetry) {
           throw new Error(JSON.stringify({
             status: response.status,
             statusText: response.statusText,
@@ -547,8 +551,12 @@ export async function createQevaroCompletion(
           combinedErrorStr.includes("not enabled")
         );
 
-        // Do NOT retry on permanent daily limits or model-not-available errors
-        if ((isDailyLimit || isModelNotAvailable) || !((response.status === 429 || response.status >= 500) && attempt < retries)) {
+        // Fail-fast: only retry on transient errors (429 rate-limit, 5xx server errors).
+        // All client errors (400, 401, 403, 404) are permanent and must not be retried.
+        const isTransient = (response.status === 429 || response.status >= 500);
+        const shouldRetry = isTransient && !isDailyLimit && !isModelNotAvailable && attempt < retries;
+
+        if (!shouldRetry) {
           const latencyMs = Date.now() - start;
           usageStore.recordRequest({
             model: params.model,

@@ -195,6 +195,11 @@ function processStreamEvent(
     return;
   }
 
+  // Handle server heartbeat pings — acknowledge to prevent client-side inactivity detection
+  if (type === "ping") {
+    return;
+  }
+
   if (type === "error") {
     const msg = extractStreamEventError(event);
     throw new GenerationError(

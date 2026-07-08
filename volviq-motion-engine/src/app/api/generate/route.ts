@@ -904,7 +904,18 @@ Please fix these issues, improve layout safety and motion visual quality to meet
           controller.close();
         } catch (err) {
           const errorMessage = err instanceof Error ? err.message : "Streaming pipeline failed";
-          console.error("Orchestrator streaming error:", err);
+          const errorStack = err instanceof Error ? err.stack : undefined;
+          
+          // Structured error logging for production debugging
+          console.error("[Pipeline:Error]", JSON.stringify({
+            error: errorMessage,
+            stack: errorStack,
+            stage: "orchestrator_streaming",
+            model: qevaroModelId,
+            promptLength: prompt?.length,
+            timestamp: new Date().toISOString(),
+          }));
+          
           sendEvent({ type: "error", error: errorMessage });
           controller.close();
         } finally {

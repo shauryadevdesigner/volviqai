@@ -48,17 +48,23 @@ export async function runOrchestrator(params: OrchestratorParams): Promise<strin
 
     // Stage 0: Intent Classifier
     onEvent({ type: "reasoning-start", phase: "analyzing" });
+    console.time("[Orchestrator] Stage 0: Intent");
     const intent = await runStage0(prompt);
+    console.timeEnd("[Orchestrator] Stage 0: Intent");
     console.log("[Orchestrator] Stage 0 Intent:", intent);
 
     // Stage 1: Creative Brief Planner
     onEvent({ type: "reasoning-start", phase: "strategizing" });
+    console.time("[Orchestrator] Stage 1: Creative Brief");
     const creativeBrief = await runStage1(prompt, intent);
+    console.timeEnd("[Orchestrator] Stage 1: Creative Brief");
     console.log("[Orchestrator] Stage 1 Creative Brief:", creativeBrief);
 
     // Stage 2: Marketing Strategist
     onEvent({ type: "reasoning-start", phase: "copywriting" });
+    console.time("[Orchestrator] Stage 2: Marketing");
     const marketingStrategy = await runStage2(creativeBrief, intent);
+    console.timeEnd("[Orchestrator] Stage 2: Marketing");
     console.log("[Orchestrator] Stage 2 Marketing Strategy:", marketingStrategy);
 
     // Read creative memory for historical examples
@@ -77,7 +83,9 @@ Final Quality Score: ${m.finalScore}/100`,
 
     // Stage 3: Storyboard Director
     onEvent({ type: "reasoning-start", phase: "storyboarding" });
+    console.time("[Orchestrator] Stage 3: Storyboard");
     const brief = await runStage3(marketingStrategy, intent, memoryExamples);
+    console.timeEnd("[Orchestrator] Stage 3: Storyboard");
     console.log("[Orchestrator] Stage 3 Storyboard Brief:", brief);
 
     // Stream brief headers immediately
@@ -103,16 +111,20 @@ Final Quality Score: ${m.finalScore}/100`,
 
     // Stage 5: Visual Asset Planner
     onEvent({ type: "reasoning-start", phase: "asset_planning" });
+    console.time("[Orchestrator] Stage 5: Asset Plan");
     const assetPlan = await runStage5(resolvedBrief);
+    console.timeEnd("[Orchestrator] Stage 5: Asset Plan");
     console.log("[Orchestrator] Stage 5 Asset Plan:", assetPlan);
 
     // ── Phase 2: Asset & Layout Assembly ──
 
     // Stage 6: Image Generation Engine
     onEvent({ type: "reasoning-start", phase: "generating_assets" });
+    console.time("[Orchestrator] Stage 6: Image Gen");
     const assets = await runStage6(assetPlan, (msg) => {
       onEvent({ type: "reasoning-start", phase: "generating_asset", message: msg });
     });
+    console.timeEnd("[Orchestrator] Stage 6: Image Gen");
     console.log("[Orchestrator] Stage 6 Generated Assets:", assets);
 
     // Inject generated image URLs back into resolved brief for final layout rendering
@@ -139,9 +151,9 @@ Final Quality Score: ${m.finalScore}/100`,
 
     // Stage 8: Motion Engineer (run scene-by-scene in parallel with staggering)
     const scenePromises = resolvedBrief.scenes.map(async (scene, index) => {
-      // Stagger request starts by 1 second to prevent concurrent rate limits (429) on free keys
+      // Stagger request starts by 400ms to prevent concurrent rate limits (429) on free keys
       if (index > 0) {
-        await new Promise((resolve) => setTimeout(resolve, index * 1000));
+        await new Promise((resolve) => setTimeout(resolve, index * 400));
       }
 
       const layout = sceneLayouts.layouts.find((l) => l.sceneNumber === scene.sceneNumber)!;
@@ -157,6 +169,8 @@ Final Quality Score: ${m.finalScore}/100`,
         },
       });
 
+      const sceneTimerLabel = `[Orchestrator] Scene ${scene.sceneNumber} total`;
+      console.time(sceneTimerLabel);
       console.log(`[Orchestrator] Generating Scene ${scene.sceneNumber}...`);
 
       let sceneCode = "";
@@ -226,6 +240,7 @@ Final Quality Score: ${m.finalScore}/100`,
 };`;
       }
 
+      console.timeEnd(sceneTimerLabel);
       return { sceneNumber: scene.sceneNumber, code: sceneCode, success: sceneCompileSuccess, errors: sceneCompileErrors };
     });
 
@@ -323,8 +338,10 @@ Please fix these issues and output the refined complete React/Remotion component
 
       // Stage 10: Quality Audit
       onEvent({ type: "reasoning-start", phase: "auditing" });
+      console.time("[Orchestrator] Stage 10: Quality Audit");
       console.log("[Orchestrator] Stage 10 Quality Audit...");
       evaluation = await runStage10(finalCode, prompt);
+      console.timeEnd("[Orchestrator] Stage 10: Quality Audit");
       console.log("[Orchestrator] Audit Score:", evaluation);
 
       if (evaluation.averageScore >= 85) {
