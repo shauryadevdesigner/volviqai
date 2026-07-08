@@ -416,7 +416,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const qevaroModelId = model;
+  let qevaroModelId = model;
+  if (qevaroModelId === "deepseek-v4-flash" || qevaroModelId === "qwen3-coder-plus") {
+    qevaroModelId = "gemini-3-flash";
+  }
 
   // ── LOCAL SKILL DETECTION & VALIDATION BYPASS ──
   let detectedSkills: SkillName[] = [];
