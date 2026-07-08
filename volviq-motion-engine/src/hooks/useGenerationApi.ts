@@ -429,7 +429,6 @@ export function useGenerationApi(
         let buffer = "";
         const streamMetadata: AssistantMetadata = {};
         // Track stream lifecycle to detect truncation
-        let receivedTextStart = false;
         let receivedTextDeltaCount = 0;
         let lastStreamPhase = "reasoning";
         let receivedDoneEvent = false;
@@ -473,7 +472,6 @@ export function useGenerationApi(
             }
 
             // Track stream lifecycle events
-            if (eventObj.type === "text-start") receivedTextStart = true;
             if (eventObj.type === "text-delta") receivedTextDeltaCount++;
             if (eventObj.type === "reasoning-start" && typeof eventObj.phase === "string") {
               lastStreamPhase = eventObj.phase;
