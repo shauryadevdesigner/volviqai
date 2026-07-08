@@ -565,7 +565,7 @@ Analyze the request and decide: use targeted edits (type: "edit") for small chan
       try {
         const editResult = await generateContent({
           provider: "qevaro",
-          model: qevaroModelId,
+          model: getModelForTask("remotion_generation").id,
           system: `${enhancedSystemPrompt}\n\n---\n\n${FOLLOW_UP_SYSTEM_PROMPT}`,
           messages: editMessages,
           schema: FollowUpResponseSchema,
@@ -593,7 +593,7 @@ You MUST output the complete code in the 'code' property of the JSON response.`;
 
         const fallbackResult = await generateContent({
           provider: "qevaro",
-          model: qevaroModelId,
+          model: getModelForTask("remotion_generation").id,
           system: fallbackSystemPrompt,
           messages: editMessages,
           schema: z.object({
@@ -709,7 +709,7 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
         
         const repairResult = await generateContent({
           provider: "qevaro",
-          model: qevaroModelId,
+          model: getModelForTask("remotion_generation").id,
           system: REFINEMENT_SYSTEM_PROMPT,
           prompt: `## COMPILATION ERROR (ATTEMPT ${compileAttempts}/${maxCompileAttempts})
 The edited component code failed to compile with the following errors:
@@ -759,7 +759,7 @@ CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct
 
         const refinedResult = await generateContent({
           provider: "qevaro",
-          model: qevaroModelId,
+          model: getModelForTask("remotion_generation").id,
           system: REFINEMENT_SYSTEM_PROMPT,
           prompt: `## USER REQUEST (EDIT):
 ${prompt}
