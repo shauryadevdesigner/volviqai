@@ -419,6 +419,8 @@ export async function POST(req: Request) {
   let qevaroModelId = model;
   if (qevaroModelId === "deepseek-v4-flash" || qevaroModelId === "qwen3-coder-plus") {
     qevaroModelId = "gemini-3-flash";
+  } else if (qevaroModelId === "gpt-120b") {
+    qevaroModelId = "gpt-oss-120b";
   }
 
   // ── LOCAL SKILL DETECTION & VALIDATION BYPASS ──

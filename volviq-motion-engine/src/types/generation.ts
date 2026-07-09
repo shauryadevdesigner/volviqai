@@ -1,6 +1,7 @@
 export const MODELS = [
   { id: "gemini-3-flash", name: "Gemini 3 Flash (Fast & Stable)" },
   { id: "gpt-5-mini", name: "GPT-5 Mini (High Quality)" },
+  { id: "gpt-120b", name: "GPT-120B (Ultra Quality)" },
 ] as const;
 
 export type ModelId = (typeof MODELS)[number]["id"];
