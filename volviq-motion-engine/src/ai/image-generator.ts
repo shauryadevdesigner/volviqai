@@ -1,10 +1,3 @@
-import fs from "fs";
-import path from "path";
-import crypto from "crypto";
-
-const CACHE_DIR = path.join(process.cwd(), "public/generated-assets");
-const MANIFEST_PATH = path.join(CACHE_DIR, "manifest.json");
-
 interface Manifest {
   [promptHash: string]: {
     prompt: string;
@@ -14,39 +7,18 @@ interface Manifest {
   };
 }
 
-// Ensure cache directory and manifest exist
-function ensureCacheDir() {
-  if (!fs.existsSync(CACHE_DIR)) {
-    fs.mkdirSync(CACHE_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(MANIFEST_PATH)) {
-    fs.writeFileSync(MANIFEST_PATH, JSON.stringify({}), "utf-8");
-  }
-}
+let imageCache: Manifest = {};
 
 // Generate a deterministic hash for caching
 function getPromptHash(prompt: string, style: string): string {
-  return crypto
-    .createHash("sha256")
-    .update(`${prompt.toLowerCase().trim()}_${style.toLowerCase().trim()}`)
-    .digest("hex");
-}
-
-// Read manifest
-function readManifest(): Manifest {
-  ensureCacheDir();
-  try {
-    const data = fs.readFileSync(MANIFEST_PATH, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return {};
+  let hash = 0;
+  const str = `${prompt.toLowerCase().trim()}_${style.toLowerCase().trim()}`;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
   }
-}
-
-// Write to manifest
-function writeManifest(manifest: Manifest) {
-  ensureCacheDir();
-  fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2), "utf-8");
+  return Math.abs(hash).toString(16);
 }
 
 /**
@@ -289,21 +261,14 @@ export function generateFallbackSVG(style: string, prompt: string): string {
  */
 export async function generateAsset(prompt: string, style: string): Promise<string> {
   const hash = getPromptHash(prompt, style);
-  const manifest = readManifest();
   
   // ── Feature 7: Asset Caching Check ──
-  if (manifest[hash]) {
+  if (imageCache[hash]) {
     console.log(`[Cache Hit] Asset found for prompt: "${prompt.substring(0, 40)}..."`);
-    return manifest[hash].url;
+    return imageCache[hash].url;
   }
 
   console.log(`[Cache Miss] Generating new asset for prompt: "${prompt.substring(0, 40)}..." Style: ${style}`);
-  
-  const filename = `${hash}.png`;
-  const relativeUrl = `/generated-assets/${filename}`;
-  const localPath = path.join(CACHE_DIR, filename);
-
-  ensureCacheDir();
 
   // Try calling OpenRouter image generation first (flux-1-schnell)
   if (process.env.OPENROUTER_API_KEY) {
@@ -334,28 +299,15 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
         const data: any = await response.json();
         const imageUrl = data.data?.[0]?.url;
         if (imageUrl) {
-          console.log(`[Image API] Fetching generated image from URL: ${imageUrl}`);
+          console.log(`[Image API] Using OpenRouter image URL: ${imageUrl}`);
           
-          const imgController = new AbortController();
-          const imgTimeoutId = setTimeout(() => imgController.abort(), 20000); // 20s timeout
-
-          const imageResponse = await fetch(imageUrl, { signal: imgController.signal });
-          clearTimeout(imgTimeoutId);
-
-          if (imageResponse.ok) {
-            const arrayBuffer = await imageResponse.arrayBuffer();
-            const uint8Array = new Uint8Array(arrayBuffer);
-            fs.writeFileSync(localPath, uint8Array);
-            
-            manifest[hash] = {
-              prompt,
-              style,
-              url: relativeUrl,
-              timestamp: new Date().toISOString(),
-            };
-            writeManifest(manifest);
-            return relativeUrl;
-          }
+          imageCache[hash] = {
+            prompt,
+            style,
+            url: imageUrl,
+            timestamp: new Date().toISOString(),
+          };
+          return imageUrl;
         }
       } else {
         const errText = await response.text().catch(() => "");
@@ -378,58 +330,35 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
     });
     
     const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?${queryParams.toString()}`;
-    console.log(`[Image API] Fetching from Pollinations: ${url}`);
+    console.log(`[Image API] Using Pollinations URL directly: ${url}`);
     
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout
-
-    const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`Pollinations AI responded with status: ${response.status}`);
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-    
-    // Save PNG locally
-    fs.writeFileSync(localPath, uint8Array);
-    console.log(`[Image API] Saved generated asset to: ${localPath}`);
-
     // Update manifest cache
-    manifest[hash] = {
+    imageCache[hash] = {
       prompt,
       style,
-      url: relativeUrl,
+      url,
       timestamp: new Date().toISOString(),
     };
-    writeManifest(manifest);
 
-    return relativeUrl;
+    return url;
   } catch (error) {
     console.warn(`[Image API Warning] Image generation failed. Falling back to SVG Illustration. Error:`, error);
     
     // ── Emergency Fallback: Premium SVG Illustration ──
-    const svgFilename = `${hash}.svg`;
-    const svgRelativeUrl = `/generated-assets/${svgFilename}`;
-    const svgLocalPath = path.join(CACHE_DIR, svgFilename);
-
     try {
       const svgContent = generateFallbackSVG(style, prompt);
-      fs.writeFileSync(svgLocalPath, svgContent, "utf-8");
-      console.log(`[SVG Fallback] Saved premium SVG illustration to: ${svgLocalPath}`);
+      const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}`;
+      console.log(`[SVG Fallback] Returning premium SVG illustration data URL.`);
 
       // Update manifest cache with the SVG
-      manifest[hash] = {
+      imageCache[hash] = {
         prompt,
         style,
-        url: svgRelativeUrl,
+        url: svgDataUrl,
         timestamp: new Date().toISOString(),
       };
-      writeManifest(manifest);
 
-      return svgRelativeUrl;
+      return svgDataUrl;
     } catch (svgError) {
       console.error(`[SVG Fallback Critical] SVG generation failed:`, svgError);
       

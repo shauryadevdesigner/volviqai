@@ -1,8 +1,6 @@
-import fs from "fs";
-import path from "path";
 import { getSupabase, isSupabaseConfigured } from "../lib/supabase";
 
-const APPROVED_TEMPLATES_FILE = path.join(process.cwd(), "src/data/approved-templates.json");
+let localTemplatesCache: CachedTemplate[] = [];
 
 export interface CachedTemplate {
   id?: string;
@@ -19,15 +17,7 @@ export interface CachedTemplate {
  * Reads approved templates from the local JSON cache.
  */
 export function readLocalTemplates(): CachedTemplate[] {
-  try {
-    if (fs.existsSync(APPROVED_TEMPLATES_FILE)) {
-      const data = fs.readFileSync(APPROVED_TEMPLATES_FILE, "utf-8");
-      return JSON.parse(data);
-    }
-  } catch (error) {
-    console.error("[Template Cache] Failed to read local templates:", error);
-  }
-  return [];
+  return [...localTemplatesCache];
 }
 
 /**
@@ -53,20 +43,14 @@ export async function saveTemplateToCache(
 
   // 1. Save locally
   try {
-    const localTemplates = readLocalTemplates();
-    localTemplates.push(newTemplate);
+    localTemplatesCache.push(newTemplate);
 
-    // Limit cache size to top 30 templates to prevent massive JSON files
-    if (localTemplates.length > 30) {
-      localTemplates.shift();
+    // Limit cache size to top 30 templates to prevent massive memory usage
+    if (localTemplatesCache.length > 30) {
+      localTemplatesCache.shift();
     }
 
-    const dir = path.dirname(APPROVED_TEMPLATES_FILE);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(APPROVED_TEMPLATES_FILE, JSON.stringify(localTemplates, null, 2), "utf-8");
-    console.log("[Template Cache] Saved approved template locally.");
+    console.log("[Template Cache] Saved approved template locally in-memory.");
   } catch (err) {
     console.error("[Template Cache] Failed to save approved template locally:", err);
   }

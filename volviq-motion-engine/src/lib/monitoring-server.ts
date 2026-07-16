@@ -1,8 +1,6 @@
-import fs from "fs";
-import path from "path";
 import { getSupabase, isSupabaseConfigured } from "./supabase";
 
-const ANALYTICS_FILE = path.join(process.cwd(), "src/data/generation-analytics.json");
+let localAnalyticsCache: any[] = [];
 
 export interface LogAnalyticsPayload {
   prompt: string;
@@ -37,21 +35,11 @@ export async function logGenerationAnalytics(payload: LogAnalyticsPayload) {
 
   // 1. Log locally
   try {
-    let localEntries = [];
-    if (fs.existsSync(ANALYTICS_FILE)) {
-      const fileData = fs.readFileSync(ANALYTICS_FILE, "utf-8");
-      localEntries = JSON.parse(fileData);
+    localAnalyticsCache.push(entry);
+    if (localAnalyticsCache.length > 100) {
+      localAnalyticsCache.shift();
     }
-    localEntries.push(entry);
-    if (localEntries.length > 100) {
-      localEntries.shift();
-    }
-    const dir = path.dirname(ANALYTICS_FILE);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(ANALYTICS_FILE, JSON.stringify(localEntries, null, 2), "utf-8");
-    console.log("[Monitoring-Server] Logged generation analytics locally.");
+    console.log("[Monitoring-Server] Logged generation analytics locally in-memory.");
   } catch (error) {
     console.error("[Monitoring-Server] Failed to write local analytics:", error);
   }
