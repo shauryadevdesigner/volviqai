@@ -40,7 +40,7 @@ export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
     const response = await fetch("https://api.json2video.com/v2/movies", {
       method: "POST",
       headers: {
-        "x-api-key": "cZehYVmEjAje7GoNCndm1bhliwGFHecRA5dKd7cg",
+        "x-api-key": process.env.JSON2VIDEO_API_KEY || "",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(json2VideoPayload),

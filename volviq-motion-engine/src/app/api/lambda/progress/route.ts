@@ -10,7 +10,7 @@ export const POST = executeApi<ProgressResponse, typeof ProgressRequest>(
         const response = await fetch(`https://api.json2video.com/v2/movies?project=${body.id}`, {
           method: "GET",
           headers: {
-            "x-api-key": "cZehYVmEjAje7GoNCndm1bhliwGFHecRA5dKd7cg",
+            "x-api-key": process.env.JSON2VIDEO_API_KEY || "",
           },
         });
 
