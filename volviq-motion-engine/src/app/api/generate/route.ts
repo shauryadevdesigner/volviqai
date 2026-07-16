@@ -14,7 +14,6 @@ import { classifyProviderError, getErrorMessage } from "@/lib/api-errors";
 import { logger } from "@/utils/logger";
 import { z } from "zod";
 import {
-  stripMarkdownFences,
   extractComponentCode,
   validateAndRepairJSX,
 } from "@/helpers/sanitize-response";
@@ -224,102 +223,8 @@ interface GenerateResponse {
   };
 }
 
-let memoryCache: CreativeMemoryEntry[] = [];
-
-interface CreativeMemoryEntry {
-  prompt: string;
-  audience: string;
-  emotion: string;
-  template?: string;
-  colorPalette?: string;
-  storyboard: unknown[];
-  finalScore: number;
-  timestamp: string;
-}
-
-function saveToCreativeMemory(entry: CreativeMemoryEntry) {
-  try {
-    memoryCache.push(entry);
-    // Limit cache size to last 50 successful creations
-    if (memoryCache.length > 50) {
-      memoryCache.shift();
-    }
-    console.log("Saved successful generation to in-memory creative memory database.");
-  } catch (error) {
-    console.error("Failed to save to in-memory creative memory:", error);
-  }
-}
 
 
-
-
-const PremiumAuditSchema = z.object({
-  taste: z.object({
-    visual_taste: z.number().min(0).max(100),
-    motion_taste: z.number().min(0).max(100),
-    cinematic_quality: z.number().min(0).max(100),
-    emotional_impact: z.number().min(0).max(100),
-    brand_presence: z.number().min(0).max(100),
-    premium_feel: z.number().min(0).max(100),
-    originality: z.number().min(0).max(100),
-    averageScore: z.number().min(0).max(100),
-  }),
-  conversion: z.object({
-    retention_score: z.number().min(0).max(100),
-    emotional_score: z.number().min(0).max(100),
-    conversion_score: z.number().min(0).max(100),
-    memorability_score: z.number().min(0).max(100),
-    averageScore: z.number().min(0).max(100),
-  }),
-  passed: z.boolean().describe("True if both taste averageScore and conversion averageScore are >= 80"),
-  critique: z.array(z.string()).describe("Detailed flaws that must be fixed to reach 90+ score. Limit to top 3 issues."),
-});
-
-type PremiumAudit = z.infer<typeof PremiumAuditSchema>;
-
-const QUALITY_AUDIT_SYSTEM_PROMPT = `You are a world-class AI Creative Director, Conversion Specialist, and Motion critic.
-You inspect generated Remotion React code against two separate criteria:
-1. Design Taste (visual style, typography hierarchy, spring timing, active backgrounds, composition)
-2. Conversion & Psychology (hook strength, retention pacing, clear brand recall, emotional resonance, conversion CTA)
-
-DIMENSIONS OF AUDIT:
-- Visual Assets & Composition:
-  * Check image/asset integration. Visual assets (images/SVGs) must be styled and positioned beautifully according to layout composition rules.
-  * Adaptive Layout: Verify text layout doesn't overlap important visual parts of the asset. Typography and imagery must complement each other.
-  * Motion Relevance: Ensure every image moves (e.g. Ken Burns effect, floating, slow drift, scale reveals). REJECT static assets.
-  * Visual Hierarchy & Placement: Ensure clear visual hierarchy. Avoid generic imagery, empty layouts, and poor text placement.
-- Overlapping layers: ALL stacked text divs MUST be grouped inside a single flex-column with a gap. Never overlap independent absolute layers.
-- Active Backgrounds: Vignettes, radial gradients, slow-drifting soft glowing radial shapes.
-- Lighting: THREE lights (spotlight, ambient, standard material) if 3D, ambient box shadows if 2D.
-- Output Range safety: interpolate() outputs must be numeric ranges (never strings or colors).
-- Easing curve: no linear entrance timing. Use spring or smooth curves.
-
-To pass, both Taste averageScore and Conversion averageScore must be >= 80. Else, provide constructive fixes.`;
-
-async function evaluateCodeQuality(code: string, userPrompt: string): Promise<PremiumAudit> {
-  const result = await generateContent({
-    provider: "openrouter",
-    model: getModelForTask("quality_assurance").id,
-    system: QUALITY_AUDIT_SYSTEM_PROMPT,
-    prompt: `Audit the following generated Remotion React code for the user prompt: "${userPrompt}"\n\n\`\`\`tsx\n${code}\n\`\`\``,
-    schema: PremiumAuditSchema,
-    taskType: "quality_assurance",
-  });
-  return result.object;
-}
-
-const REFINEMENT_SYSTEM_PROMPT = `You are an elite Creative Technologist, senior Motion Designer, and Remotion expert.
-Your job is to take a draft Remotion component that has been critique-flagged for visual, design-taste, or conversion issues, and produce a refined, polished version that meets premium studio standards.
-
-CRITICAL RULES:
-- Fix all issues listed by the Art Critic.
-- Check layout overlapping: wrap stacked texts in a single flex-column container with centered alignment.
-- Ensure all coordinate properties (translate, opacity) animate via spring or smooth interpolation.
-- Background MUST have slow-moving soft glowing gradients or blurred drifting circles.
-- Keep all safety rules: outputRange in interpolate must contain ONLY numbers, clamp extrapolation.
-- Ensure any visual assets (images/SVGs) are integrated correctly, styled beautifully, and have dynamic motion (no static images).
-- Preserve all image asset URL paths, rendering logic, and custom media handling.
-- Output ONLY valid, compiled Remotion component code, starting with imports. No markdown wrappers.`;
 
 async function processPlaceholderImages(code: string): Promise<string> {
   const regex = /_IMAGE_GEN_\["([^"]+)"\]_/g;
@@ -683,41 +588,15 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
         finalCode = followUpValidation.code;
       }
 
-      // ── Compilation Safety Verification & Auto-Repair ──
-      let compileValidation = verifyAndCompileServer(finalCode);
-      let compileAttempts = 0;
-      const maxCompileAttempts = errorCorrection ? 2 : 3;
-      
-      while (!compileValidation.success && compileAttempts < maxCompileAttempts) {
-        compileAttempts++;
-        console.log(`[Pipeline] Follow-up compilation failed, attempt ${compileAttempts}/${maxCompileAttempts}. Errors:`, compileValidation.errors);
-        
-        const repairResult = await generateContent({
-          provider: "openrouter",
-          model: getModelForTask("remotion_generation").id,
-          system: REFINEMENT_SYSTEM_PROMPT,
-          prompt: `## COMPILATION ERROR (ATTEMPT ${compileAttempts}/${maxCompileAttempts})
-The edited component code failed to compile with the following errors:
-${compileValidation.errors.map((e: string, i: number) => `${i + 1}. ${e}`).join("\n")}
-
-## CURRENT CODE (WITH ERRORS):
-\`\`\`tsx
-${finalCode}
-\`\`\`
-
-CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct, and all variables and imports exist. Return only the corrected ES6 React/Remotion component code starting with imports.`,
-          schema: z.object({
-            code: z.string().describe("Complete, valid ES6 Remotion component code starting with imports and ending with the default/named export."),
-            summary: z.string().describe("Explanation of compilation fixes"),
-          }),
-          taskType: "remotion_generation",
-        });
-        
-        finalCode = extractComponentCode(stripMarkdownFences(repairResult.object.code));
-        compileValidation = verifyAndCompileServer(finalCode);
-      }
+      // ── Compilation Safety Verification ──
+      // On Edge Runtime (Vercel Hobby 30s limit), we keep this lightweight:
+      // - Only run sucrase transpilation check (no new Function)
+      // - Skip expensive quality audit + refinement loops for follow-up edits
+      //   (user-directed edits don't need taste scoring)
+      const compileValidation = verifyAndCompileServer(finalCode);
 
       if (!compileValidation.success) {
+        console.warn(`[Pipeline] Follow-up compilation failed. Errors:`, compileValidation.errors);
         return new Response(
           JSON.stringify({
             error: `Failed to compile edit: ${compileValidation.errors.join("; ")}`,
@@ -725,76 +604,6 @@ CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct
           }),
           { status: 400, headers: { "Content-Type": "application/json" } },
         );
-      }
-
-      // Evaluate visual taste and conversion quality of follow-up edit
-      // Skip visual taste & conversion refinement for error-correction/self-healing runs to prevent timeouts and latency
-      const shouldSkipRefinement = Boolean(errorCorrection);
-      let evaluation = shouldSkipRefinement 
-        ? { passed: true, taste: { averageScore: 100 }, conversion: { averageScore: 100 }, critique: [] }
-        : await evaluateCodeQuality(finalCode, prompt);
-      let refinementAttempt = 0;
-      const maxRefinementAttempts = 2;
-
-      while (!evaluation.passed && refinementAttempt < maxRefinementAttempts) {
-        refinementAttempt++;
-        console.log(
-          `Refining follow-up edit, attempt ${refinementAttempt}. Taste Score: ${evaluation.taste.averageScore}/100, Conversion Score: ${evaluation.conversion.averageScore}/100`
-        );
-
-        const refinedResult = await generateContent({
-          provider: "openrouter",
-          model: getModelForTask("remotion_generation").id,
-          system: REFINEMENT_SYSTEM_PROMPT,
-          prompt: `## USER REQUEST (EDIT):
-${prompt}
-
-## PREVIOUS CODE DRAFT (FAILED CRITIQUE):
-\`\`\`tsx
-${finalCode}
-\`\`\`
-
-## ART CRITIC DETECTED ISSUES TO FIX:
-${evaluation.critique.map((c, i) => `${i + 1}. ${c}`).join("\n")}
-
-Please fix these issues, improve layout safety and motion visual quality to meet premium standards, and output the refined code.`,
-          schema: z.object({
-            code: z.string().describe("Complete, valid ES6 Remotion component code starting with imports and ending with closing export block."),
-            summary: z.string().describe("Brief description of refinement changes"),
-          }),
-          taskType: "remotion_generation",
-        });
-
-        finalCode = extractComponentCode(stripMarkdownFences(refinedResult.object.code));
-        editType = "full_replacement"; // Force full replacement since we refined it
-        appliedEdits = undefined;
-
-        evaluation = await evaluateCodeQuality(finalCode, prompt);
-      }
-
-      // Save successful follow-up edits to Creative Memory database
-      const finalTasteScore = evaluation.taste.averageScore;
-      const finalConvScore = evaluation.conversion.averageScore;
-      const finalScore = Math.round((finalTasteScore + finalConvScore) / 2);
-
-      if (finalScore >= 90) {
-        const parsedBrief = (() => {
-          const audienceMatch = finalCode.match(/\*\s*AUDIENCE\s*:\s*([^\n]+)/i);
-          const emotionMatch = finalCode.match(/\*\s*EMOTION\s*:\s*([^\n(]+)/i);
-          return {
-            audience: audienceMatch ? audienceMatch[1].trim() : "Existing Audience",
-            emotion: emotionMatch ? emotionMatch[1].trim() : "Luxury",
-          };
-        })();
-
-        saveToCreativeMemory({
-          prompt,
-          audience: parsedBrief.audience,
-          emotion: parsedBrief.emotion,
-          storyboard: [],
-          finalScore,
-          timestamp: new Date().toISOString(),
-        });
       }
 
       // Return the result with metadata
