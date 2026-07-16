@@ -305,11 +305,11 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
 
   ensureCacheDir();
 
-  // Try calling Qevaro image generation first (flux-1-schnell)
-  if (process.env.QEVARO_API_KEY) {
+  // Try calling OpenRouter image generation first (flux-1-schnell)
+  if (process.env.OPENROUTER_API_KEY) {
     try {
-      const baseUrl = process.env.QEVARO_BASE_URL || "https://api.qevaro.com/v1";
-      console.log(`[Image API] Calling Qevaro flux-1-schnell...`);
+      const baseUrl = "https://openrouter.ai/api/v1";
+      console.log(`[Image API] Calling OpenRouter flux-1-schnell...`);
       
       const genController = new AbortController();
       const genTimeoutId = setTimeout(() => genController.abort(), 20000); // 20s timeout
@@ -318,7 +318,7 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.QEVARO_API_KEY}`
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
         },
         body: JSON.stringify({
           model: "flux-1-schnell",
@@ -334,7 +334,7 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
         const data: any = await response.json();
         const imageUrl = data.data?.[0]?.url;
         if (imageUrl) {
-          console.log(`[Image API] Fetching generated image from Qevaro URL: ${imageUrl}`);
+          console.log(`[Image API] Fetching generated image from URL: ${imageUrl}`);
           
           const imgController = new AbortController();
           const imgTimeoutId = setTimeout(() => imgController.abort(), 20000); // 20s timeout
@@ -359,10 +359,10 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
         }
       } else {
         const errText = await response.text().catch(() => "");
-        console.warn(`[Image API Warning] Qevaro image generation returned status ${response.status}: ${errText}`);
+        console.warn(`[Image API Warning] OpenRouter image generation returned status ${response.status}: ${errText}`);
       }
-    } catch (qevaroErr) {
-      console.warn(`[Image API Warning] Qevaro image generation failed:`, qevaroErr);
+    } catch (imageErr) {
+      console.warn(`[Image API Warning] OpenRouter image generation failed:`, imageErr);
     }
   }
 

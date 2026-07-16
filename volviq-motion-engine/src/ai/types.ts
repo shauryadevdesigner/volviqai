@@ -1,11 +1,11 @@
 // ============================================================================
-// Qevaro AI Provider — Shared Types
+// AI Provider — Shared Types
 // ============================================================================
 
 /**
- * All available Qevaro model identifiers.
+ * All available AI model identifiers.
  */
-export type QevaroModel =
+export type AIModel =
   // Reasoning Models
   | "deepseek-v4-pro"
   | "deepseek-v3.1"
@@ -56,11 +56,11 @@ export type ModelCategory =
  * Per-model configuration entry in the registry.
  */
 export interface ModelConfig {
-  id: QevaroModel;
+  id: AIModel;
   name: string;
   category: ModelCategory;
   maxTokens: number;
-  fallback?: QevaroModel;
+  fallback?: AIModel;
   locked?: boolean;
 }
 
@@ -78,11 +78,11 @@ export type TaskType =
   | "vision_analysis";
 
 /**
- * Parameters for `createQevaroCompletion()`.
+ * Parameters for AI completions.
  */
-export interface QevaroCompletionParams {
-  model: QevaroModel | string;
-  messages: QevaroMessage[];
+export interface AICompletionParams {
+  model: AIModel | string;
+  messages: AIMessage[];
   system?: string;
   temperature?: number;
   maxTokens?: number;
@@ -93,24 +93,24 @@ export interface QevaroCompletionParams {
 }
 
 /**
- * A single message in the Qevaro chat completion request.
+ * A single message in the chat completion request.
  */
-export interface QevaroMessage {
+export interface AIMessage {
   role: "system" | "user" | "assistant";
-  content: string | QevaroContentPart[];
+  content: string | AIContentPart[];
 }
 
 /**
  * Multi-modal content part (text or image).
  */
-export type QevaroContentPart =
+export type AIContentPart =
   | { type: "text"; text: string }
   | { type: "image_url"; image_url: { url: string } };
 
 /**
- * Wrapper around the Qevaro chat completion response.
+ * Wrapper around the chat completion response.
  */
-export interface QevaroCompletionResponse {
+export interface AICompletionResponse {
   content: string;
   model: string;
   usage: {
@@ -118,15 +118,15 @@ export interface QevaroCompletionResponse {
     completionTokens: number;
     totalTokens: number;
   };
-  quotaMetrics: QevaroUsageMetrics | null;
+  quotaMetrics: ProviderUsageMetrics | null;
   latencyMs: number;
   finishReason: string;
 }
 
 /**
- * Token quota metrics extracted from Qevaro response headers.
+ * Token quota metrics extracted from response headers.
  */
-export interface QevaroUsageMetrics {
+export interface ProviderUsageMetrics {
   tokenQuotaTotal: number;
   tokenQuotaUsed: number;
   tokenQuotaRemaining: number;
@@ -178,7 +178,7 @@ export interface AggregatedUsageMetrics {
   totalTokensUsed: number;
   averageLatencyMs: number;
   errorRate: number;
-  quota: QevaroUsageMetrics | null;
+  quota: ProviderUsageMetrics | null;
   modelBreakdown: ModelUsageBreakdown[];
 }
 

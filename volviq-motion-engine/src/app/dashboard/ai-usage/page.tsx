@@ -92,7 +92,7 @@ export default function AIUsageDashboard() {
         <div>
           <h1 style={styles.title}>AI Usage Dashboard</h1>
           <p style={styles.subtitle}>
-            Qevaro API · Real-time monitoring & model routing
+            OpenRouter API · Real-time monitoring & model routing
           </p>
         </div>
         <div style={styles.headerBadge}>

@@ -90,7 +90,7 @@ function parseApiErrorBody(
     typeof errorData.type === "string" ? errorData.type : undefined;
 
   // Extract the error message from various response shapes
-  // Qevaro / OpenAI-style: { error: { message: "...", type: "..." } }
+  // OpenRouter / OpenAI-style: { error: { message: "...", type: "..." } }
   // Flat style:            { error: "..." }
   // Alt flat:              { message: "..." }
   let message: string;
@@ -108,7 +108,7 @@ function parseApiErrorBody(
     message = `API error: ${status}`;
   }
 
-  // Derive the effective API error type (prefer nested type from Qevaro)
+  // Derive the effective API error type (prefer nested type from provider)
   const effectiveApiType =
     apiType ||
     (errorData.error &&
@@ -119,7 +119,10 @@ function parseApiErrorBody(
 
   if (
     effectiveApiType === "api_key_missing" ||
-    (status === 400 && (message.toLowerCase().includes("gemini is not configured") || message.toLowerCase().includes("qevaro is not configured")))
+    (status === 400 && (
+      message.toLowerCase().includes("gemini is not configured") || 
+      message.toLowerCase().includes("openrouter is not configured")
+    ))
   ) {
     return classifyGenerationError(message, {
       httpStatus: status,

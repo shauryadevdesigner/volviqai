@@ -14,16 +14,16 @@ export const logger = {
     baseLogger.debug("system", message, data);
   },
 
-  logQevaroRequest(model: string, promptPreview: string, isFollowUp: boolean) {
-    baseLogger.info("Qevaro", `Request initiated for model: ${model}`, {
+  logOpenRouterRequest(model: string, promptPreview: string, isFollowUp: boolean) {
+    baseLogger.info("OpenRouter", `Request initiated for model: ${model}`, {
       model,
       isFollowUp,
       promptPreview: promptPreview.length > 100 ? `${promptPreview.slice(0, 100)}...` : promptPreview,
     });
   },
 
-  logQevaroResponse(model: string, durationMs: number, success: boolean, details?: unknown) {
-    baseLogger.info("Qevaro", `Response received for model: ${model} in ${durationMs}ms (Success: ${success})`, {
+  logOpenRouterResponse(model: string, durationMs: number, success: boolean, details?: unknown) {
+    baseLogger.info("OpenRouter", `Response received for model: ${model} in ${durationMs}ms (Success: ${success})`, {
       model,
       durationMs,
       success,
@@ -32,7 +32,7 @@ export const logger = {
   },
 
   logTokenUsage(model: string, usage: { tokenQuotaTotal: number; tokenQuotaUsed: number; tokenQuotaRemaining: number }) {
-    baseLogger.info("Qevaro:Quota", `Token usage for ${model}: ${usage.tokenQuotaUsed}/${usage.tokenQuotaTotal} (${usage.tokenQuotaRemaining} remaining)`, {
+    baseLogger.info("OpenRouter:Quota", `Token usage for ${model}: ${usage.tokenQuotaUsed}/${usage.tokenQuotaTotal} (${usage.tokenQuotaRemaining} remaining)`, {
       model,
       ...usage,
     });

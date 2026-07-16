@@ -1,22 +1,18 @@
 // ============================================================================
-// Qevaro AI — Unified Provider Layer
+// AI Unified Provider Layer (OpenRouter)
 // ============================================================================
 //
-// High-level `generateContent()` function that replaces the former
-// Replaces the former provider layer. All AI generation flows through this module.
+// High-level `generateContent()` function. All AI generation flows through this module.
 // ============================================================================
 
-import {
-  generateObject as sdkGenerateObject,
-  streamText as sdkStreamText,
-  GenerateObjectResult,
-  StreamTextResult,
-} from "ai";
-import { getQevaroClient } from "./qevaro";
+import { GenerateObjectResult, StreamTextResult } from "ai";
+import { OpenRouterProvider } from "./openrouter-provider";
 import { getModelChain, getModelFallbackChain, getModelForTask } from "./model-router";
 import { usageStore } from "./usage-store";
 import { logger } from "../lib/logger";
 import type { TaskType } from "./types";
+
+const aiProvider = new OpenRouterProvider();
 
 // ── Request Queue System ───────────────────────────────────────────────────
 
@@ -76,7 +72,7 @@ export const FINAL_FALLBACK_MODEL = "gpt-oss-120b";
 // ── Types ───────────────────────────────────────────────────────────────────
 
 export interface GenerateContentParams {
-  provider?: string; // Kept for API compat, always uses Qevaro
+  provider?: string; // Kept for API compat, always uses OpenRouter
   model: string;
   prompt?: string;
   system?: string;
@@ -106,7 +102,7 @@ export function generateContent(
  * High-level generateContent function for the Volviq AI pipeline.
  *
  * Automatically wraps structured object generation, streaming, and
- * text generation with a model fallback chain powered by Qevaro.
+ * text generation with a model fallback chain powered by OpenRouter.
  */
 export async function generateContent(params: GenerateContentParams): Promise<any> {
   const queueStart = Date.now();
@@ -164,26 +160,18 @@ export async function generateContent(params: GenerateContentParams): Promise<an
       logger.logModelSelection(modelName, phase);
 
       try {
-        const modelInstance = getModelForProvider(modelName);
         const start = Date.now();
 
         if (schema) {
           // Structured JSON mode via generateObject
-          const options: any = {
-            model: modelInstance,
-            system,
-            schema,
-            maxTokens: 8000,
-            mode: "json",
-          };
-          if (prompt) {
-            options.prompt = prompt;
-          } else if (messages) {
-            options.messages = messages;
-          }
-
           try {
-            const result = await sdkGenerateObject(options);
+            const result = await aiProvider.generateObject({
+              model: modelName,
+              system,
+              prompt,
+              messages,
+              schema,
+            });
             const duration = Date.now() - start;
             logger.info(`generateContent (Object) succeeded with ${modelName} in ${duration}ms (Queue wait: ${queueTimeMs}ms)`);
 
@@ -205,15 +193,12 @@ export async function generateContent(params: GenerateContentParams): Promise<an
             if (rawText) {
               try {
                 const repairModelId = getModelForTask("validation").id;
-                const repairModelInstance = getModelForProvider(repairModelId);
-                const repairResult = await sdkGenerateObject({
-                  model: repairModelInstance,
+                const repairResult = await aiProvider.generateObject({
+                  model: repairModelId,
                   system: "Convert the following output into valid JSON matching the required schema exactly.",
                   prompt: `Raw Output:\n${rawText}\n\nSchema details:\n${JSON.stringify(schema)}`,
                   schema,
-                  maxTokens: 8000,
-                  mode: "json",
-                } as any);
+                });
                 const repairDuration = Date.now() - start;
                 logger.info(`JSON repair succeeded using ${repairModelId} in ${repairDuration}ms`);
 
@@ -236,18 +221,12 @@ export async function generateContent(params: GenerateContentParams): Promise<an
           }
         } else if (stream) {
           // Streaming text mode — needs high token limit for full Remotion components
-          const options: any = {
-            model: modelInstance,
+          const result = await aiProvider.streamText({
+            model: modelName,
             system,
-            maxTokens: 16000,
-          };
-          if (prompt) {
-            options.prompt = prompt;
-          } else if (messages) {
-            options.messages = messages;
-          }
-
-          const result = await sdkStreamText(options);
+            prompt,
+            messages,
+          });
           const duration = Date.now() - start;
           logger.info(`generateContent (Stream) initialized with ${modelName} in ${duration}ms (Queue wait: ${queueTimeMs}ms)`);
 
@@ -281,17 +260,4 @@ export async function generateContent(params: GenerateContentParams): Promise<an
     logger.error("generateContent failed for all models in the fallback chain");
     throw lastError || new Error("AI Generation failed with all models in the fallback chain");
   });
-}
-
-// ── Model Instance Creator ──────────────────────────────────────────────────
-
-/**
- * Returns an AI SDK model instance for the given model name via Qevaro.
- */
-export function getModelForProvider(modelName: string) {
-  const client = getQevaroClient();
-  if (!client) {
-    throw new Error("Qevaro client is not configured. Check QEVARO_API_KEY.");
-  }
-  return client.chat(modelName);
 }

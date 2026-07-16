@@ -58,7 +58,7 @@ export function classifyGenerationError(
         ? error
         : JSON.stringify(error);
 
-  // Try to parse structured JSON error from Qevaro custom fetch
+  // Try to parse structured JSON error from OpenRouter custom fetch
   try {
     const jsonStart = raw.indexOf("{");
     if (jsonStart !== -1) {
@@ -130,14 +130,14 @@ export function classifyGenerationError(
     apiType === "api_key_missing" ||
     includesAny(combined, [
       "gemini is not configured",
-      "qevaro is not configured",
+      "openrouter is not configured",
       "api key",
       "api_key",
       "missing key",
       "invalid api key",
       "google_generative_ai_api_key",
       "gemini_api_key",
-      "qevaro_api_key",
+      "openrouter_api_key",
     ])
   ) {
     const isProd = process.env.NODE_ENV === "production";
@@ -145,10 +145,10 @@ export function classifyGenerationError(
       code: "api_key_missing",
       title: "API Key Missing",
       message: isProd
-        ? "Qevaro is not configured. Please ensure QEVARO_API_KEY is configured in your Vercel environment variables."
-        : "Qevaro is not configured. Add QEVARO_API_KEY to volviq-motion-engine/.env and restart the dev server.",
+        ? "OpenRouter is not configured. Please ensure OPENROUTER_API_KEY is configured in your Vercel environment variables."
+        : "OpenRouter is not configured. Add OPENROUTER_API_KEY to volviq-motion-engine/.env and restart the dev server.",
       action: isProd
-        ? "Configure QEVARO_API_KEY in your Vercel project settings and trigger a redeployment."
+        ? "Configure OPENROUTER_API_KEY in your Vercel project settings and trigger a redeployment."
         : "Set your API key in .env, then run npm run dev again.",
       type: "api",
       httpStatus: httpStatus ?? 400,
@@ -241,7 +241,7 @@ export function classifyGenerationError(
       code: "auth_failed",
       title: "Authentication Failed",
       message: combined || "Could not authenticate with the AI service.",
-      action: "Verify your Qevaro API key is valid and has access to the requested model.",
+      action: "Verify your OpenRouter API key is valid and has access to the requested model.",
       type: "api",
       httpStatus: httpStatus ?? 401,
       detail: raw,
@@ -307,7 +307,7 @@ export function classifyGenerationError(
       title: "Generation Failed",
       message:
         `An unexpected error occurred during generation${detailText}. Check the browser console for logs.`,
-      action: "Open DevTools → Console, then retry. Ensure QEVARO_API_KEY is set.",
+      action: "Open DevTools → Console, then retry. Ensure OPENROUTER_API_KEY is set.",
       type: "api",
       detail: raw || "Empty error message",
     };

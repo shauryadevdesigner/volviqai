@@ -17,7 +17,7 @@ export function classifyProviderError(error: unknown): {
 } {
   const msg = getErrorMessage(error);
   
-  // Try to parse structured error from our qevaro fetch wrapper
+  // Try to parse structured error from our openrouter fetch wrapper
   try {
     const jsonStart = msg.indexOf("{");
     if (jsonStart !== -1) {
@@ -26,7 +26,7 @@ export function classifyProviderError(error: unknown): {
       if (parsed.status && parsed.message) {
         return {
           message: parsed.message,
-          type: parsed.type || "qevaro_error",
+          type: parsed.type || "openrouter_error",
           status: parsed.status,
         };
       }
@@ -35,7 +35,7 @@ export function classifyProviderError(error: unknown): {
       if (parsed.status && parsed.message) {
         return {
           message: parsed.message,
-          type: parsed.type || "qevaro_error",
+          type: parsed.type || "openrouter_error",
           status: parsed.status,
         };
       }
@@ -55,8 +55,8 @@ export function classifyProviderError(error: unknown): {
     const isProd = process.env.NODE_ENV === "production";
     return {
       message: isProd
-        ? "Invalid or missing Qevaro API key. Please check QEVARO_API_KEY in your Vercel project environment variables."
-        : "Invalid or missing Qevaro API key. Check QEVARO_API_KEY in .env.",
+        ? "Invalid or missing OpenRouter API key. Please check OPENROUTER_API_KEY in your Vercel project environment variables."
+        : "Invalid or missing OpenRouter API key. Check OPENROUTER_API_KEY in .env.",
       type: "api_key_missing",
       status: 401,
     };
@@ -70,7 +70,7 @@ export function classifyProviderError(error: unknown): {
     lower.includes("exhausted")
   ) {
     return {
-      message: "Qevaro rate limit or quota exceeded. Try again shortly.",
+      message: "OpenRouter rate limit or quota exceeded. Try again shortly.",
       type: "rate_limit",
       status: 429,
     };
@@ -83,7 +83,7 @@ export function classifyProviderError(error: unknown): {
     lower.includes("403")
   ) {
     return {
-      message: "Qevaro authentication failed. Verify your API key.",
+      message: "OpenRouter authentication failed. Verify your API key.",
       type: "auth_failed",
       status: 401,
     };
@@ -99,7 +99,7 @@ export function classifyProviderError(error: unknown): {
 
   logger.error("api-errors", "Unclassified provider error", { msg, error });
   return {
-    message: msg || "Qevaro provider error",
+    message: msg || "OpenRouter provider error",
     type: "api_unavailable",
     status: 500,
   };

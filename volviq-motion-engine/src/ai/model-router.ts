@@ -1,13 +1,13 @@
 // ============================================================================
-// Qevaro AI — Dynamic Model Router
+// AI Provider — Dynamic Model Router
 // ============================================================================
 
-import type { ModelConfig, QevaroModel, TaskType } from "./types";
+import type { ModelConfig, AIModel, TaskType } from "./types";
 
 /**
- * Complete registry of all available Qevaro models.
+ * Complete registry of all available models.
  */
-export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
+export const MODEL_REGISTRY: Record<AIModel, ModelConfig> = {
   // ── Reasoning Models ──────────────────────────────────────────────────
   "deepseek-v4-pro": {
     id: "deepseek-v4-pro",
@@ -227,7 +227,7 @@ export const MODEL_REGISTRY: Record<QevaroModel, ModelConfig> = {
  * Each task type maps to a primary model and an implicit fallback chain
  * derived from the model's `fallback` field in the registry.
  */
-const TASK_MODEL_MAP: Record<TaskType, QevaroModel> = {
+const TASK_MODEL_MAP: Record<TaskType, AIModel> = {
   storyboarding: "gemini-3-flash",
   remotion_generation: "gemini-3-flash",
   fast_operation: "gemini-3-flash",
@@ -255,9 +255,9 @@ export function getModelForTask(task: TaskType): ModelConfig {
  *
  * e.g. for `storyboarding`: ["deepseek-v4-pro", "deepseek-v3.1", "kimi-k2.6"]
  */
-export function getModelChain(task: TaskType): QevaroModel[] {
+export function getModelChain(task: TaskType): AIModel[] {
   const primaryId = TASK_MODEL_MAP[task];
-  const chain: QevaroModel[] = [primaryId];
+  const chain: AIModel[] = [primaryId];
 
   let current = MODEL_REGISTRY[primaryId];
   while (current?.fallback) {
@@ -273,8 +273,8 @@ export function getModelChain(task: TaskType): QevaroModel[] {
 /**
  * Returns the full fallback chain starting from a given model ID.
  */
-export function getModelFallbackChain(modelId: QevaroModel): QevaroModel[] {
-  const chain: QevaroModel[] = [modelId];
+export function getModelFallbackChain(modelId: AIModel): AIModel[] {
+  const chain: AIModel[] = [modelId];
 
   let current = MODEL_REGISTRY[modelId];
   while (current?.fallback) {
@@ -297,7 +297,7 @@ export function getAllModels(): ModelConfig[] {
 /**
  * Check if a specific model is currently available (not locked).
  */
-export function isModelAvailable(model: QevaroModel): boolean {
+export function isModelAvailable(model: AIModel): boolean {
   const config = MODEL_REGISTRY[model];
   return config ? !config.locked : false;
 }
@@ -305,6 +305,6 @@ export function isModelAvailable(model: QevaroModel): boolean {
 /**
  * Returns the ModelConfig for a specific model ID, or null if not found.
  */
-export function getModelConfig(model: QevaroModel | string): ModelConfig | null {
-  return MODEL_REGISTRY[model as QevaroModel] ?? null;
+export function getModelConfig(model: AIModel | string): ModelConfig | null {
+  return MODEL_REGISTRY[model as AIModel] ?? null;
 }

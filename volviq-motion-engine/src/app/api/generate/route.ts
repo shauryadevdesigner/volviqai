@@ -7,7 +7,6 @@ import {
   detectSkillsLocally,
 } from "@/skills";
 import { checkAndIncrementUsage, getUserFromRequest } from "@/lib/auth-server";
-import { getQevaroApiKey } from "@/ai/qevaro";
 import { generateContent } from "@/ai/provider";
 import { getModelForTask } from "@/ai/model-router";
 import { classifyProviderError, getErrorMessage } from "@/lib/api-errors";
@@ -318,7 +317,7 @@ To pass, both Taste averageScore and Conversion averageScore must be >= 80. Else
 
 async function evaluateCodeQuality(code: string, userPrompt: string): Promise<PremiumAudit> {
   const result = await generateContent({
-    provider: "qevaro",
+    provider: "openrouter",
     model: getModelForTask("quality_assurance").id,
     system: QUALITY_AUDIT_SYSTEM_PROMPT,
     prompt: `Audit the following generated Remotion React code for the user prompt: "${userPrompt}"\n\n\`\`\`tsx\n${code}\n\`\`\``,
@@ -378,7 +377,7 @@ export async function POST(req: Request) {
     frameImages,
   }: GenerateRequest = await req.json();
 
-  const apiKey = getQevaroApiKey();
+  const apiKey = process.env.OPENROUTER_API_KEY;
 
   const authUser = await getUserFromRequest(req);
   const authHeader = req.headers.get("Authorization");
@@ -400,13 +399,13 @@ export async function POST(req: Request) {
   }
 
   if (!apiKey) {
-    logger.error("generate", "QEVARO_API_KEY missing");
+    logger.error("generate", "OPENROUTER_API_KEY missing");
     const isProd = process.env.NODE_ENV === "production";
     return new Response(
       JSON.stringify({
         error: isProd
-          ? "Qevaro is not configured. Please ensure QEVARO_API_KEY is configured in your Vercel environment variables."
-          : "Qevaro is not configured. Add QEVARO_API_KEY to volviq-motion-engine/.env and restart the dev server.",
+          ? "OpenRouter is not configured. Please ensure OPENROUTER_API_KEY is configured in your Vercel environment variables."
+          : "OpenRouter is not configured. Add OPENROUTER_API_KEY to volviq-motion-engine/.env and restart the dev server.",
         type: "api_key_missing",
       }),
       {
@@ -416,11 +415,11 @@ export async function POST(req: Request) {
     );
   }
 
-  let qevaroModelId = model;
-  if (qevaroModelId === "deepseek-v4-flash" || qevaroModelId === "qwen3-coder-plus") {
-    qevaroModelId = "gemini-3-flash";
-  } else if (qevaroModelId === "gpt-120b") {
-    qevaroModelId = "gpt-oss-120b";
+  let targetModelId = model;
+  if (targetModelId === "deepseek-v4-flash" || targetModelId === "qwen3-coder-plus") {
+    targetModelId = "gemini-3-flash";
+  } else if (targetModelId === "gpt-120b") {
+    targetModelId = "gpt-oss-120b";
   }
 
   // ── LOCAL SKILL DETECTION & VALIDATION BYPASS ──
@@ -537,7 +536,7 @@ Analyze the request and decide: use targeted edits (type: "edit") for small chan
         "Follow-up edit with prompt:",
         prompt,
         "model:",
-        qevaroModelId,
+        targetModelId,
         "skills:",
         detectedSkills.length > 0 ? detectedSkills.join(", ") : "general",
         frameImages && frameImages.length > 0
@@ -569,7 +568,7 @@ Analyze the request and decide: use targeted edits (type: "edit") for small chan
       let response;
       try {
         const editResult = await generateContent({
-          provider: "qevaro",
+          provider: "openrouter",
           model: getModelForTask("remotion_generation").id,
           system: `${enhancedSystemPrompt}\n\n---\n\n${FOLLOW_UP_SYSTEM_PROMPT}`,
           messages: editMessages,
@@ -597,7 +596,7 @@ Analyze the user's request and the current code, and output the COMPLETE, update
 You MUST output the complete code in the 'code' property of the JSON response.`;
 
         const fallbackResult = await generateContent({
-          provider: "qevaro",
+          provider: "openrouter",
           model: getModelForTask("remotion_generation").id,
           system: fallbackSystemPrompt,
           messages: editMessages,
@@ -644,8 +643,8 @@ ${result.error}
 Since the search-replace edit failed, please output the COMPLETE updated code instead.`;
 
             const fallbackResult = await generateContent({
-              provider: "qevaro",
-              model: qevaroModelId,
+              provider: "openrouter",
+              model: targetModelId,
               system: fallbackSystemPrompt,
               prompt: fallbackPromptText,
               schema: z.object({
@@ -713,7 +712,7 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
         console.log(`[Pipeline] Follow-up compilation failed, attempt ${compileAttempts}/${maxCompileAttempts}. Errors:`, compileValidation.errors);
         
         const repairResult = await generateContent({
-          provider: "qevaro",
+          provider: "openrouter",
           model: getModelForTask("remotion_generation").id,
           system: REFINEMENT_SYSTEM_PROMPT,
           prompt: `## COMPILATION ERROR (ATTEMPT ${compileAttempts}/${maxCompileAttempts})
@@ -763,7 +762,7 @@ CRITICAL: Fix these compilation errors. Ensure all tags match, types are correct
         );
 
         const refinedResult = await generateContent({
-          provider: "qevaro",
+          provider: "openrouter",
           model: getModelForTask("remotion_generation").id,
           system: REFINEMENT_SYSTEM_PROMPT,
           prompt: `## USER REQUEST (EDIT):
@@ -825,7 +824,7 @@ Please fix these issues, improve layout safety and motion visual quality to meet
           skills: detectedSkills,
           editType,
           edits: appliedEdits,
-          model: qevaroModelId,
+          model: targetModelId,
         },
       };
 
@@ -859,7 +858,7 @@ Please fix these issues, improve layout safety and motion visual quality to meet
       "Starting 16-Stage Universal Creative Brain V1 Orchestrator with prompt:",
       prompt,
       "model:",
-      qevaroModelId
+      targetModelId
     );
 
     const encoder = new TextEncoder();
@@ -881,7 +880,7 @@ Please fix these issues, improve layout safety and motion visual quality to meet
         try {
           const finalCode = await runOrchestrator({
             prompt,
-            model: qevaroModelId,
+            model: targetModelId,
             userId: authUser?.id,
             onEvent: (event) => {
               if (event.type === "telemetry") {
@@ -916,7 +915,7 @@ Please fix these issues, improve layout safety and motion visual quality to meet
             error: errorMessage,
             stack: errorStack,
             stage: "orchestrator_streaming",
-            model: qevaroModelId,
+            model: targetModelId,
             promptLength: prompt?.length,
             timestamp: new Date().toISOString(),
           }));
@@ -942,7 +941,7 @@ Please fix these issues, improve layout safety and motion visual quality to meet
     logger.error("generate", "Stream generation failed", {
       message: getErrorMessage(error),
       stack: error instanceof Error ? error.stack : undefined,
-      model: qevaroModelId,
+      model: targetModelId,
     });
     return new Response(
       JSON.stringify({

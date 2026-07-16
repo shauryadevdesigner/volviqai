@@ -1,23 +1,23 @@
 // ============================================================================
-// Qevaro AI — In-Memory Usage Metrics Store
+// AI Provider — In-Memory Usage Metrics Store
 // ============================================================================
 
 import type {
   AIRequestRecord,
   AggregatedUsageMetrics,
   ModelUsageBreakdown,
-  QevaroUsageMetrics,
+  ProviderUsageMetrics,
 } from "./types";
 
 const MAX_RECORDS = 1000;
 
 /**
  * Singleton in-memory store for tracking AI request metrics.
- * Used by the AI Usage Dashboard and the Qevaro client.
+ * Used by the AI Usage Dashboard and the AI provider client.
  */
 class UsageStore {
   private records: AIRequestRecord[] = [];
-  private latestQuota: QevaroUsageMetrics | null = null;
+  private latestQuota: ProviderUsageMetrics | null = null;
   private idCounter = 0;
 
   /**
@@ -56,9 +56,9 @@ class UsageStore {
   }
 
   /**
-   * Update the latest token quota from Qevaro response headers.
+   * Update the latest token quota from response headers.
    */
-  updateQuota(quota: QevaroUsageMetrics): void {
+  updateQuota(quota: ProviderUsageMetrics): void {
     this.latestQuota = quota;
   }
 
@@ -149,7 +149,7 @@ class UsageStore {
   /**
    * Get the latest quota info.
    */
-  getQuota(): QevaroUsageMetrics | null {
+  getQuota(): ProviderUsageMetrics | null {
     return this.latestQuota;
   }
 }
