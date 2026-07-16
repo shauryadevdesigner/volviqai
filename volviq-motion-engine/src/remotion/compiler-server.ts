@@ -250,18 +250,8 @@ export function verifyAndCompileServer(code: string): { success: boolean; errors
       return { success: false, errors: ["Transpilation failed"] };
     }
 
-    const wrappedCode = `${transpiled.code}\nreturn DynamicAnimation;`;
-
-    new Function(
-      "React", "Remotion", "RemotionShapes", "Lottie", "Audio", "ThreeCanvas", "THREE",
-      "AbsoluteFill", "interpolate", "useCurrentFrame", "useVideoConfig", "spring", "Sequence", "Img", "staticFile",
-      "useState", "useEffect", "useMemo", "useRef", "Rect", "Circle", "Triangle", "Star", "Polygon", "Ellipse",
-      "Heart", "Pie", "makeRect", "makeCircle", "makeTriangle", "makeStar", "makePolygon", "makeEllipse", "makeHeart", "makePie",
-      "TransitionSeries", "linearTiming", "springTiming", "fade", "slide", "wipe", "flip", "clockWipe", "userImages",
-      "SPRINGS", "SPACING", "BORDER_RADIUS", "SHADOWS", "GLOWS", "BLURS", "FONTS",
-      "HeroHeadline", "GradientBackground", "GlassCard", "FeatureGrid", "PremiumCTA", "KineticText", "AnimatedNumber", "LogoWall",
-      wrappedCode
-    );
+    // Transpilation successful implies syntax is valid.
+    // Edge Runtime does not allow 'new Function', so we skip execution validation here.
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown compilation error";
