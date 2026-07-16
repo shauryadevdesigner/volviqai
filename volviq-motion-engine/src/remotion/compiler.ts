@@ -1,4 +1,4 @@
-import * as Babel from "@babel/standalone";
+import { transform } from "sucrase";
 import { repairGeneratedCode } from "./jsx-validator";
 import { Audio } from "@remotion/media";
 import { Lottie } from "@remotion/lottie";
@@ -349,9 +349,8 @@ export function compileCode(code: string): CompilationResult {
 
     const wrappedSource = `const DynamicAnimation = () => {\n${componentBody}\n};`;
 
-    const transpiled = Babel.transform(wrappedSource, {
-      presets: ["react", "typescript"],
-      filename: "dynamic-animation.tsx",
+    const transpiled = transform(wrappedSource, {
+      transforms: ["jsx", "typescript"],
     });
 
     if (!transpiled.code) {

@@ -8,7 +8,7 @@
 // commas in style objects, and malformed JSX.
 // ============================================================================
 
-import * as Babel from "@babel/standalone";
+import { transform } from "sucrase";
 
 export interface ValidationReport {
   isValid: boolean;
@@ -339,11 +339,8 @@ export function repairGeneratedCode(code: string): { code: string; repairs: stri
  */
 function tryBabelParse(code: string): string | null {
   try {
-    // We use Babel's transform (available in the browser via @babel/standalone)
-    // as a validation step. If it throws, the code is invalid.
-    Babel.transform(code, {
-      presets: ["react", "typescript"],
-      filename: "validation-check.tsx",
+    transform(code, {
+      transforms: ["jsx", "typescript"],
     });
     return null;
   } catch (err) {

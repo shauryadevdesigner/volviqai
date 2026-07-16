@@ -1,4 +1,4 @@
-import * as Babel from "@babel/standalone";
+import { transform } from "sucrase";
 import { repairGeneratedCode } from "./jsx-validator";
 
 function extractComponentBody(code: string): string {
@@ -242,9 +242,8 @@ export function verifyAndCompileServer(code: string): { success: boolean; errors
     const { code: componentBody } = repairGeneratedCode(rawComponentBody);
     const wrappedSource = `const DynamicAnimation = () => {\n${componentBody}\n};`;
 
-    const transpiled = Babel.transform(wrappedSource, {
-      presets: ["react", "typescript"],
-      filename: "dynamic-animation.tsx",
+    const transpiled = transform(wrappedSource, {
+      transforms: ["jsx", "typescript"],
     });
 
     if (!transpiled.code) {
