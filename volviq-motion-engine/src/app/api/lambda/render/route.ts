@@ -23,16 +23,29 @@ export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
     const base64Code = btoa(unescape(encodeURIComponent(inputProps.code)));
     const durationSec = Math.ceil(inputProps.durationInFrames / (inputProps.fps || 30));
 
-    const renderTargetUrl = `${baseUrl}/render-target?durationInFrames=${inputProps.durationInFrames}&code=${base64Code}`;
+    const renderTargetUrl = `${baseUrl}/render-target?durationInFrames=${inputProps.durationInFrames}&code=${encodeURIComponent(base64Code)}`;
 
+    // JSON2VIDEO requires scenes array with explicit element dimensions
     const json2VideoPayload = {
-      resolution: "full-hd",
+      resolution: "custom",
+      width: 1080,
+      height: 1920,
       quality: "high",
-      elements: [
+      scenes: [
         {
-          type: "html",
-          url: renderTargetUrl,
-          duration: durationSec
+          "background-color": "#000000",
+          duration: durationSec,
+          elements: [
+            {
+              type: "html",
+              html: `<iframe src="${renderTargetUrl}" style="width:1080px;height:1920px;border:none;overflow:hidden;" scrolling="no"></iframe>`,
+              width: 1080,
+              height: 1920,
+              x: 0,
+              y: 0,
+              duration: durationSec
+            }
+          ]
         }
       ]
     };
