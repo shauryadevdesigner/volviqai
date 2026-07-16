@@ -1,15 +1,66 @@
-import {
-  AwsRegion,
-  getRenderProgress,
-  speculateFunctionName,
-} from "@remotion/lambda/client";
-import { DISK, RAM, REGION, TIMEOUT } from "../../../../../config.mjs";
 import { ProgressRequest, ProgressResponse } from "../../../../../types/schema";
 import { executeApi } from "../../../../helpers/api-response";
 
 export const POST = executeApi<ProgressResponse, typeof ProgressRequest>(
   ProgressRequest,
   async (req, body) => {
+    // If it's a JSON2VIDEO render
+    if (body.bucketName === "json2video") {
+      try {
+        const response = await fetch(`https://api.json2video.com/v2/movies?project=${body.id}`, {
+          method: "GET",
+          headers: {
+            "x-api-key": "cZehYVmEjAje7GoNCndm1bhliwGFHecRA5dKd7cg",
+          },
+        });
+
+        if (!response.ok) {
+          return {
+            type: "error",
+            message: "Failed to fetch progress from JSON2VIDEO",
+          };
+        }
+
+        const data = await response.json();
+        
+        if (!data.success || !data.movie) {
+          return {
+            type: "error",
+            message: "Invalid response from JSON2VIDEO",
+          };
+        }
+
+        const movie = data.movie;
+
+        if (movie.status === "error") {
+          return {
+            type: "error",
+            message: movie.message || "JSON2VIDEO rendering failed",
+          };
+        }
+
+        if (movie.status === "done" && movie.url) {
+          return {
+            type: "done",
+            url: movie.url,
+            size: movie.size || 0,
+          };
+        }
+
+        // JSON2VIDEO doesn't provide fine-grained percentage progress, so we mock it
+        return {
+          type: "progress",
+          progress: 0.5, // 50% fixed progress while rendering
+        };
+      } catch (e: any) {
+        return {
+          type: "error",
+          message: e.message || "JSON2VIDEO polling failed",
+        };
+      }
+    }
+
+    // Local render polling fallback
     if (body.bucketName === "local-bucket" || body.id.startsWith("local-")) {
       interface LocalRenderJob {
         status: "rendering" | "done" | "error";
@@ -53,35 +104,9 @@ export const POST = executeApi<ProgressResponse, typeof ProgressRequest>(
       };
     }
 
-    const renderProgress = await getRenderProgress({
-      bucketName: body.bucketName,
-      functionName: speculateFunctionName({
-        diskSizeInMb: DISK,
-        memorySizeInMb: RAM,
-        timeoutInSeconds: TIMEOUT,
-      }),
-      region: REGION as AwsRegion,
-      renderId: body.id,
-    });
-
-    if (renderProgress.fatalErrorEncountered) {
-      return {
-        type: "error",
-        message: renderProgress.errors[0].message,
-      };
-    }
-
-    if (renderProgress.done) {
-      return {
-        type: "done",
-        url: renderProgress.outputFile as string,
-        size: renderProgress.outputSizeInBytes as number,
-      };
-    }
-
     return {
-      type: "progress",
-      progress: Math.max(0.03, renderProgress.overallProgress),
+      type: "error",
+      message: "Unsupported render bucket: " + body.bucketName,
     };
-  },
+  }
 );

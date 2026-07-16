@@ -1,180 +1,67 @@
 export const maxDuration = 300; // 5 minutes
 export const dynamic = "force-dynamic";
 
-import {
-  AwsRegion,
-  renderMediaOnLambda,
-  RenderMediaOnLambdaOutput,
-  speculateFunctionName,
-} from "@remotion/lambda/client";
-import {
-  DISK,
-  RAM,
-  REGION,
-  SITE_NAME,
-  TIMEOUT,
-} from "../../../../../config.mjs";
-import { COMP_NAME } from "../../../../../types/constants";
 import { RenderRequest } from "../../../../../types/schema";
 import { executeApi } from "../../../../helpers/api-response";
-import { lambdaRenderQuality } from "@/lib/render-quality";
 import { clampDurationInFrames } from "@/lib/video-duration";
-
-import { webpackOverride } from "@/remotion/webpack-override.mjs";
-import path from "path";
-import fs from "fs";
-
-interface LocalRenderJob {
-  status: "rendering" | "done" | "error";
-  progress: number;
-  url?: string;
-  size?: number;
-  error?: string;
-}
-
-type GlobalWithLocalRenders = typeof globalThis & {
-  localRenders?: Map<string, LocalRenderJob>;
-  cachedBundleLocation?: string | null;
-};
-
-const globalObj = globalThis as GlobalWithLocalRenders;
-const localRenders = (globalObj.localRenders = globalObj.localRenders || new Map<string, LocalRenderJob>());
-let cachedBundleLocation = globalObj.cachedBundleLocation || null;
-
-const isServerless = !!(
-  process.env.VERCEL ||
-  process.env.LAMBDA_TASK_ROOT ||
-  process.env.AWS_EXECUTION_ENV
-);
-
-async function getBundle() {
-  if (cachedBundleLocation && fs.existsSync(cachedBundleLocation)) {
-    return cachedBundleLocation;
-  }
-  const entryPoint = path.join(/*turbopackIgnore: true*/ process.cwd(), "src/remotion/index.ts");
-  const bundlerModuleName = "@remotion/bundler";
-  const { bundle } = (await import(bundlerModuleName)) as typeof import("@remotion/bundler");
-  cachedBundleLocation = await bundle({
-    entryPoint,
-    webpackOverride,
-  });
-  globalObj.cachedBundleLocation = cachedBundleLocation;
-  return cachedBundleLocation;
-}
+import type { RenderMediaOnLambdaOutput } from "@remotion/lambda/client";
 
 export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
   RenderRequest,
   async (req, body) => {
-    const hasAwsCredentials =
-      (process.env.AWS_ACCESS_KEY_ID || process.env.REMOTION_AWS_ACCESS_KEY_ID) &&
-      (process.env.AWS_SECRET_ACCESS_KEY || process.env.REMOTION_AWS_SECRET_ACCESS_KEY);
-
     const inputProps = {
       ...body.inputProps,
       durationInFrames: clampDurationInFrames(body.inputProps.durationInFrames),
     };
 
-    if (!hasAwsCredentials) {
-      if (isServerless) {
-        throw new Error(
-          "AWS credentials are not configured. Local rendering fallback is not supported in serverless environments (Vercel/Lambda)."
-        );
-      }
+    const host = req.headers.get("host") || "localhost:3000";
+    const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+    const baseUrl = `${protocol}://${host}`;
 
-      // Local rendering fallback
-      const renderId = "local-" + Math.random().toString(36).substring(2, 9);
-      localRenders.set(renderId, {
-        status: "rendering",
-        progress: 0,
-      });
+    // Base64 encode the code to pass it in the URL
+    // We use btoa but handle unicode characters safely
+    const base64Code = btoa(unescape(encodeURIComponent(inputProps.code)));
+    const durationSec = Math.ceil(inputProps.durationInFrames / (inputProps.fps || 30));
 
-      // Trigger local render asynchronously
-      (async () => {
-        try {
-          const bundleLocation = await getBundle();
-          const rendererModuleName = "@remotion/renderer";
-          const { selectComposition, renderMedia } = (await import(rendererModuleName)) as typeof import("@remotion/renderer");
-          const composition = await selectComposition({
-            serveUrl: bundleLocation,
-            id: COMP_NAME,
-            inputProps,
-          });
+    const renderTargetUrl = `${baseUrl}/render-target?durationInFrames=${inputProps.durationInFrames}&code=${base64Code}`;
 
-          const publicDir = path.join(/*turbopackIgnore: true*/ process.cwd(), "public");
-          const rendersDir = path.join(publicDir, "renders");
-          if (!fs.existsSync(rendersDir)) {
-            fs.mkdirSync(rendersDir, { recursive: true });
-          }
-
-          const outputFilePath = path.join(rendersDir, `${renderId}.mp4`);
-
-          await renderMedia({
-            codec: lambdaRenderQuality.codec,
-            crf: lambdaRenderQuality.crf,
-            imageFormat: lambdaRenderQuality.imageFormat,
-            pixelFormat: lambdaRenderQuality.pixelFormat,
-            audioCodec: lambdaRenderQuality.audioCodec,
-            audioBitrate: lambdaRenderQuality.audioBitrate,
-            serveUrl: bundleLocation,
-            composition,
-            outputLocation: outputFilePath,
-            inputProps,
-            onProgress: ({ progress }) => {
-              localRenders.set(renderId, {
-                status: "rendering",
-                progress,
-              });
-            },
-          });
-
-          const size = fs.statSync(outputFilePath).size;
-          localRenders.set(renderId, {
-            status: "done",
-            progress: 1,
-            url: `/renders/${renderId}.mp4`,
-            size,
-          });
-        } catch (error) {
-          const errMsg = error instanceof Error ? error.message : String(error);
-          console.error("Local render failed:", error);
-          localRenders.set(renderId, {
-            status: "error",
-            progress: 0,
-            error: errMsg,
-          });
+    const json2VideoPayload = {
+      resolution: "full-hd",
+      quality: "high",
+      elements: [
+        {
+          type: "html",
+          url: renderTargetUrl,
+          duration: durationSec
         }
-      })();
+      ]
+    };
 
-      return {
-        renderId,
-        bucketName: "local-bucket",
-      } as unknown as RenderMediaOnLambdaOutput;
-    }
-
-    const result = await renderMediaOnLambda({
-      codec: lambdaRenderQuality.codec,
-      crf: lambdaRenderQuality.crf,
-      imageFormat: lambdaRenderQuality.imageFormat,
-      pixelFormat: lambdaRenderQuality.pixelFormat,
-      audioCodec: lambdaRenderQuality.audioCodec,
-      audioBitrate: lambdaRenderQuality.audioBitrate,
-      functionName: speculateFunctionName({
-        diskSizeInMb: DISK,
-        memorySizeInMb: RAM,
-        timeoutInSeconds: TIMEOUT,
-      }),
-      region: REGION as AwsRegion,
-      serveUrl: SITE_NAME,
-      composition: COMP_NAME,
-      inputProps,
-      framesPerLambda: 60,
-      downloadBehavior: {
-        type: "download",
-        fileName: "video.mp4",
+    const response = await fetch("https://api.json2video.com/v2/movies", {
+      method: "POST",
+      headers: {
+        "x-api-key": "cZehYVmEjAje7GoNCndm1bhliwGFHecRA5dKd7cg",
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(json2VideoPayload),
     });
 
-    return result;
-  },
-);
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("JSON2VIDEO Error:", text);
+      throw new Error(`JSON2VIDEO API Error: ${response.status} ${text}`);
+    }
 
+    const data = await response.json();
+    
+    if (!data.success || !data.project) {
+      throw new Error("Failed to start JSON2VIDEO render: " + JSON.stringify(data));
+    }
+
+    // Return the JSON2VIDEO project ID as the renderId
+    return {
+      renderId: data.project,
+      bucketName: "json2video", // Mock bucket name to satisfy types
+    } as unknown as RenderMediaOnLambdaOutput;
+  }
+);
