@@ -445,15 +445,20 @@ export class OpenRouterProvider implements AIProvider {
     } catch (textFallbackError: any) {
       logger.error(`Text-based JSON fallback also failed for ${params.model}: ${textFallbackError.message || textFallbackError}`);
 
-      // Construct a descriptive error for the caller
-      throw new Error(
-        JSON.stringify({
-          status: 502,
-          statusText: "Model JSON Error",
-          message: `Free model ${params.model} failed to generate valid JSON output. Both structured mode and text fallback failed.`,
-          type: "model_json_error",
-        })
-      );
+      // Only mask as JSON error if it actually was a parsing failure
+      if (textFallbackError instanceof SyntaxError) {
+        throw new Error(
+          JSON.stringify({
+            status: 502,
+            statusText: "Model JSON Error",
+            message: `Free model ${params.model} failed to generate valid JSON output. Both structured mode and text fallback failed.`,
+            type: "model_json_error",
+          })
+        );
+      }
+
+      // Propagate API errors (e.g. 429 Rate Limit) directly
+      throw textFallbackError;
     }
   }
 

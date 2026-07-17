@@ -251,6 +251,12 @@ export async function generateContent(params: GenerateContentParams): Promise<an
         logger.warn(`generateContent failed with model ${modelName}: ${error.message || error}`);
         logger.logFailure(phase, `Failed to generate content with ${modelName}`, error.message || error);
 
+        // Abort fallback chain immediately if we hit a Rate Limit (429) to avoid spamming the API
+        if (error?.message?.includes("429") || error?.statusCode === 429) {
+          logger.error(`Aborting fallback chain due to 429 Rate Limit error on ${modelName}`);
+          throw error;
+        }
+
         if (i < chain.length - 1) {
           logger.warn(`Attempting fallback to ${chain[i + 1]}...`);
         }
