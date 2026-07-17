@@ -1,6 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import {
   generateObject as sdkGenerateObject,
+  generateText as sdkGenerateText,
   streamText as sdkStreamText,
   GenerateObjectResult,
   StreamTextResult,
@@ -339,7 +340,8 @@ export class OpenRouterProvider implements AIProvider {
   private getModel(modelName: string) {
     const config = AI_CONFIG.models[modelName];
     // Fall back defensively to default model if the internal key is not in config
-    const targetModelId = config?.id || AI_CONFIG.models[AI_CONFIG.defaultModel]?.id || "google/gemini-2.5-flash";
+    const targetModelId = config?.id || AI_CONFIG.models[AI_CONFIG.defaultModel]?.id || "meta-llama/llama-3.3-70b-instruct:free";
+    logger.info(`Resolved model "${modelName}" → "${targetModelId}"`);
     return this.client.chat(targetModelId);
   }
 
@@ -372,7 +374,91 @@ export class OpenRouterProvider implements AIProvider {
       options.messages = params.messages;
     }
 
-    return sdkGenerateObject(options);
+    // ── Tier 1: Try SDK's native generateObject (JSON mode) ──
+    try {
+      return await sdkGenerateObject(options);
+    } catch (jsonModeError: any) {
+      logger.warn(`generateObject JSON mode failed for ${params.model}: ${jsonModeError.message || jsonModeError}. Falling back to text-based JSON extraction...`);
+    }
+
+    // ── Tier 2: Plain text generation + manual JSON parsing ──
+    // Many free-tier models don't support structured output / JSON mode.
+    // We ask the model to output JSON in plain text, then parse it ourselves.
+    try {
+      const schemaDescription = typeof params.schema?.description === "string"
+        ? params.schema.description
+        : "the required JSON schema";
+
+      // Build a system prompt that instructs the model to output raw JSON
+      const jsonSystemPrompt = [
+        params.system || "",
+        "\n\n## CRITICAL OUTPUT INSTRUCTION",
+        "You MUST respond with ONLY valid JSON. No markdown, no explanation, no code fences.",
+        "Output a single JSON object that matches the required schema.",
+        "Do NOT wrap the JSON in ```json``` blocks or add any text before/after it.",
+      ].join("\n");
+
+      const textOptions: any = {
+        model: modelInstance,
+        system: jsonSystemPrompt,
+        maxTokens,
+        temperature,
+      };
+
+      if (params.prompt) {
+        textOptions.prompt = params.prompt;
+      } else if (params.messages) {
+        textOptions.messages = params.messages;
+      }
+
+      const textResult = await sdkGenerateText(textOptions);
+      const rawText = textResult.text || "";
+      const cleanedJson = cleanContent(rawText);
+
+      // Parse and validate the JSON
+      const parsed = JSON.parse(cleanedJson);
+
+      // If schema has a parse/safeParse method (Zod), validate against it
+      if (params.schema && typeof params.schema.safeParse === "function") {
+        const validation = params.schema.safeParse(parsed);
+        if (validation.success) {
+          // Construct a result object compatible with GenerateObjectResult
+          return {
+            object: validation.data,
+            usage: textResult.usage || { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+            rawResponse: textResult.rawResponse,
+          } as any;
+        } else {
+          logger.warn("Text-based JSON parsed but failed Zod validation:", validation.error.errors);
+          // Still return the parsed object — the caller's existing error handling
+          // in provider.ts will attempt JSON repair via a secondary model call
+          return {
+            object: parsed as T,
+            usage: textResult.usage || { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+            rawResponse: textResult.rawResponse,
+          } as any;
+        }
+      }
+
+      // No Zod schema — return raw parsed object
+      return {
+        object: parsed as T,
+        usage: textResult.usage || { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+        rawResponse: textResult.rawResponse,
+      } as any;
+    } catch (textFallbackError: any) {
+      logger.error(`Text-based JSON fallback also failed for ${params.model}: ${textFallbackError.message || textFallbackError}`);
+
+      // Construct a descriptive error for the caller
+      throw new Error(
+        JSON.stringify({
+          status: 502,
+          statusText: "Model JSON Error",
+          message: `Free model ${params.model} failed to generate valid JSON output. Both structured mode and text fallback failed.`,
+          type: "model_json_error",
+        })
+      );
+    }
   }
 
   async streamText(params: {

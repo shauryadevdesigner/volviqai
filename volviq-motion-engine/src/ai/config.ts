@@ -126,16 +126,16 @@ export const AI_CONFIG = {
       timeoutMs: 60000,
     },
     "gpt-5-mini": {
-      id: "openai/gpt-oss-20b:free",
+      id: "qwen/qwen3-next-80b-a3b-instruct:free",
       temperature: 0.3,
       maxTokens: 8000,
-      timeoutMs: 60000,
+      timeoutMs: 90000,
     },
     "gemini-3-flash": {
-      id: "google/gemma-4-26b-a4b-it:free",
+      id: "meta-llama/llama-3.3-70b-instruct:free",
       temperature: 0.2,
       maxTokens: 8000,
-      timeoutMs: 60000,
+      timeoutMs: 90000,
     },
     "mimo-v2-flash": {
       id: "openai/gpt-oss-20b:free",
