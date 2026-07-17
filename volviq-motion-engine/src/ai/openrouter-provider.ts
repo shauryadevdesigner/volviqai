@@ -385,10 +385,6 @@ export class OpenRouterProvider implements AIProvider {
     // Many free-tier models don't support structured output / JSON mode.
     // We ask the model to output JSON in plain text, then parse it ourselves.
     try {
-      const schemaDescription = typeof params.schema?.description === "string"
-        ? params.schema.description
-        : "the required JSON schema";
-
       // Build a system prompt that instructs the model to output raw JSON
       const jsonSystemPrompt = [
         params.system || "",
@@ -426,7 +422,7 @@ export class OpenRouterProvider implements AIProvider {
           return {
             object: validation.data,
             usage: textResult.usage || { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
-            rawResponse: textResult.rawResponse,
+            response: textResult.response,
           } as any;
         } else {
           logger.warn("Text-based JSON parsed but failed Zod validation:", validation.error.errors);
@@ -435,7 +431,7 @@ export class OpenRouterProvider implements AIProvider {
           return {
             object: parsed as T,
             usage: textResult.usage || { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
-            rawResponse: textResult.rawResponse,
+            response: textResult.response,
           } as any;
         }
       }
@@ -444,7 +440,7 @@ export class OpenRouterProvider implements AIProvider {
       return {
         object: parsed as T,
         usage: textResult.usage || { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
-        rawResponse: textResult.rawResponse,
+        response: textResult.response,
       } as any;
     } catch (textFallbackError: any) {
       logger.error(`Text-based JSON fallback also failed for ${params.model}: ${textFallbackError.message || textFallbackError}`);
