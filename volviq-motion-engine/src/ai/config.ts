@@ -56,7 +56,7 @@ export const AI_CONFIG = {
       timeoutMs: 90000,
     },
     "nemotron-3-super-120b-a12b": {
-      id: "nvidia/llama-3.1-nemotron-70b-instruct",
+      id: "meta-llama/llama-3.3-70b-instruct:free",
       temperature: 0.4,
       maxTokens: 8000,
       timeoutMs: 90000,
