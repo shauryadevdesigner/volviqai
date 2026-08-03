@@ -11,7 +11,7 @@ import {
 import type { Session } from "@supabase/supabase-js";
 import {
   getProfile,
-  getSession,
+  getValidSession,
   isSupabaseConfigured,
   onAuthStateChange,
   setSessionFromTokens,
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       initialSessionPromise = (async () => {
-        const localSession = await getSession();
+        const localSession = await getValidSession();
         const params = new URLSearchParams(window.location.search);
         const accessToken = params.get("access_token");
         const refreshToken = params.get("refresh_token");
@@ -131,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             await activeTokenExchangePromise;
           }
 
-          return getSession();
+          return getValidSession();
         }
 
         return localSession;

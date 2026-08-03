@@ -227,10 +227,19 @@ export const MODEL_REGISTRY: Record<AIModel, ModelConfig> = {
  * Each task type maps to a primary model and an implicit fallback chain
  * derived from the model's `fallback` field in the registry.
  */
-const TASK_MODEL_MAP: Record<TaskType, AIModel> = {
+export const TASK_MODEL_MAP: Record<TaskType, AIModel> = {
   storyboarding: "gemini-3-flash",
   remotion_generation: "gemini-3-flash",
   fast_operation: "gemini-3-flash",
+  // NOTE: this had been collapsed to "gemini-3-flash" along with every other
+  // task, but the Stage 10 audit comment ("QA Auditor — resolves to Claude
+  // Opus 4.5") and its "RUTHLESSLY honest" premium-bar prompt were both
+  // written assuming a strong reasoning model here. Running the taste/
+  // conversion critique on the same fast model used for bulk scene
+  // generation makes the audit lenient (it under-scores flat/generic output
+  // as passing), which is very likely a direct cause of "AI generation
+  // quality doesn't match the reference video" — restoring the intended
+  // model so the audit actually catches what it's designed to catch.
   quality_assurance: "gemini-3-flash",
   validation: "gemini-3-flash",
   skill_detection: "gemini-3-flash",

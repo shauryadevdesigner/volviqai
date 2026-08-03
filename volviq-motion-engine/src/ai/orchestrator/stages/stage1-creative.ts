@@ -203,12 +203,14 @@ export async function runConsolidatedBrief(
 ${memoryExamples ? `\nDraw inspiration from these historical examples:\n${memoryExamples}` : ""}`;
 
   const result = await generateContent({
-    model: getModelForTask("storyboarding").id, // Dynamically resolved task model (resolves to gemini-3-flash)
+    model: getModelForTask("storyboarding").id,
     system: SYSTEM_PROMPT,
     prompt: promptText,
     schema: ConsolidatedBriefSchema,
     taskType: "storyboarding",
   });
 
-  return result.object;
+  const validated = ConsolidatedBriefSchema.safeParse(result.object);
+  if (validated.success) return validated.data;
+  throw new Error(`AI planner returned an invalid creative brief: ${validated.error.message}`);
 }

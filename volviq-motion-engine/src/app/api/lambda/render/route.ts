@@ -7,6 +7,7 @@ import { clampDurationInFrames } from "@/lib/video-duration";
 import type { RenderMediaOnLambdaOutput } from "@remotion/lambda/client";
 import { generateContent } from "@/ai/provider";
 import { getModelForTask } from "@/ai/model-router";
+import { requireAuth } from "@/lib/auth-server";
 
 const REMOTION_TO_HTML_PROMPT = `You are an expert CSS animator. Convert the given Remotion React component into a SINGLE self-contained HTML page with CSS keyframe animations.
 
@@ -28,6 +29,14 @@ RULES:
 export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
   RenderRequest,
   async (req, body) => {
+    // This route spends real money on every call (an AI model conversion
+    // pass plus a JSON2VIDEO render). It previously had no auth check at
+    // all, so anyone who found the URL could trigger renders on your bill.
+    const auth = await requireAuth(req);
+    if (auth instanceof Response) {
+      throw new Error("Authentication required.");
+    }
+
     const inputProps = {
       ...body.inputProps,
       durationInFrames: clampDurationInFrames(body.inputProps.durationInFrames),

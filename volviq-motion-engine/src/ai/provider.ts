@@ -1,18 +1,19 @@
 // ============================================================================
-// AI Unified Provider Layer (OpenRouter)
+// AI Unified Provider Layer (Gemini)
 // ============================================================================
 //
 // High-level `generateContent()` function. All AI generation flows through this module.
 // ============================================================================
 
 import { GenerateObjectResult, StreamTextResult } from "ai";
-import { OpenRouterProvider } from "./openrouter-provider";
+import { OpenAIProviderImpl } from "./openai-provider";
 import { getModelChain, getModelFallbackChain, getModelForTask } from "./model-router";
 import { usageStore } from "./usage-store";
 import { logger } from "../lib/logger";
 import type { TaskType } from "./types";
+import { AI_CONFIG } from "./config";
 
-const aiProvider = new OpenRouterProvider();
+const aiProvider = new OpenAIProviderImpl();
 
 // ── Request Queue System ───────────────────────────────────────────────────
 
@@ -61,18 +62,18 @@ const generationQueue = new TaskQueue(5);
 // ── Default Models ──────────────────────────────────────────────────────────
 
 /** Primary model for fast operations (validation, skill detection, etc.) */
-export const PRIMARY_MODEL = "gemini-3-flash";
+export const PRIMARY_MODEL = "gemini-3.6-flash";
 
 /** Fallback model for fast operations */
-export const FALLBACK_MODEL = "gpt-5-mini";
+export const FALLBACK_MODEL = "gemini-3.6-flash";
 
 /** Final fallback for critical operations */
-export const FINAL_FALLBACK_MODEL = "gpt-oss-120b";
+export const FINAL_FALLBACK_MODEL = "gemini-3.1-pro-preview";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
 export interface GenerateContentParams {
-  provider?: string; // Kept for API compat, always uses OpenRouter
+  provider?: string; // Kept for API compatibility; generation uses Gemini.
   model: string;
   prompt?: string;
   system?: string;
@@ -102,7 +103,7 @@ export function generateContent(
  * High-level generateContent function for the Volviq AI pipeline.
  *
  * Automatically wraps structured object generation, streaming, and
- * text generation with a model fallback chain powered by OpenRouter.
+ * text generation with a model fallback chain powered by Gemini.
  */
 export async function generateContent(params: GenerateContentParams): Promise<any> {
   const queueStart = Date.now();
@@ -151,13 +152,31 @@ export async function generateContent(params: GenerateContentParams): Promise<an
       }
     }
 
+    // Antigravity is the explicitly selected managed-agent workflow. Never
+    // silently downgrade it to a chat model or spend a second model bucket.
+    if (requestedModel === "antigravity-preview-05-2026") {
+      chain = ["antigravity-preview-05-2026"];
+    }
+    if (taskType === "remotion_generation" && requestedModel) {
+      chain = [requestedModel];
+    }
+
+    const seenModelIds = new Set<string>();
+    chain = chain.filter((name) => {
+      const resolved = AI_CONFIG.models[name]?.id || name;
+      if (seenModelIds.has(resolved)) return false;
+      seenModelIds.add(resolved);
+      return true;
+    });
+
     let lastError: any = null;
 
     for (let i = 0; i < chain.length; i++) {
       const modelName = chain[i];
+      const resolvedModelId = AI_CONFIG.models[modelName]?.id || modelName;
       const phase = i === 0 ? "primary" : i === 1 ? "fallback" : "final_fallback";
 
-      logger.logModelSelection(modelName, phase);
+      logger.logModelSelection(resolvedModelId, phase);
 
       try {
         const start = Date.now();
@@ -166,7 +185,7 @@ export async function generateContent(params: GenerateContentParams): Promise<an
           // Structured JSON mode via generateObject
           try {
             const result = await aiProvider.generateObject({
-              model: modelName,
+              model: resolvedModelId,
               system,
               prompt,
               messages,
@@ -177,7 +196,7 @@ export async function generateContent(params: GenerateContentParams): Promise<an
 
             // Track usage
             usageStore.recordRequest({
-              model: modelName,
+              model: resolvedModelId,
               taskType: taskType || "generate_object",
               latencyMs: duration,
               promptTokens: (result as any).usage?.promptTokens ?? 0,
@@ -194,7 +213,7 @@ export async function generateContent(params: GenerateContentParams): Promise<an
               try {
                 const repairModelId = getModelForTask("validation").id;
                 const repairResult = await aiProvider.generateObject({
-                  model: repairModelId,
+                  model: AI_CONFIG.models[repairModelId]?.id || repairModelId,
                   system: "Convert the following output into valid JSON matching the required schema exactly.",
                   prompt: `Raw Output:\n${rawText}\n\nSchema details:\n${JSON.stringify(schema)}`,
                   schema,
@@ -222,7 +241,7 @@ export async function generateContent(params: GenerateContentParams): Promise<an
         } else if (stream) {
           // Streaming text mode — needs high token limit for full Remotion components
           const result = await aiProvider.streamText({
-            model: modelName,
+            model: resolvedModelId,
             system,
             prompt,
             messages,
@@ -232,7 +251,7 @@ export async function generateContent(params: GenerateContentParams): Promise<an
 
           // Track usage (partial — full tracking happens when stream completes)
           usageStore.recordRequest({
-            model: modelName,
+            model: resolvedModelId,
             taskType: taskType || "stream_text",
             latencyMs: duration,
             promptTokens: 0,
@@ -251,9 +270,9 @@ export async function generateContent(params: GenerateContentParams): Promise<an
         logger.warn(`generateContent failed with model ${modelName}: ${error.message || error}`);
         logger.logFailure(phase, `Failed to generate content with ${modelName}`, error.message || error);
 
-        // Abort fallback chain immediately if we hit a Rate Limit (429) to avoid spamming the API
-        if (error?.message?.includes("429") || error?.statusCode === 429) {
-          logger.error(`Aborting fallback chain due to 429 Rate Limit error on ${modelName}`);
+        if (error?.message?.includes("429") || error?.message?.includes("413") ||
+            error?.statusCode === 429 || error?.statusCode === 413) {
+          logger.error(`Aborting fallback chain due to Gemini quota/size limit on ${modelName}`);
           throw error;
         }
 

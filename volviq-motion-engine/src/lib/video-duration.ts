@@ -1,5 +1,8 @@
-/** Minimum composition length: 10s @ 30fps */
-export const MIN_DURATION_FRAMES = 300;
+/** Technical minimum accepted by Remotion. */
+export const MIN_DURATION_FRAMES = 1;
+
+/** Used only when neither the prompt nor the UI specifies a duration. */
+export const DEFAULT_DURATION_FRAMES = 300;
 
 /** Long-form content target range (20–30s @ 30fps) */
 export const LONG_FORM_DURATION_MIN = 600;
@@ -19,9 +22,28 @@ export function resolveDurationInFrames(
   options: {
     prompt?: string;
     explicit?: number;
+    fps?: number;
   } = {},
 ): number {
-  const { prompt = "", explicit } = options;
+  const { prompt = "", explicit, fps = 30 } = options;
+
+  const secondsMatch = prompt.match(
+    /\b(\d+(?:\.\d+)?)\s*(?:-|\s)?(?:seconds?|secs?|sec|s)\b/i,
+  );
+  const minutesMatch = prompt.match(
+    /\b(\d+(?:\.\d+)?)\s*(?:-|\s)?(?:minutes?|mins?|min)\b/i,
+  );
+  const framesMatch = prompt.match(/\b(\d+)\s*(?:-|\s)?frames?\b/i);
+
+  if (framesMatch) {
+    return Math.max(MIN_DURATION_FRAMES, Math.round(Number(framesMatch[1])));
+  }
+  if (secondsMatch) {
+    return Math.max(MIN_DURATION_FRAMES, Math.round(Number(secondsMatch[1]) * fps));
+  }
+  if (minutesMatch) {
+    return Math.max(MIN_DURATION_FRAMES, Math.round(Number(minutesMatch[1]) * 60 * fps));
+  }
 
   if (prompt && LONG_FORM_PATTERN.test(prompt)) {
     if (
@@ -38,12 +60,12 @@ export function resolveDurationInFrames(
     return Math.max(MIN_DURATION_FRAMES, explicit);
   }
 
-  return MIN_DURATION_FRAMES;
+  return DEFAULT_DURATION_FRAMES;
 }
 
 export function clampDurationInFrames(durationInFrames: number): number {
   if (!Number.isFinite(durationInFrames) || durationInFrames < MIN_DURATION_FRAMES) {
-    return MIN_DURATION_FRAMES;
+    return DEFAULT_DURATION_FRAMES;
   }
   return Math.round(durationInFrames);
 }

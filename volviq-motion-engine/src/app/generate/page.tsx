@@ -18,7 +18,7 @@ import type {
   ErrorCorrectionContext,
 } from "../../types/conversation";
 import {
-  MIN_DURATION_FRAMES,
+  DEFAULT_DURATION_FRAMES,
   resolveDurationInFrames,
 } from "@/lib/video-duration";
 import type { UserFacingGenerationError } from "@/lib/generation-errors";
@@ -49,7 +49,7 @@ function GeneratePageContent() {
   const willAutoStart = Boolean(initialPrompt);
 
   const [durationInFrames, setDurationInFrames] = useState(
-    Math.max(examples[0]?.durationInFrames || MIN_DURATION_FRAMES, MIN_DURATION_FRAMES),
+    examples[0]?.durationInFrames || DEFAULT_DURATION_FRAMES,
   );
   const [fps, setFps] = useState(examples[0]?.fps || 30);
   const [currentFrame, setCurrentFrame] = useState(0);
@@ -230,11 +230,12 @@ function GeneratePageContent() {
         resolveDurationInFrames({
           prompt: lastGenerationPromptRef.current,
           explicit: prev,
+          fps,
         }),
       );
       markAsAiGenerated();
     },
-    [addAssistantMessage, markAsAiGenerated],
+    [addAssistantMessage, fps, markAsAiGenerated],
   );
 
   // Cleanup debounce on unmount

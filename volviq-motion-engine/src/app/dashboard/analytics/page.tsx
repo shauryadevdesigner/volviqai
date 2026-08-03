@@ -33,14 +33,17 @@ interface AnalyticsData {
 }
 
 export default function AnalyticsPage() {
-  useRequireAuth();
+  const { accessToken } = useRequireAuth();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!accessToken) return;
     async function fetchAnalytics() {
       try {
-        const res = await fetch("/api/analytics");
+        const res = await fetch("/api/analytics", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
         if (res.ok) {
           const json = await res.json();
           setData(json);
@@ -52,7 +55,7 @@ export default function AnalyticsPage() {
       }
     }
     fetchAnalytics();
-  }, []);
+  }, [accessToken]);
 
   if (loading) {
     return (

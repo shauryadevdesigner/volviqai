@@ -7,17 +7,22 @@ import { useRendering } from "../../../helpers/use-rendering";
 import { DownloadButton } from "./DownloadButton";
 import { ErrorComp } from "./Error";
 import { ProgressBar } from "./ProgressBar";
+import { useAuthContext } from "@/components/providers/AuthProvider";
 
 export const RenderControls: React.FC<{
   code: string;
   durationInFrames: number;
   fps: number;
 }> = ({ code, durationInFrames, fps }) => {
-  const { renderMedia, state, undo } = useRendering({
-    code,
-    durationInFrames,
-    fps,
-  });
+  const { accessToken } = useAuthContext();
+  const { renderMedia, state, undo } = useRendering(
+    {
+      code,
+      durationInFrames,
+      fps,
+    },
+    accessToken,
+  );
   const previousPropsRef = useRef({ code, durationInFrames, fps });
 
   // Reset rendering state when code, duration, or fps changes

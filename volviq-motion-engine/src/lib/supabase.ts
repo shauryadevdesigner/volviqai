@@ -94,6 +94,56 @@ export async function getSession(): Promise<Session | null> {
   return data.session;
 }
 
+/**
+ * Returns a server-validated session, refreshing it once when it is expired,
+ * close to expiry, or rejected by Supabase. Stale localStorage sessions are
+ * cleared so protected pages can send the user through login again.
+ */
+export async function getValidSession(): Promise<Session | null> {
+  const supabase = getSupabase();
+  const { data } = await supabase.auth.getSession();
+  let session = data.session;
+
+  if (!session) return null;
+
+  const expiresSoon =
+    !session.expires_at ||
+    session.expires_at <= Math.floor(Date.now() / 1000) + 60;
+
+  if (expiresSoon) {
+    const refreshed = await supabase.auth.refreshSession();
+    if (refreshed.error || !refreshed.data.session) {
+      await supabase.auth.signOut({ scope: 'local' });
+      return null;
+    }
+    session = refreshed.data.session;
+  }
+
+  const validation = await supabase.auth.getUser(session.access_token);
+  if (!validation.error && validation.data.user) return session;
+
+  const refreshed = await supabase.auth.refreshSession();
+  if (refreshed.error || !refreshed.data.session) {
+    await supabase.auth.signOut({ scope: 'local' });
+    return null;
+  }
+
+  const refreshedValidation = await supabase.auth.getUser(
+    refreshed.data.session.access_token,
+  );
+  if (refreshedValidation.error || !refreshedValidation.data.user) {
+    await supabase.auth.signOut({ scope: 'local' });
+    return null;
+  }
+
+  return refreshed.data.session;
+}
+
+export async function getValidAccessToken(): Promise<string | null> {
+  const session = await getValidSession();
+  return session?.access_token ?? null;
+}
+
 export async function setSessionFromTokens(
   accessToken: string,
   refreshToken: string,

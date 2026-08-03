@@ -17,7 +17,7 @@ export function classifyProviderError(error: unknown): {
 } {
   const msg = getErrorMessage(error);
   
-  // Try to parse structured error from our openrouter fetch wrapper
+  // Try to parse a structured error from the Gemini fetch wrapper.
   try {
     const jsonStart = msg.indexOf("{");
     if (jsonStart !== -1) {
@@ -26,7 +26,7 @@ export function classifyProviderError(error: unknown): {
       if (parsed.status && parsed.message) {
         return {
           message: parsed.message,
-          type: parsed.type || "openrouter_error",
+          type: parsed.type || "gemini_error",
           status: parsed.status,
         };
       }
@@ -35,7 +35,7 @@ export function classifyProviderError(error: unknown): {
       if (parsed.status && parsed.message) {
         return {
           message: parsed.message,
-          type: parsed.type || "openrouter_error",
+          type: parsed.type || "gemini_error",
           status: parsed.status,
         };
       }
@@ -55,8 +55,8 @@ export function classifyProviderError(error: unknown): {
     const isProd = process.env.NODE_ENV === "production";
     return {
       message: isProd
-        ? "Invalid or missing OpenRouter API key. Please check OPENROUTER_API_KEY in your Vercel project environment variables."
-        : "Invalid or missing OpenRouter API key. Check OPENROUTER_API_KEY in .env.",
+        ? "Invalid or missing Gemini API key. Check GEMINI_API_KEY in your deployment environment."
+        : "Invalid or missing Gemini API key. Check GEMINI_API_KEY in volviq-motion-engine/.env.",
       type: "api_key_missing",
       status: 401,
     };
@@ -70,7 +70,7 @@ export function classifyProviderError(error: unknown): {
     lower.includes("exhausted")
   ) {
     return {
-      message: "OpenRouter rate limit or quota exceeded. Try again shortly.",
+      message: "Gemini rate limit or quota exceeded. Try again after the retry window.",
       type: "rate_limit",
       status: 429,
     };
@@ -83,7 +83,7 @@ export function classifyProviderError(error: unknown): {
     lower.includes("403")
   ) {
     return {
-      message: "OpenRouter authentication failed. Verify your API key.",
+      message: "Gemini authentication or model permission failed. Verify the API key and model permissions.",
       type: "auth_failed",
       status: 401,
     };
@@ -99,9 +99,8 @@ export function classifyProviderError(error: unknown): {
 
   logger.error("api-errors", "Unclassified provider error", { msg, error });
   return {
-    message: msg || "OpenRouter provider error",
+    message: msg || "Gemini provider error",
     type: "api_unavailable",
     status: 500,
   };
 }
-

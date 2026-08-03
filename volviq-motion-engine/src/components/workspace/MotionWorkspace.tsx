@@ -25,7 +25,7 @@ import type {
   ErrorCorrectionContext,
 } from "@/types/conversation";
 import {
-  MIN_DURATION_FRAMES,
+  DEFAULT_DURATION_FRAMES,
   resolveDurationInFrames,
 } from "@/lib/video-duration";
 import type { UserFacingGenerationError } from "@/lib/generation-errors";
@@ -54,7 +54,6 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
     {
       initialPrompt = "",
       autoStart = false,
-      accessToken,
       compact = false,
       onGenerationComplete,
     },
@@ -63,7 +62,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
   const willAutoStart = Boolean(autoStart && initialPrompt);
 
   const [durationInFrames, setDurationInFrames] = useState(
-    Math.max(examples[0]?.durationInFrames || MIN_DURATION_FRAMES, MIN_DURATION_FRAMES),
+    examples[0]?.durationInFrames || DEFAULT_DURATION_FRAMES,
   );
   const [fps, setFps] = useState(examples[0]?.fps || 30);
   const [currentFrame, setCurrentFrame] = useState(0);
@@ -71,6 +70,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
   const [streamPhase, setStreamPhase] = useState<StreamPhase>(
     willAutoStart ? "reasoning" : "idle",
   );
+  const [streamPhaseDetail, setStreamPhaseDetail] = useState<string | undefined>(undefined);
   const [prompt, setPrompt] = useState(initialPrompt);
   const [hasAutoStarted, setHasAutoStarted] = useState(false);
   const [hasGeneratedOnce, setHasGeneratedOnce] = useState(false);
@@ -230,6 +230,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
         resolveDurationInFrames({
           prompt: lastGenerationPromptRef.current,
           explicit: prev,
+          fps,
         }),
       );
       const title =
@@ -243,7 +244,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
       markAsAiGenerated();
       onGenerationComplete?.();
     },
-    [addAssistantMessage, markAsAiGenerated, onGenerationComplete, upsertConversation],
+    [addAssistantMessage, fps, markAsAiGenerated, onGenerationComplete, upsertConversation],
   );
 
   useEffect(() => {
@@ -333,6 +334,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
         onCodeGenerated={handleCodeChange}
         onStreamingChange={handleStreamingChange}
         onStreamPhaseChange={setStreamPhase}
+        onStreamPhaseDetailChange={setStreamPhaseDetail}
         onError={handleError}
         prompt={prompt}
         onPromptChange={setPrompt}
@@ -353,7 +355,6 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
         fps={fps}
         durationInFrames={durationInFrames}
         currentFrame={currentFrame}
-        accessToken={accessToken}
       />
 
       <div
@@ -366,6 +367,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
               onChange={handleCodeChange}
               isStreaming={isStreaming}
               streamPhase={streamPhase}
+              streamPhaseDetail={streamPhaseDetail}
             />
           }
           previewContent={

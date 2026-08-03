@@ -35,7 +35,10 @@ const wait = async (milliSeconds: number) => {
   });
 };
 
-export const useRendering = (inputProps: z.infer<typeof CompositionProps>) => {
+export const useRendering = (
+  inputProps: z.infer<typeof CompositionProps>,
+  accessToken?: string | null,
+) => {
   const [state, setState] = useState<State>({
     status: "init",
   });
@@ -45,7 +48,7 @@ export const useRendering = (inputProps: z.infer<typeof CompositionProps>) => {
       status: "invoking",
     });
     try {
-      const { renderId, bucketName } = await renderVideo({ inputProps });
+      const { renderId, bucketName } = await renderVideo({ inputProps, accessToken });
       setState({
         status: "rendering",
         progress: 0,
@@ -59,6 +62,7 @@ export const useRendering = (inputProps: z.infer<typeof CompositionProps>) => {
         const result = await getProgress({
           id: renderId,
           bucketName: bucketName,
+          accessToken,
         });
         switch (result.type) {
           case "error": {
@@ -97,7 +101,7 @@ export const useRendering = (inputProps: z.infer<typeof CompositionProps>) => {
         renderId: null,
       });
     }
-  }, [inputProps]);
+  }, [inputProps, accessToken]);
 
   const undo = useCallback(() => {
     setState({ status: "init" });

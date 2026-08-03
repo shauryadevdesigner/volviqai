@@ -1,96 +1,6 @@
 import { transform } from "sucrase";
 import { repairGeneratedCode } from "./jsx-validator";
 
-function extractComponentBody(code: string): string {
-  let cleaned = code;
-
-  cleaned = cleaned.replace(/import\s+type\s*\{[\s\S]*?\}\s*from\s*["'][^"']+["'];?/g, "");
-  cleaned = cleaned.replace(/import\s+\w+\s*,\s*\{[\s\S]*?\}\s*from\s*["'][^"']+["'];?/g, "");
-  cleaned = cleaned.replace(/import\s*\{[\s\S]*?\}\s*from\s*["'][^"']+["'];?/g, "");
-  cleaned = cleaned.replace(/import\s+\*\s+as\s+\w+\s+from\s*["'][^"']+["'];?/g, "");
-  cleaned = cleaned.replace(/import\s+\w+\s+from\s*["'][^"']+["'];?/g, "");
-  cleaned = cleaned.replace(/import\s*["'][^"']+["'];?/g, "");
-
-  cleaned = cleaned.trim();
-
-  let componentName: string | null = null;
-  const defaultFnMatch = cleaned.match(/export\s+default\s+function\s+(\w+)/);
-  const defaultClassMatch = cleaned.match(/export\s+default\s+class\s+(\w+)/);
-  const defaultExportMatch = cleaned.match(/export\s+default\s+(?!function\b|class\b)(\w+)\s*;?/);
-  
-  if (defaultFnMatch) {
-    componentName = defaultFnMatch[1];
-  } else if (defaultClassMatch) {
-    componentName = defaultClassMatch[1];
-  } else if (defaultExportMatch) {
-    componentName = defaultExportMatch[1];
-  } else {
-    const namedExportMatch = cleaned.match(/export\s*\{\s*(\w+)(?:\s+as\s+default)?\s*\}\s*;?/);
-    if (namedExportMatch) {
-      componentName = namedExportMatch[1];
-    }
-  }
-
-  if (!componentName) {
-    const namedConstExportMatch = cleaned.match(/export\s+(?:const|let|var)\s+(\w+)\s*=/);
-    if (namedConstExportMatch) {
-      componentName = namedConstExportMatch[1];
-    }
-  }
-
-  let startMatch: RegExpMatchArray | null = null;
-
-  if (componentName) {
-    const escapedName = componentName.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const componentRegex = new RegExp(
-      `([\\s\\S]*?)(?:export\\s+)?(?:default\\s+)?(?:(?:const|let|var)\\s+${escapedName}\\s*(?::\\s*[^=]+)?\\s*=\\s*\\([^)]*\\)\\s*=>|(?:function\\s+${escapedName}\\s*\\([^)]*\\)))\\s*\\{`
-    );
-    startMatch = cleaned.match(componentRegex);
-  }
-
-  if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)export\s+(?:default\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\{/);
-  }
-  if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)export\s+(?:default\s+)?function\s+(\w+)\s*\([^)]*\)\s*\{/);
-  }
-  if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)(?:const|let|var)\s+(VolviqAd|VolviqAnimation|MyAnimation|Animation|AdComponent|DynamicComponent|DynamicAnimation)\s*=\s*\([^)]*\)\s*=>\s*\{/);
-  }
-  if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)function\s+(VolviqAd|VolviqAnimation|MyAnimation|Animation|AdComponent|DynamicComponent|DynamicAnimation)\s*\([^)]*\)\s*\{/);
-  }
-  if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)(?:export\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\{/);
-  }
-  if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)(?:export\s+)?function\s+(\w+)\s*\([^)]*\)\s*\{/);
-  }
-
-  const cleanExports = (str: string) => {
-    return str
-      .replace(/export\s+default\s+(function|class)\b/g, "$1")
-      .replace(/export\s+(const|let|var|function|class)\b/g, "$1")
-      .replace(/export\s+default\s+(?!function\b|class\b)\w+\s*;?/g, "")
-      .replace(/export\s*\{\s*[\s\S]*?\}\s*;?/g, "")
-      .trim();
-  };
-
-  if (startMatch) {
-    const helpers = startMatch[1].trim();
-    const afterExport = cleaned.substring(startMatch[0].length);
-    const lastBraceIndex = afterExport.lastIndexOf('}');
-    if (lastBraceIndex !== -1) {
-      const body = afterExport.substring(0, lastBraceIndex).trim();
-      const cleanHelpers = cleanExports(helpers);
-      const cleanBody = cleanExports(body);
-      return cleanHelpers ? `${cleanHelpers}\n\n${cleanBody}` : cleanBody;
-    }
-  }
-
-  return cleanExports(cleaned);
-}
-
 function repairTruncatedCode(code: string): { code: string; wasTruncated: boolean } {
   let braceCount = 0;
   let inString = false;
@@ -229,21 +139,21 @@ export function verifyAndCompileServer(code: string): { success: boolean; errors
   }
 
   try {
-    const { code: repairedCode } = repairTruncatedCode(code);
-    const rawComponentBody = extractComponentBody(repairedCode);
-
-    if (!rawComponentBody.trim()) {
+    const { code: repairedCode, wasTruncated } = repairTruncatedCode(code);
+    if (wasTruncated) {
       return {
         success: false,
-        errors: ["Could not extract component body from the generated code."],
+        errors: ["The generated TSX module was truncated before completion."],
       };
     }
 
-    const { code: componentBody } = repairGeneratedCode(rawComponentBody);
-    const wrappedSource = `const DynamicAnimation = () => {\n${componentBody}\n};`;
+    const { code: moduleCode } = repairGeneratedCode(repairedCode);
 
-    const transpiled = transform(wrappedSource, {
-      transforms: ["jsx", "typescript"],
+    // Validate the complete module directly. Extracting the component body and
+    // wrapping it in another arrow function corrupts valid modules containing
+    // helpers, typed subcomponents, or complex export declarations.
+    const transpiled = transform(moduleCode, {
+      transforms: ["jsx", "typescript", "imports"],
     });
 
     if (!transpiled.code) {

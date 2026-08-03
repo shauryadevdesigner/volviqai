@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useAuthContext } from "@/components/providers/AuthProvider";
+import { TASK_MODEL_MAP } from "@/ai/model-router";
+import { AI_CONFIG } from "@/ai/config";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -46,25 +49,41 @@ interface UsageData {
 
 // ── Model Router Reference ──────────────────────────────────────────────────
 
-const TASK_MODEL_MAP = [
-  { task: "Storyboarding", model: "deepseek-v4-pro", fallback: "kimi-k2.6" },
-  { task: "Remotion Generation", model: "qwen3-coder-plus", fallback: "gemma-4-31b-it" },
-  { task: "Fast Operations", model: "deepseek-v4-flash", fallback: "glm-4.7-flash" },
-  { task: "Quality Assurance", model: "qwen3-coder-plus", fallback: "gemma-4-31b-it" },
-  { task: "Validation", model: "deepseek-v4-flash", fallback: "glm-4.7-flash" },
-  { task: "Skill Detection", model: "deepseek-v4-flash", fallback: "glm-4.7-flash" },
-];
+const TASK_LABELS: Record<string, string> = {
+  storyboarding: "Storyboarding",
+  remotion_generation: "Remotion Generation",
+  fast_operation: "Fast Operations",
+  quality_assurance: "Quality Assurance",
+  validation: "Validation",
+  skill_detection: "Skill Detection",
+  image_generation: "Image Generation",
+  vision_analysis: "Vision Analysis",
+};
+
+const RESOLVED_MODEL_TABLE = Object.entries(TASK_MODEL_MAP).map(([task, internalKey]) => {
+  const resolvedId = AI_CONFIG.models[internalKey]?.id || "unknown";
+  return {
+    task: TASK_LABELS[task] || task,
+    internalKey,
+    resolvedId,
+    isFreeTier: resolvedId.endsWith(":free"),
+  };
+});
 
 // ── Dashboard Page ──────────────────────────────────────────────────────────
 
 export default function AIUsageDashboard() {
+  const { accessToken } = useAuthContext();
   const [data, setData] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
+    if (!accessToken) return;
     try {
-      const res = await fetch("/api/ai-usage");
+      const res = await fetch("/api/ai-usage", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
       setData(json);
@@ -74,7 +93,7 @@ export default function AIUsageDashboard() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     fetchData();
@@ -92,7 +111,7 @@ export default function AIUsageDashboard() {
         <div>
           <h1 style={styles.title}>AI Usage Dashboard</h1>
           <p style={styles.subtitle}>
-            OpenRouter API · Real-time monitoring & model routing
+            Gemini API · Real-time monitoring & model routing
           </p>
         </div>
         <div style={styles.headerBadge}>
@@ -162,25 +181,32 @@ export default function AIUsageDashboard() {
 
       {/* ── Model Routing Table ─────────────────────────────────────────── */}
       <div style={styles.card}>
-        <h2 style={styles.cardTitle}>Model Routing Strategy</h2>
+        <h2 style={styles.cardTitle}>Model Routing (Actual)</h2>
+        <p style={{ fontSize: 12, color: "#64748b", marginTop: -8, marginBottom: 16 }}>
+          Resolved Gemini model ID actually called for each task — not the display name.
+        </p>
         <div style={styles.tableWrapper}>
           <table style={styles.table}>
             <thead>
               <tr>
                 <th style={styles.th}>Task</th>
-                <th style={styles.th}>Primary Model</th>
-                <th style={styles.th}>Fallback</th>
+                <th style={styles.th}>Resolved Model</th>
+                <th style={styles.th}>Tier</th>
               </tr>
             </thead>
             <tbody>
-              {TASK_MODEL_MAP.map((row) => (
+              {RESOLVED_MODEL_TABLE.map((row) => (
                 <tr key={row.task} style={styles.tr}>
                   <td style={styles.td}>{row.task}</td>
                   <td style={styles.tdModel}>
-                    <span style={styles.modelBadge}>{row.model}</span>
+                    <span style={styles.modelBadge}>{row.resolvedId}</span>
                   </td>
                   <td style={styles.tdModel}>
-                    <span style={styles.fallbackBadge}>{row.fallback}</span>
+                    <span
+                      style={row.isFreeTier ? styles.fallbackBadge : styles.modelBadge}
+                    >
+                      {row.isFreeTier ? "Free tier" : "Paid"}
+                    </span>
                   </td>
                 </tr>
               ))}

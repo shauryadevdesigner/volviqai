@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
-import { getUserFromRequest } from "@/lib/auth-server";
+import { getUserFromRequest, requireAuth } from "@/lib/auth-server";
 
 const ANALYTICS_FILE = path.join(process.cwd(), "src/data/generation-analytics.json");
 
@@ -62,6 +62,13 @@ function writeLocalAnalytics(entry: AnalyticsEntry) {
 
 // POST: Save new generation metrics
 export async function POST(req: Request) {
+  // This accepted writes from anyone, logged-in or not — unlike every other
+  // route in this app. Since it feeds the same dashboard metrics /api/analytics
+  // GET requires auth to read, an unauthenticated caller could spam fake
+  // entries (fake scores, fake failure causes) into your own quality metrics.
+  const auth = await requireAuth(req);
+  if (auth instanceof Response) return auth;
+
   try {
     const body = await req.json();
     const {
@@ -132,7 +139,10 @@ export async function POST(req: Request) {
 }
 
 // GET: Retrieve aggregated analytics summaries for the dashboard
-export async function GET() {
+export async function GET(req: Request) {
+  const auth = await requireAuth(req);
+  if (auth instanceof Response) return auth;
+
   try {
     let entries: AnalyticsEntry[] = [];
 

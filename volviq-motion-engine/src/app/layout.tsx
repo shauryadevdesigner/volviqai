@@ -27,7 +27,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={sora.variable} suppressHydrationWarning>
-      <body className="bg-background font-sans antialiased">
+      <body
+        className="bg-background font-sans antialiased"
+        suppressHydrationWarning
+      >
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

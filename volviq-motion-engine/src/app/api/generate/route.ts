@@ -1,15 +1,22 @@
-export const maxDuration = 300; // 5 minutes
+export const maxDuration = 300; // 5 minutes — only honored on the Node.js runtime (see below)
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
+// NOTE: previously "edge". Edge Functions on Vercel have a hard execution
+// cap well under 300s regardless of `maxDuration` above (that setting only
+// applies to the Node.js runtime). This route runs a multi-stage LLM
+// pipeline (storyboard -> per-scene generation -> audit -> refinement ->
+// compile) that routinely needs more time than Edge allows, which is why
+// the orchestrator was force-skipping its quality audit whenever
+// `process.env.VERCEL` was set. Running on Node.js lets maxDuration apply
+// for real and removes the need for that workaround.
+export const runtime = "nodejs";
 
 import {
   getCombinedSkillContent,
   type SkillName,
   detectSkillsLocally,
 } from "@/skills";
-import { checkAndIncrementUsage, getUserFromRequest } from "@/lib/auth-server";
+import { checkAndIncrementUsage, requireAuth } from "@/lib/auth-server";
 import { generateContent } from "@/ai/provider";
-import { getModelForTask } from "@/ai/model-router";
 import { classifyProviderError, getErrorMessage } from "@/lib/api-errors";
 import { logger } from "@/utils/logger";
 import { z } from "zod";
@@ -19,7 +26,7 @@ import {
 } from "@/helpers/sanitize-response";
 import { SYSTEM_PROMPT, FOLLOW_UP_SYSTEM_PROMPT } from "@/ai/prompts/generation";
 import { verifyAndCompileServer } from "@/remotion/compiler-server";
-import { logGenerationAnalytics } from "@/lib/monitoring-server";
+import { logGenerationAnalytics, logGenerationFailure, type LogAnalyticsPayload } from "@/lib/monitoring-server";
 import { runOrchestrator } from "@/ai/orchestrator";
 import { generateAsset } from "@/ai/image-generator";
 
@@ -263,15 +270,35 @@ export async function POST(req: Request) {
     frameImages,
   }: GenerateRequest = await req.json();
 
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
 
-  const authUser = await getUserFromRequest(req);
-  const authHeader = req.headers.get("Authorization");
-  const accessToken = authHeader?.startsWith("Bearer ")
-    ? authHeader.slice(7)
-    : null;
+  // Require a valid, logged-in user for every call to this route. Previously
+  // an absent/expired bearer token silently skipped both authentication AND
+  // the usage-limit check below, letting anyone who could reach this URL
+  // generate for free and burn provider quota with no limit.
+  const auth = await requireAuth(req);
+  if (auth instanceof Response) return auth;
+  const { user: authUser, accessToken } = auth;
 
-  if (!isFollowUp && !errorCorrection && authUser && accessToken) {
+  if (!apiKey) {
+    logger.error("generate", "GEMINI_API_KEY missing");
+    const isProd = process.env.NODE_ENV === "production";
+    return new Response(
+      JSON.stringify({
+        error: isProd
+          ? "Gemini is not configured. Set GEMINI_API_KEY in the deployment environment."
+          : "Gemini is not configured. Add GEMINI_API_KEY to volviq-motion-engine/.env and restart the dev server.",
+        type: "api_key_missing",
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  // Usage limits apply to every generation call, including follow-up edits
+  // and error-correction retries — those also consume model tokens and were
+  // previously exempted entirely, letting anyone bypass their plan limit by
+  // just chaining "follow-up" requests instead of "initial" ones.
+  {
     const usage = await checkAndIncrementUsage(authUser.id, accessToken);
     if (!usage.ok && usage.error === "limit_reached") {
       return new Response(
@@ -284,29 +311,13 @@ export async function POST(req: Request) {
     }
   }
 
-  if (!apiKey) {
-    logger.error("generate", "OPENROUTER_API_KEY missing");
-    const isProd = process.env.NODE_ENV === "production";
-    return new Response(
-      JSON.stringify({
-        error: isProd
-          ? "OpenRouter is not configured. Please ensure OPENROUTER_API_KEY is configured in your Vercel environment variables."
-          : "OpenRouter is not configured. Add OPENROUTER_API_KEY to volviq-motion-engine/.env and restart the dev server.",
-        type: "api_key_missing",
-      }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
-  }
-
-  let targetModelId = model;
-  if (targetModelId === "deepseek-v4-flash" || targetModelId === "qwen3-coder-plus") {
-    targetModelId = "gemini-3-flash";
-  } else if (targetModelId === "gpt-120b") {
-    targetModelId = "gpt-oss-120b";
-  }
+  const allowedCodeModels = new Set([
+    "gemini-3.6-flash",
+    "gemini-3.1-pro-preview",
+  ]);
+  const targetModelId = allowedCodeModels.has(model)
+    ? model
+    : "gemini-3.6-flash";
 
   // ── LOCAL SKILL DETECTION & VALIDATION BYPASS ──
   let detectedSkills: SkillName[] = [];
@@ -454,8 +465,8 @@ Analyze the request and decide: use targeted edits (type: "edit") for small chan
       let response;
       try {
         const editResult = await generateContent({
-          provider: "openrouter",
-          model: getModelForTask("remotion_generation").id,
+          provider: "gemini",
+          model: targetModelId,
           system: `${enhancedSystemPrompt}\n\n---\n\n${FOLLOW_UP_SYSTEM_PROMPT}`,
           messages: editMessages,
           schema: FollowUpResponseSchema,
@@ -482,8 +493,8 @@ Analyze the user's request and the current code, and output the COMPLETE, update
 You MUST output the complete code in the 'code' property of the JSON response.`;
 
         const fallbackResult = await generateContent({
-          provider: "openrouter",
-          model: getModelForTask("remotion_generation").id,
+          provider: "gemini",
+          model: targetModelId,
           system: fallbackSystemPrompt,
           messages: editMessages,
           schema: z.object({
@@ -529,7 +540,7 @@ ${result.error}
 Since the search-replace edit failed, please output the COMPLETE updated code instead.`;
 
             const fallbackResult = await generateContent({
-              provider: "openrouter",
+              provider: "gemini",
               model: targetModelId,
               system: fallbackSystemPrompt,
               prompt: fallbackPromptText,
@@ -628,6 +639,12 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
         message: getErrorMessage(error),
         stack: error instanceof Error ? error.stack : undefined,
       });
+      logGenerationFailure({
+        prompt,
+        stage: "follow_up_edit",
+        errorMessage: getErrorMessage(error),
+        userId: authUser?.id,
+      }).catch(() => {});
       return new Response(
         JSON.stringify({
           error: classified.message,
@@ -654,11 +671,24 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
+        const generationStartedAt = Date.now();
+        let streamClosed = false;
         const sendEvent = (eventObj: Record<string, unknown>) => {
+          if (streamClosed) return;
           try {
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(eventObj)}\n\n`));
-          } catch (e) {
-            // Stream may already be closed
+          } catch {
+            // The browser may disconnect while generation is still running.
+            streamClosed = true;
+          }
+        };
+        const closeStream = () => {
+          if (streamClosed) return;
+          streamClosed = true;
+          try {
+            controller.close();
+          } catch {
+            // The response may already have been cancelled by the client.
           }
         };
 
@@ -672,10 +702,11 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
             prompt,
             model: targetModelId,
             userId: authUser?.id,
+            images: frameImages,
             onEvent: (event) => {
               if (event.type === "telemetry") {
                 // Log generation analytics asynchronously
-                logGenerationAnalytics(event.data).catch((err) => {
+                logGenerationAnalytics(event.data as LogAnalyticsPayload).catch((err) => {
                   console.error("Failed to log generation analytics:", err);
                 });
               } else {
@@ -695,7 +726,7 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
 
           // Complete streaming pipeline
           sendEvent({ type: "reasoning-start", phase: "idle" });
-          controller.close();
+          closeStream();
         } catch (err) {
           const errorMessage = err instanceof Error ? err.message : "Streaming pipeline failed";
           const errorStack = err instanceof Error ? err.stack : undefined;
@@ -709,9 +740,21 @@ Since the search-replace edit failed, please output the COMPLETE updated code in
             promptLength: prompt?.length,
             timestamp: new Date().toISOString(),
           }));
+
+          // This used to only exist as a console.error line, which is lost
+          // as soon as the serverless instance recycles. Persist it so
+          // failed generations are actually visible in the analytics
+          // dashboard, not just successful ones.
+          logGenerationFailure({
+            prompt,
+            stage: "orchestrator_streaming",
+            errorMessage,
+            durationMs: generationStartedAt ? Date.now() - generationStartedAt : undefined,
+            userId: authUser?.id,
+          }).catch(() => {});
           
           sendEvent({ type: "error", error: errorMessage });
-          controller.close();
+          closeStream();
         } finally {
           clearInterval(heartbeatInterval);
         }

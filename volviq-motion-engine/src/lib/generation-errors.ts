@@ -58,7 +58,7 @@ export function classifyGenerationError(
         ? error
         : JSON.stringify(error);
 
-  // Try to parse structured JSON error from OpenRouter custom fetch
+  // Try to parse structured JSON error from the Groq fetch wrapper.
   try {
     const jsonStart = raw.indexOf("{");
     if (jsonStart !== -1) {
@@ -88,7 +88,19 @@ export function classifyGenerationError(
       ? String((context.responseBody as { error: unknown }).error)
       : "";
 
-  const combined = `${raw} ${bodyStr}`.trim();
+  const combined = bodyStr && bodyStr !== raw ? `${raw} ${bodyStr}`.trim() : raw.trim();
+
+  if (apiType === "unauthorized") {
+    return {
+      code: "auth_failed",
+      title: "Session Expired",
+      message: combined || "Your session is invalid or expired.",
+      action: "Sign in again to continue generating.",
+      type: "api",
+      httpStatus: httpStatus ?? 401,
+      detail: raw,
+    };
+  }
 
   if (apiType === "validation") {
     return {
@@ -130,14 +142,16 @@ export function classifyGenerationError(
     apiType === "api_key_missing" ||
     includesAny(combined, [
       "gemini is not configured",
-      "openrouter is not configured",
+      "openai is not configured",
+      "groq is not configured",
       "api key",
       "api_key",
       "missing key",
       "invalid api key",
       "google_generative_ai_api_key",
       "gemini_api_key",
-      "openrouter_api_key",
+      "openai_api_key",
+      "groq_api_key",
     ])
   ) {
     const isProd = process.env.NODE_ENV === "production";
@@ -145,10 +159,10 @@ export function classifyGenerationError(
       code: "api_key_missing",
       title: "API Key Missing",
       message: isProd
-        ? "OpenRouter is not configured. Please ensure OPENROUTER_API_KEY is configured in your Vercel environment variables."
-        : "OpenRouter is not configured. Add OPENROUTER_API_KEY to volviq-motion-engine/.env and restart the dev server.",
+        ? "Gemini is not configured. Set GEMINI_API_KEY in your deployment environment."
+        : "Gemini is not configured. Add GEMINI_API_KEY to volviq-motion-engine/.env and restart the dev server.",
       action: isProd
-        ? "Configure OPENROUTER_API_KEY in your Vercel project settings and trigger a redeployment."
+        ? "Configure GEMINI_API_KEY in your deployment settings and trigger a redeployment."
         : "Set your API key in .env, then run npm run dev again.",
       type: "api",
       httpStatus: httpStatus ?? 400,
@@ -229,6 +243,8 @@ export function classifyGenerationError(
   }
 
   if (
+    httpStatus === 401 ||
+    httpStatus === 403 ||
     includesAny(combined, [
       "unauthorized",
       "authentication",
@@ -241,7 +257,7 @@ export function classifyGenerationError(
       code: "auth_failed",
       title: "Authentication Failed",
       message: combined || "Could not authenticate with the AI service.",
-      action: "Verify your OpenRouter API key is valid and has access to the requested model.",
+      action: "Verify GEMINI_API_KEY and confirm the selected Gemini model is allowed for this project.",
       type: "api",
       httpStatus: httpStatus ?? 401,
       detail: raw,
@@ -307,7 +323,7 @@ export function classifyGenerationError(
       title: "Generation Failed",
       message:
         `An unexpected error occurred during generation${detailText}. Check the browser console for logs.`,
-      action: "Open DevTools → Console, then retry. Ensure OPENROUTER_API_KEY is set.",
+      action: "Open DevTools → Console, then retry. Ensure GEMINI_API_KEY is set.",
       type: "api",
       detail: raw || "Empty error message",
     };
@@ -352,12 +368,10 @@ export function logFullGenerationError(
   error: unknown,
   context: Record<string, unknown>,
 ): void {
-  console.error("FULL GENERATION ERROR", error);
-  if (error instanceof Error) {
-    console.error("STACK", error.stack);
-  }
-  console.error("CONTEXT", context);
-  if (error && typeof error === "object" && "cause" in error) {
-    console.error("CAUSE", (error as { cause: unknown }).cause);
-  }
+  const message = error instanceof Error ? error.message : String(error);
+  const cause =
+    error && typeof error === "object" && "cause" in error
+      ? (error as { cause: unknown }).cause
+      : undefined;
+  console.warn("Generation request failed", { message, cause, ...context });
 }

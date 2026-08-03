@@ -20,6 +20,7 @@ import {
   Img,
   Sequence,
   interpolate,
+  interpolateColors,
   spring,
   staticFile,
   useCurrentFrame,
@@ -143,7 +144,9 @@ function extractComponentBody(code: string): string {
   }
 
   if (!componentName) {
-    const namedConstExportMatch = cleaned.match(/export\s+(?:const|let|var)\s+(\w+)\s*=/);
+    const namedConstExportMatch = cleaned.match(
+      /export\s+(?:const|let|var)\s+(\w+)\s*(?::\s*[^=]+)?\s*=/,
+    );
     if (namedConstExportMatch) {
       componentName = namedConstExportMatch[1];
     }
@@ -163,7 +166,7 @@ function extractComponentBody(code: string): string {
 
   // Strategy B: Look for any exported arrow function: export const Component = () => {
   if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)export\s+(?:default\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\{/);
+    startMatch = cleaned.match(/([\s\S]*?)export\s+(?:default\s+)?(?:const|let|var)\s+(\w+)\s*(?::\s*[^=]+)?\s*=\s*\([^)]*\)\s*=>\s*\{/);
   }
 
   // Strategy C: Look for any exported standard function: export function Component() {
@@ -173,7 +176,7 @@ function extractComponentBody(code: string): string {
 
   // Strategy D: Look for any const component declaration that matches typical names
   if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)(?:const|let|var)\s+(VolviqAd|VolviqAnimation|MyAnimation|Animation|AdComponent|DynamicComponent)\s*=\s*\([^)]*\)\s*=>\s*\{/);
+    startMatch = cleaned.match(/([\s\S]*?)(?:const|let|var)\s+(VolviqAd|VolviqAnimation|MyAnimation|Animation|AdComponent|DynamicComponent)\s*(?::\s*[^=]+)?\s*=\s*\([^)]*\)\s*=>\s*\{/);
   }
 
   // Strategy D2: Look for any standard function declaration that matches typical names
@@ -183,7 +186,7 @@ function extractComponentBody(code: string): string {
 
   // Strategy E: Fallback to the last const assignment of an arrow function
   if (!startMatch) {
-    startMatch = cleaned.match(/([\s\S]*?)(?:export\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\{/);
+    startMatch = cleaned.match(/([\s\S]*?)(?:export\s+)?(?:const|let|var)\s+(\w+)\s*(?::\s*[^=]+)?\s*=\s*\([^)]*\)\s*=>\s*\{/);
   }
 
   // Strategy E2: Fallback to the last standard function definition
@@ -394,6 +397,7 @@ export function compileCode(code: string): CompilationResult {
     const Remotion = {
       AbsoluteFill,
       interpolate: safeInterpolate,
+      interpolateColors,
       useCurrentFrame,
       useVideoConfig,
       spring: safeSpring,
@@ -415,6 +419,7 @@ export function compileCode(code: string): CompilationResult {
       "THREE",
       "AbsoluteFill",
       "interpolate",
+      "interpolateColors",
       "useCurrentFrame",
       "useVideoConfig",
       "spring",
@@ -504,6 +509,7 @@ export function compileCode(code: string): CompilationResult {
       THREE,
       AbsoluteFill,
       safeInterpolate,
+      interpolateColors,
       useCurrentFrame,
       useVideoConfig,
       safeSpring,

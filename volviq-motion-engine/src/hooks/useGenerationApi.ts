@@ -23,6 +23,7 @@ import type {
   StreamPhase,
 } from "@/types/generation";
 import { logger } from "@/utils/logger";
+import { getValidAccessToken } from "@/lib/supabase";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface FailedEditInfo {
@@ -35,6 +36,8 @@ interface GenerationCallbacks {
   onCodeGenerated?: (code: string) => void;
   onStreamingChange?: (isStreaming: boolean) => void;
   onStreamPhaseChange?: (phase: StreamPhase) => void;
+  /** Human-readable detail for the current phase (e.g. "Scene 2 of 4: Hero shot") */
+  onStreamPhaseDetailChange?: (detail: string | undefined) => void;
   onError?: (
     error: string,
     type: GenerationErrorType,
@@ -64,10 +67,8 @@ interface GenerationContext {
   hasManualEdits: boolean;
   errorCorrection?: ErrorCorrectionContext;
   frameImages?: string[];
-}
-
-interface UseGenerationApiOptions {
-  accessToken?: string | null;
+  fps: number;
+  durationInFrames: number;
 }
 
 interface UseGenerationApiReturn {
@@ -90,7 +91,7 @@ function parseApiErrorBody(
     typeof errorData.type === "string" ? errorData.type : undefined;
 
   // Extract the error message from various response shapes
-  // OpenRouter / OpenAI-style: { error: { message: "...", type: "..." } }
+  // Gemini/OpenAI-compatible shape: { error: { message: "...", type: "..." } }
   // Flat style:            { error: "..." }
   // Alt flat:              { message: "..." }
   let message: string;
@@ -121,7 +122,7 @@ function parseApiErrorBody(
     effectiveApiType === "api_key_missing" ||
     (status === 400 && (
       message.toLowerCase().includes("gemini is not configured") || 
-      message.toLowerCase().includes("openrouter is not configured")
+      message.toLowerCase().includes("groq is not configured")
     ))
   ) {
     return classifyGenerationError(message, {
@@ -142,6 +143,7 @@ function processStreamEvent(
   event: Record<string, unknown>,
   handlers: {
     onStreamPhaseChange?: (phase: StreamPhase) => void;
+    onStreamPhaseDetailChange?: (detail: string | undefined) => void;
     onPendingMessage?: (skills?: string[]) => void;
     onCodeGenerated?: (code: string) => void;
     accumulatedText: { value: string };
@@ -166,11 +168,31 @@ function processStreamEvent(
   if (type === "reasoning-start") {
     const phase = event.phase as StreamPhase | undefined;
     handlers.onStreamPhaseChange?.(phase || "reasoning");
+
+    // The orchestrator sends rich progress detail on some phases (which
+    // scene is being generated, which asset, a repair-attempt message) that
+    // was previously being silently dropped here, leaving the UI stuck on
+    // a generic "Generating code..." message during the most informative
+    // parts of a generation.
+    const message = event.message as string | undefined;
+    const meta = event.meta as
+      | { sceneNumber?: number; totalScenes?: number; purpose?: string }
+      | undefined;
+    if (message) {
+      handlers.onStreamPhaseDetailChange?.(message);
+    } else if (meta?.sceneNumber && meta?.totalScenes) {
+      handlers.onStreamPhaseDetailChange?.(
+        `Scene ${meta.sceneNumber} of ${meta.totalScenes}${meta.purpose ? `: ${meta.purpose}` : ""}`,
+      );
+    } else {
+      handlers.onStreamPhaseDetailChange?.(undefined);
+    }
     return;
   }
 
   if (type === "text-start") {
     handlers.onStreamPhaseChange?.("generating");
+    handlers.onStreamPhaseDetailChange?.(undefined);
     return;
   }
 
@@ -211,10 +233,7 @@ function processStreamEvent(
   }
 }
 
-export function useGenerationApi(
-  apiOptions?: UseGenerationApiOptions,
-): UseGenerationApiReturn {
-  const accessToken = apiOptions?.accessToken;
+export function useGenerationApi(): UseGenerationApiReturn {
   const [isLoading, setIsLoading] = useState(false);
   // Use a ref to strictly prevent concurrent calls across renders
   const isGeneratingRef = useRef(false);
@@ -252,6 +271,7 @@ export function useGenerationApi(
         onCodeGenerated,
         onStreamingChange,
         onStreamPhaseChange,
+        onStreamPhaseDetailChange,
         onError,
         onMessageSent,
         onGenerationComplete,
@@ -276,6 +296,7 @@ export function useGenerationApi(
       setIsLoading(true);
       onStreamingChange?.(true);
       onStreamPhaseChange?.("reasoning");
+      onStreamPhaseDetailChange?.(undefined);
 
       if (!options?.silent) {
         onMessageSent?.(prompt, frameImages);
@@ -288,9 +309,16 @@ export function useGenerationApi(
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
         };
-        if (accessToken) {
-          headers.Authorization = `Bearer ${accessToken}`;
+        const validAccessToken = await getValidAccessToken();
+        if (!validAccessToken) {
+          throw new GenerationError(
+            classifyGenerationError("Invalid or expired session. Please log in again.", {
+              httpStatus: 401,
+              apiType: "unauthorized",
+            }),
+          );
         }
+        headers.Authorization = `Bearer ${validAccessToken}`;
 
         logger.info("generation", "POST /api/generate", {
           model,
@@ -320,13 +348,6 @@ export function useGenerationApi(
           } catch {
             errorData = { error: await response.text().catch(() => "") };
           }
-
-          logFullGenerationError(new Error("API request failed"), {
-            status: response.status,
-            contentType,
-            requestBody,
-            responseBody: errorData,
-          });
 
           const userError = parseApiErrorBody(errorData, response.status);
 
@@ -487,6 +508,7 @@ export function useGenerationApi(
 
             processStreamEvent(eventObj, {
               onStreamPhaseChange,
+              onStreamPhaseDetailChange,
               onPendingMessage,
               onCodeGenerated,
               accumulatedText,
@@ -543,11 +565,7 @@ export function useGenerationApi(
 
         onCodeGenerated?.(finalCode);
         onClearPendingMessage?.();
-        onGenerationComplete?.(
-          finalCode,
-          undefined,
-          streamMetadata.skills?.length ? streamMetadata : undefined,
-        );
+        onGenerationComplete?.(finalCode, undefined, streamMetadata);
 
         trackMetric({
           kind: "generation_success",
@@ -601,10 +619,11 @@ export function useGenerationApi(
         setIsLoading(false);
         onStreamingChange?.(false);
         onStreamPhaseChange?.("idle");
+        onStreamPhaseDetailChange?.(undefined);
         onClearPendingMessage?.();
       }
     },
-    [isLoading, accessToken],
+    [isLoading],
   );
 
   const abortActiveRequest = useCallback(() => {

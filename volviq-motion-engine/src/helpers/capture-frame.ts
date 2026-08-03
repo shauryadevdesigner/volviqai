@@ -27,7 +27,7 @@ export async function captureFrame(
         durationInFrames: config.durationInFrames,
       },
       frame,
-      scale: 0.5, // 960x540 - good enough for AI context
+      scale: 1 / 6, // 640x360 from the 3840x2160 composition
       inputProps: {},
       licenseKey: "free-license",
     })

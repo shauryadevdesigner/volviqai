@@ -11,6 +11,7 @@ import React, { useEffect, useRef } from "react";
 
 import { EditorHeader } from "./EditorHeader";
 import { StreamingOverlay } from "./StreamingOverlay";
+import type { StreamPhase } from "@/types/generation";
 
 // Monaco must be loaded client-side only
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
@@ -22,13 +23,13 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ),
 });
 
-type StreamPhase = "idle" | "reasoning" | "generating" | "briefing" | "evaluating" | "refining" | "analyzing" | "strategizing" | "auditing";
-
 interface CodeEditorProps {
   code: string;
   onChange: (value: string) => void;
   isStreaming?: boolean;
   streamPhase?: StreamPhase;
+  /** Rich per-phase detail (e.g. "Scene 2 of 4: Hero shot") — overrides the generic phase text when present */
+  streamPhaseDetail?: string;
 }
 
 export const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -36,6 +37,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   onChange,
   isStreaming = false,
   streamPhase = "idle",
+  streamPhaseDetail,
 }) => {
   const monacoRef = useRef<Monaco | null>(null);
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -422,13 +424,24 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           <StreamingOverlay
             visible={isStreaming}
             message={
+              streamPhaseDetail ||
               (() => {
                 switch (streamPhase) {
                   case "reasoning": return "Analyzing request...";
                   case "analyzing": return "Analyzing target audience & psychology...";
                   case "strategizing": return "Formulating creative strategy & emotional triggers...";
                   case "briefing": return "Directing cinematography & motion profiles...";
+                  case "asset_planning": return "Planning visual assets...";
+                  case "generating_assets": return "Generating visual assets...";
+                  case "generating_asset": return "Generating an asset...";
+                  case "generating_scene": return "Generating scene...";
                   case "generating": return "Assembling brand layouts & kinetic typography...";
+                  case "generating_draft": return "Generating draft animation...";
+                  case "rendering_quality_frames": return "Rendering quality frames...";
+                  case "reviewing_visuals": return "Reviewing rendered visuals...";
+                  case "refining_animation": return "Refining animation...";
+                  case "compiling_final": return "Compiling final video...";
+                  case "compiling": return "Compiling animation code...";
                   case "evaluating": return "Reviewing visual quality against premium defaults...";
                   case "auditing": return "Auditing design taste & conversion mechanics...";
                   case "refining": return "Refining visual details for agency-grade finish...";

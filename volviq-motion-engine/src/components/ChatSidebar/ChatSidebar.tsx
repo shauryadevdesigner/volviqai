@@ -51,6 +51,7 @@ interface ChatSidebarProps {
   onCodeGenerated?: (code: string) => void;
   onStreamingChange?: (isStreaming: boolean) => void;
   onStreamPhaseChange?: (phase: StreamPhase) => void;
+  onStreamPhaseDetailChange?: (detail: string | undefined) => void;
   onError?: (
     error: string,
     type: GenerationErrorType,
@@ -83,7 +84,6 @@ interface ChatSidebarProps {
   fps?: number;
   durationInFrames?: number;
   currentFrame?: number;
-  accessToken?: string | null;
 }
 
 export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
@@ -97,6 +97,7 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
       onCodeGenerated,
       onStreamingChange,
       onStreamPhaseChange,
+      onStreamPhaseDetailChange,
       onError,
       prompt,
       onPromptChange,
@@ -117,14 +118,13 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
       fps = 30,
       durationInFrames = 300,
       currentFrame = 0,
-      accessToken,
     },
     ref,
   ) {
     const [model, setModel] = useState<ModelId>(DEFAULT_MODEL_ID);
     const promptRef = useRef<string>("");
 
-    const { isLoading, runGeneration, abortActiveRequest } = useGenerationApi({ accessToken });
+    const { isLoading, runGeneration, abortActiveRequest } = useGenerationApi();
 
     // Keep prompt ref in sync for use in triggerGeneration
     useEffect(() => {
@@ -151,11 +151,14 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
           hasManualEdits,
           errorCorrection,
           frameImages: options?.attachedImages,
+          fps,
+          durationInFrames,
         },
         {
           onCodeGenerated,
           onStreamingChange,
           onStreamPhaseChange,
+          onStreamPhaseDetailChange,
           onError,
           onMessageSent,
           onGenerationComplete,

@@ -1,9 +1,17 @@
 import { ProgressRequest, ProgressResponse } from "../../../../../types/schema";
 import { executeApi } from "../../../../helpers/api-response";
+import { requireAuth } from "@/lib/auth-server";
 
 export const POST = executeApi<ProgressResponse, typeof ProgressRequest>(
   ProgressRequest,
   async (req, body) => {
+    // Same reasoning as /api/lambda/render: don't let anonymous requests
+    // poll (or fish for info about) render jobs that aren't theirs.
+    const auth = await requireAuth(req);
+    if (auth instanceof Response) {
+      throw new Error("Authentication required.");
+    }
+
     // If it's a JSON2VIDEO render
     if (body.bucketName === "json2video") {
       try {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Composition } from "remotion";
-import { MIN_DURATION_FRAMES, DEFAULT_FPS } from "@/lib/video-duration";
+import { DEFAULT_DURATION_FRAMES, DEFAULT_FPS } from "@/lib/video-duration";
 import {
   RENDER_HEIGHT,
   RENDER_WIDTH,
@@ -17,13 +17,13 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="DynamicComp"
         component={DynamicComp}
-        durationInFrames={MIN_DURATION_FRAMES}
+        durationInFrames={DEFAULT_DURATION_FRAMES}
         fps={DEFAULT_FPS}
         width={RENDER_WIDTH}
         height={RENDER_HEIGHT}
         defaultProps={{
           code: defaultCode,
-          durationInFrames: MIN_DURATION_FRAMES,
+          durationInFrames: DEFAULT_DURATION_FRAMES,
           fps: DEFAULT_FPS,
         }}
         calculateMetadata={calculateDynamicCompMetadata as never}

@@ -2,7 +2,6 @@ import { z } from "zod";
 import { generateContent } from "../../provider";
 import { ResolvedBrief, ResolvedScene } from "../../design-system";
 import { GeneratedAssetItem, SceneLayoutItem } from "../types";
-import { getModelForTask } from "../../model-router";
 
 export const SceneGenerationSchema = z.object({
   code: z
@@ -11,6 +10,69 @@ export const SceneGenerationSchema = z.object({
       "Component body code for the scene, starting with component declaration.",
     ),
 });
+
+const UnifiedGenerationSchema = z.object({
+  code: z.string().describe("Complete compilable Remotion TSX component code"),
+});
+
+export async function runStage8Unified(params: {
+  prompt: string;
+  resolvedBrief?: ResolvedBrief;
+  codeModel: string;
+  images?: string[];
+}): Promise<string> {
+  const scenes = params.resolvedBrief?.scenes.map((scene) => ({
+    sceneNumber: scene.sceneNumber,
+    purpose: scene.purpose,
+    copy: scene.copyText,
+    subtext: scene.subtext || "",
+    startPct: scene.time_start_pct,
+    endPct: scene.time_end_pct,
+    motion: scene.motion.motionStyle,
+  })) ?? [];
+
+  const generationPrompt = `Create the complete motion graphic requested below.
+
+User request: ${params.prompt}
+${params.resolvedBrief ? `Template: ${params.resolvedBrief.template}
+Palette: ${params.resolvedBrief.colorPalette}
+Colors: ${JSON.stringify(params.resolvedBrief.colors)}
+Storyboard: ${JSON.stringify(scenes)}` : "Infer a distinctive art direction, palette, typography system, scene structure, and pacing directly from the request."}
+${params.images?.length ? `The user supplied ${params.images.length} reference image(s). They are available to the component as userImages[0..${params.images.length - 1}]. Use them when relevant with <Img src={userImages[index]} />.` : ""}
+
+Build multiple purposeful visual beats across the full duration. Derive every timing boundary from durationInFrames; never assume 300 frames or a fixed FPS. Keep meaningful content visible through the ending. Keep the complete module concise (prefer under 350 lines), prioritize finishing valid code over excessive helper abstractions, and never stop mid-component.
+
+Quality requirements:
+- Use prompt-specific visual storytelling, not a generic centered-text template.
+- Maintain safe margins, strong hierarchy, readable contrast, and responsive sizing based on composition width/height.
+- Prevent text overlap, clipping, off-canvas transforms, empty/black sections, abrupt disappearances, and hard cuts.
+- Use layered depth, controlled secondary motion, and transitions that support the requested tone without visual clutter.
+- Clamp interpolation at both ends and keep spring delays/frame ranges valid for any requested duration.
+- For animated colors, use interpolateColors(); interpolate() output ranges must contain numbers only.
+- Ensure the opening frame has an intentional visible background and the final frame remains composed.
+
+Return complete imports and the exported VolviqAnimation component.`;
+
+  const result = await generateContent({
+    model: params.codeModel,
+    taskType: "remotion_generation",
+    system: `You are an elite motion designer and senior Remotion engineer. Return one complete, valid raw TSX module. Import React and every used API from remotion. Export a component named VolviqAnimation. Use useCurrentFrame, useVideoConfig, spring, and interpolate for frame-driven animation. Use inline styles only; never use CSS keyframes, browser timers, Math.random(), external packages, or unavailable local components. The component must render correctly at every frame and at arbitrary durations and FPS values.`,
+    ...(params.images?.length
+      ? {
+          messages: [{
+            role: "user",
+            content: [
+              {type: "text", text: generationPrompt},
+              ...params.images.map((url) => ({type: "image_url", image_url: {url}})),
+            ],
+          }],
+        }
+      : {prompt: generationPrompt}),
+    schema: UnifiedGenerationSchema,
+  });
+
+  return result.object.code;
+}
 
 export async function runStage8Scene(params: {
   scene: ResolvedScene;
@@ -23,6 +85,7 @@ export async function runStage8Scene(params: {
   cachedTemplate: any;
   compileErrors?: string[];
   attempt?: number;
+  codeModel: string;
 }): Promise<string> {
   const {
     scene,
@@ -34,6 +97,7 @@ export async function runStage8Scene(params: {
     cachedTemplate,
     compileErrors,
     attempt = 1,
+    codeModel,
   } = params;
 
   const hasAsset = asset !== undefined;
@@ -133,7 +197,7 @@ Return only the single React/Remotion component Scene${scene.sceneNumber} matchi
       : `${scenePrompt}\n\nCRITICAL: Compilation failed on previous attempt. Fix these compilation errors:\n${compileErrors?.join("\n")}\n\nReturn ONLY the fixed component declaration code.`;
 
   const codeResult = await generateContent({
-    model: getModelForTask("remotion_generation").id, // Dynamically resolved coder model
+    model: codeModel,
     system: systemPromptWithRef,
     prompt: promptText,
     schema: SceneGenerationSchema,

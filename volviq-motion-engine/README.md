@@ -109,6 +109,12 @@ npm i
 npm run dev
 ```
 
+Add `GEMINI_API_KEY` to `.env` before using prompt-to-animation generation.
+The selected Gemini code model generates the Remotion TSX, which is then
+validated and compiled locally. Rendered-frame vision review is currently
+disabled, so ordinary generation uses one AI request and does not perform a
+vision audit or AI rewrite. No deterministic video fallback is inserted.
+
 **Render video**
 
 ```console

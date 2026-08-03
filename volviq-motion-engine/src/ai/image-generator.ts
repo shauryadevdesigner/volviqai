@@ -270,23 +270,24 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
 
   console.log(`[Cache Miss] Generating new asset for prompt: "${prompt.substring(0, 40)}..." Style: ${style}`);
 
-  // Try calling OpenRouter image generation first (flux-1-schnell)
-  if (process.env.OPENROUTER_API_KEY) {
+  // Try calling OpenAI's image generation API first (gpt-image-1)
+  if (process.env.OPENAI_API_KEY) {
     try {
-      const baseUrl = "https://openrouter.ai/api/v1";
-      console.log(`[Image API] Calling OpenRouter flux-1-schnell...`);
-      
+      const baseUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
+      const imageModel = process.env.OPENAI_MODEL_IMAGE || "gpt-image-1";
+      console.log(`[Image API] Calling OpenAI ${imageModel}...`);
+
       const genController = new AbortController();
-      const genTimeoutId = setTimeout(() => genController.abort(), 20000); // 20s timeout
+      const genTimeoutId = setTimeout(() => genController.abort(), 30000); // 30s timeout
 
       const response = await fetch(`${baseUrl}/images/generations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
+          "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
         },
         body: JSON.stringify({
-          model: "flux-1-schnell",
+          model: imageModel,
           prompt: `${prompt}, ${style}, 4k high quality, photographic style`,
           n: 1,
           size: "1024x1024"
@@ -297,10 +298,12 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
 
       if (response.ok) {
         const data: any = await response.json();
-        const imageUrl = data.data?.[0]?.url;
+        // gpt-image-1 returns base64 (b64_json) by default; some setups may return a url instead
+        const b64 = data.data?.[0]?.b64_json;
+        const imageUrl = b64 ? `data:image/png;base64,${b64}` : data.data?.[0]?.url;
         if (imageUrl) {
-          console.log(`[Image API] Using OpenRouter image URL: ${imageUrl}`);
-          
+          console.log(`[Image API] Using OpenAI-generated image (${b64 ? "base64" : "url"}).`);
+
           imageCache[hash] = {
             prompt,
             style,
@@ -311,10 +314,10 @@ export async function generateAsset(prompt: string, style: string): Promise<stri
         }
       } else {
         const errText = await response.text().catch(() => "");
-        console.warn(`[Image API Warning] OpenRouter image generation returned status ${response.status}: ${errText}`);
+        console.warn(`[Image API Warning] OpenAI image generation returned status ${response.status}: ${errText}`);
       }
     } catch (imageErr) {
-      console.warn(`[Image API Warning] OpenRouter image generation failed:`, imageErr);
+      console.warn(`[Image API Warning] OpenAI image generation failed:`, imageErr);
     }
   }
 

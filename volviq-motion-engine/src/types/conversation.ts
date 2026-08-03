@@ -14,6 +14,12 @@ export interface AssistantMetadata {
   edits?: EditOperation[];
   /** Model used for generation */
   model?: string;
+  qualityScore?: number;
+  qualityIssues?: string[];
+  qualityWarning?: string;
+  usedDraftFallback?: boolean;
+  visionModel?: string;
+  refinementModel?: string;
 }
 
 export interface ConversationMessage {
