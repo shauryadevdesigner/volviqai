@@ -196,9 +196,9 @@ export const MODEL_REGISTRY: Record<AIModel, ModelConfig> = {
     maxTokens: 8000,
     fallback: "gpt-oss-120b",
   },
-  "gemini-3.1-pro": {
-    id: "gemini-3.1-pro",
-    name: "Gemini 3.1 Pro",
+  "gemini-3.5-flash-lite": {
+    id: "gemini-3.5-flash-lite",
+    name: "Gemini 3.5 Flash Lite",
     category: "general",
     maxTokens: 8000,
     fallback: "gpt-oss-120b",

@@ -39,6 +39,7 @@ export interface ChatSidebarRef {
 }
 
 interface ChatSidebarProps {
+  initialModel?: ModelId;
   messages: ConversationMessage[];
   pendingMessage?: {
     skills?: string[];
@@ -90,6 +91,7 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
   function ChatSidebar(
     {
       messages,
+      initialModel = DEFAULT_MODEL_ID,
       pendingMessage,
       isCollapsed,
       onToggleCollapse,
@@ -121,7 +123,7 @@ export const ChatSidebar = forwardRef<ChatSidebarRef, ChatSidebarProps>(
     },
     ref,
   ) {
-    const [model, setModel] = useState<ModelId>(DEFAULT_MODEL_ID);
+    const [model, setModel] = useState<ModelId>(initialModel);
     const promptRef = useRef<string>("");
 
     const { isLoading, runGeneration, abortActiveRequest } = useGenerationApi();

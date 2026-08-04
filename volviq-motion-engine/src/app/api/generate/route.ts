@@ -313,7 +313,7 @@ export async function POST(req: Request) {
 
   const allowedCodeModels = new Set([
     "gemini-3.6-flash",
-    "gemini-3.1-pro-preview",
+    "gemini-3.5-flash-lite",
   ]);
   const targetModelId = allowedCodeModels.has(model)
     ? model

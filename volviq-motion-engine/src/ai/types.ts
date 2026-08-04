@@ -36,7 +36,7 @@ export type AIModel =
   | "gpt-oss-120b"
   | "llama-3.3-70b-instruct"
   | "mistral-medium-latest"
-  | "gemini-3.1-pro"
+  | "gemini-3.5-flash-lite"
   // Advanced Reasoning & Creative
   | "claude-opus-4.5"
   | "claude-opus-4.8";

@@ -304,7 +304,7 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       // Leave enough room for the input under provider limits.
       // The lightweight planner has a 6K TPM ceiling, while code models need
       // a larger completion budget to return a complete component.
-      const modelTokenCap = modelName === "gemini-3.1-pro-preview" ? 8000 : 8000;
+      const modelTokenCap = 8000;
       parsed.max_tokens = Math.min(requestedMaxTokens ?? modelTokenCap, modelTokenCap);
       delete parsed.max_completion_tokens;
       delete parsed.max_output_tokens;

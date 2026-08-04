@@ -68,7 +68,7 @@ export const PRIMARY_MODEL = "gemini-3.6-flash";
 export const FALLBACK_MODEL = "gemini-3.6-flash";
 
 /** Final fallback for critical operations */
-export const FINAL_FALLBACK_MODEL = "gemini-3.1-pro-preview";
+export const FINAL_FALLBACK_MODEL = "gemini-3.5-flash-lite";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 

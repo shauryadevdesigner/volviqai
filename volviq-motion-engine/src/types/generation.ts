@@ -1,6 +1,6 @@
 export const MODELS = [
-  { id: "gemini-3.6-flash", name: "Gemini 3.6 Flash — Code Only" },
-  { id: "gemini-3.1-pro-preview", name: "Gemini 3.1 Pro — Best Quality" },
+  { id: "gemini-3.6-flash", name: "Gemini 3.6 Flash — Best Quality" },
+  { id: "gemini-3.5-flash-lite", name: "Gemini 3.5 Flash Lite — Faster" },
 ] as const;
 
 export type ModelId = (typeof MODELS)[number]["id"];

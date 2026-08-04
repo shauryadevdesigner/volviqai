@@ -16,7 +16,6 @@ import {
   onAuthStateChange,
   setSessionFromTokens,
   signOut,
-  MARKETING_APP_URL,
 } from "@/lib/supabase";
 import type { UserProfile } from "@/types/profile";
 
@@ -173,7 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     await signOut();
-    window.location.href = `${MARKETING_APP_URL}/login`;
+    window.location.assign("/auth/login");
   }, []);
 
   const value = useMemo(
@@ -205,15 +204,15 @@ export function useRequireAuth() {
   useEffect(() => {
     if (auth.loading) return;
     if (!isSupabaseConfigured()) {
-      window.location.href = `${MARKETING_APP_URL}/login`;
+      window.location.assign("/auth/login");
       return;
     }
     if (!auth.session) {
-      window.location.href = `${MARKETING_APP_URL}/login`;
+      window.location.assign("/auth/login");
       return;
     }
     if (auth.profile && !auth.profile.onboarding_completed_at) {
-      window.location.href = `${MARKETING_APP_URL}/onboarding`;
+      window.location.assign("/auth/onboarding");
     }
   }, [auth.loading, auth.session, auth.profile]);
 

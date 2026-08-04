@@ -9,7 +9,15 @@ import {
 import type { UserProfile } from "@/types/profile";
 import BorderGlow from "@/components/animations/BorderGlow";
 import GlareHover from "@/components/animations/GlareHover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getPlanLimit } from "@/lib/plans";
+import { DEFAULT_MODEL_ID, MODELS, type ModelId } from "@/types/generation";
 
 interface CenterWorkspaceProps {
   profile: UserProfile | null;
@@ -27,6 +35,7 @@ export function CenterWorkspace({
   const [prompt, setPrompt] = useState("");
   const [workspaceActive, setWorkspaceActive] = useState(false);
   const [startPrompt, setStartPrompt] = useState("");
+  const [model, setModel] = useState<ModelId>(DEFAULT_MODEL_ID);
   const workspaceRef = useRef<MotionWorkspaceRef | null>(null);
 
   const beginGeneration = (text: string) => {
@@ -34,10 +43,6 @@ export function CenterWorkspace({
     if (!trimmed) return;
     setStartPrompt(trimmed);
     setWorkspaceActive(true);
-    setTimeout(() => {
-      workspaceRef.current?.setPrompt(trimmed);
-      workspaceRef.current?.triggerGeneration();
-    }, 150);
   };
 
   useEffect(() => {
@@ -69,6 +74,7 @@ export function CenterWorkspace({
         <MotionWorkspace
           ref={workspaceRef}
           initialPrompt={startPrompt}
+          initialModel={model}
           autoStart
           accessToken={accessToken}
           compact
@@ -156,16 +162,40 @@ export function CenterWorkspace({
               rows={4}
               className="w-full resize-none bg-transparent px-4 py-3 text-foreground placeholder:text-muted-foreground/60 focus:outline-none text-base"
             />
-            <div className="flex items-center justify-between border-t border-border/30 px-3 py-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/30 px-3 py-2">
               <span className="text-[10px] text-muted-foreground font-mono">Press Enter to generate</span>
-              <button
-                type="button"
-                onClick={() => beginGeneration(prompt)}
-                disabled={!prompt.trim()}
-                className="rounded-md bg-primary hover:bg-primary-hover px-5 py-1.5 text-xs font-semibold text-primary-foreground transition-all duration-200 disabled:opacity-40 shadow-[0_0_12px_rgba(255,255,255,0.15)] active:scale-95 cursor-pointer"
-              >
-                Generate
-              </button>
+              <div className="flex items-center gap-2">
+                <Select
+                  value={model}
+                  onValueChange={(value) => setModel(value as ModelId)}
+                >
+                  <SelectTrigger
+                    className="h-8 w-[230px] border-border/70 bg-secondary/50 px-3 text-xs text-foreground"
+                    aria-label="Choose AI model"
+                  >
+                    <SelectValue placeholder="Choose AI model" />
+                  </SelectTrigger>
+                  <SelectContent className="border-border bg-background-elevated">
+                    {MODELS.map((option) => (
+                      <SelectItem
+                        key={option.id}
+                        value={option.id}
+                        className="text-xs text-foreground focus:bg-secondary focus:text-foreground"
+                      >
+                        {option.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <button
+                  type="button"
+                  onClick={() => beginGeneration(prompt)}
+                  disabled={!prompt.trim()}
+                  className="rounded-md bg-primary hover:bg-primary-hover px-5 py-1.5 text-xs font-semibold text-primary-foreground transition-all duration-200 disabled:opacity-40 shadow-[0_0_12px_rgba(255,255,255,0.15)] active:scale-95 cursor-pointer"
+                >
+                  Generate
+                </button>
+              </div>
             </div>
           </GlareHover>
         </BorderGlow>

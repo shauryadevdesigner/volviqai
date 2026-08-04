@@ -29,7 +29,12 @@ import {
   resolveDurationInFrames,
 } from "@/lib/video-duration";
 import type { UserFacingGenerationError } from "@/lib/generation-errors";
-import type { GenerationErrorType, StreamPhase } from "@/types/generation";
+import {
+  DEFAULT_MODEL_ID,
+  type GenerationErrorType,
+  type ModelId,
+  type StreamPhase,
+} from "@/types/generation";
 
 const MAX_CORRECTION_ATTEMPTS = 3;
 
@@ -43,6 +48,7 @@ export interface MotionWorkspaceRef {
 
 interface MotionWorkspaceProps {
   initialPrompt?: string;
+  initialModel?: ModelId;
   autoStart?: boolean;
   accessToken?: string | null;
   compact?: boolean;
@@ -53,6 +59,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
   function MotionWorkspace(
     {
       initialPrompt = "",
+      initialModel = DEFAULT_MODEL_ID,
       autoStart = false,
       compact = false,
       onGenerationComplete,
@@ -326,6 +333,7 @@ export const MotionWorkspace = forwardRef<MotionWorkspaceRef, MotionWorkspacePro
     >
       <ChatSidebar
         ref={setChatSidebar}
+        initialModel={initialModel}
         messages={messages}
         pendingMessage={pendingMessage}
         isCollapsed={isSidebarCollapsed}

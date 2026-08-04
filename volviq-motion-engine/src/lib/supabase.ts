@@ -6,9 +6,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const APP_URL =
-  process.env.NODE_ENV === 'production'
+  process.env.NEXT_PUBLIC_APP_URL ||
+  (process.env.NODE_ENV === 'production'
     ? 'https://app.volviq.xyz'
-    : 'http://localhost:3000';
+    : 'http://localhost:3000');
 
 export const MARKETING_APP_URL =
   process.env.NEXT_PUBLIC_MARKETING_URL ||

@@ -24,14 +24,14 @@ export const AI_CONFIG = {
   defaultProvider: "gemini",
   defaultModel: "gemini-3.6-flash",
   fallbackModel: "gemini-3.6-flash",
-  finalFallbackModel: "gemini-3.1-pro-preview",
+  finalFallbackModel: "gemini-3.5-flash-lite",
 
   // Legacy internal routing keys remain for compatibility, but resolve to
   // the Gemini tiers above.
   models: {
     "gemini-3.6-flash": { id: "gemini-3.6-flash", temperature: 0.25, maxTokens: 8000, timeoutMs: 90000 },
     "antigravity-preview-05-2026": { id: "antigravity-preview-05-2026", temperature: 0.2, maxTokens: 12000, timeoutMs: 300000 },
-    "gemini-3.1-pro-preview": { id: "gemini-3.1-pro-preview", temperature: 0.25, maxTokens: 5000, timeoutMs: 120000 },
+    "gemini-3.5-flash-lite": { id: "gemini-3.5-flash-lite", temperature: 0.25, maxTokens: 8000, timeoutMs: 90000 },
     // Compatibility aliases resolve to Gemini; no Groq endpoint is used.
     "llama-3.1-8b-instant": { id: FAST_MODEL, temperature: 0.2, maxTokens: 4000, timeoutMs: 60000 },
     "llama-3.3-70b-versatile": { id: FAST_MODEL, temperature: 0.3, maxTokens: 4500, timeoutMs: 90000 },
@@ -70,7 +70,6 @@ export const AI_CONFIG = {
     "gpt-oss-120b": { id: GENERAL_MODEL, temperature: 0.4, maxTokens: 8000, timeoutMs: 90000 },
     "llama-3.3-70b-instruct": { id: GENERAL_MODEL, temperature: 0.4, maxTokens: 8000, timeoutMs: 90000 },
     "mistral-medium-latest": { id: GENERAL_MODEL, temperature: 0.3, maxTokens: 8000, timeoutMs: 60000 },
-    "gemini-3.1-pro": { id: GENERAL_MODEL, temperature: 0.3, maxTokens: 8000, timeoutMs: 60000 },
 
     // ── Advanced Reasoning & Creative ─────────────────────────────────────
     "claude-opus-4.5": { id: ADVANCED_MODEL, temperature: 0.5, maxTokens: 8000, timeoutMs: 90000 },

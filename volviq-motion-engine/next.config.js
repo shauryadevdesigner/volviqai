@@ -32,28 +32,45 @@ const nextConfig = {
       },
     ];
   },
-  // Redirects to point auth/onboarding to main domain
+  // Local aliases bypass any permanent redirects cached by browsers from older
+  // versions of this project while still serving the same bundled pages.
+  async rewrites() {
+    if (process.env.NODE_ENV === "production") return [];
+    return [
+      { source: "/auth/login", destination: "/login" },
+      { source: "/auth/signup", destination: "/signup" },
+      { source: "/auth/onboarding", destination: "/onboarding" },
+      { source: "/auth/request-access", destination: "/request-access" },
+    ];
+  },
+  // Keep the bundled auth pages local during development. Production may hand
+  // these routes to the public website, but a permanent redirect here poisons
+  // the browser cache for localhost as well.
   async redirects() {
+    if (process.env.NODE_ENV !== "production") {
+      return [];
+    }
+
     return [
       {
         source: "/login",
         destination: "https://volviq.xyz/login",
-        permanent: true,
+        permanent: false,
       },
       {
         source: "/signup",
         destination: "https://volviq.xyz/signup",
-        permanent: true,
+        permanent: false,
       },
       {
         source: "/onboarding",
         destination: "https://volviq.xyz/onboarding",
-        permanent: true,
+        permanent: false,
       },
       {
         source: "/request-access",
         destination: "https://volviq.xyz/request-access",
-        permanent: true,
+        permanent: false,
       },
     ];
   },

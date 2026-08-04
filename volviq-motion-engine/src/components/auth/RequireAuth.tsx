@@ -9,11 +9,11 @@ export default function RequireAuth({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
-      router.push('/login');
+      router.push('/auth/login');
       return;
     }
     if (!loading && !session) {
-      router.push('/login');
+      router.push('/auth/login');
     }
   }, [loading, session, router]);
 
