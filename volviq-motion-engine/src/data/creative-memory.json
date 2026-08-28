@@ -1,0 +1,2110 @@
+[
+  {
+    "prompt": "Generate a 20-second motion graphic ad with bold typography and dynamic transitions",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T05:58:17.774Z"
+  },
+  {
+    "prompt": "Create a YouTube Short with hook text in the first 2 seconds and kinetic typography",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T06:28:01.369Z"
+  },
+  {
+    "prompt": "Design a multi-scene brand campaign with logo reveal",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T06:56:45.852Z"
+  },
+  {
+    "prompt": "Generate a bold motion graphic ad with kinetic typography",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T10:18:47.541Z"
+  },
+  {
+    "prompt": "Generate a bold motion graphic ad with kinetic typography",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T10:31:42.628Z"
+  },
+  {
+    "prompt": "Create a premium product advertisement with cinematic motion",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T10:43:27.105Z"
+  },
+  {
+    "prompt": "Generate a bold motion graphic ad with kinetic typography",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T10:51:12.750Z"
+  },
+  {
+    "prompt": "Generate a bold motion graphic ad with kinetic typography",
+    "audience": "",
+    "emotion": "Ambition",
+    "storyboard": [],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T11:24:17.049Z"
+  },
+  {
+    "prompt": "Fix the compilation error",
+    "audience": "Existing Audience",
+    "emotion": "Luxury",
+    "storyboard": [],
+    "finalScore": 93,
+    "timestamp": "2026-06-19T11:30:33.189Z"
+  },
+  {
+    "prompt": "Fix the compilation error",
+    "audience": "Existing Audience",
+    "emotion": "Luxury",
+    "storyboard": [],
+    "finalScore": 93,
+    "timestamp": "2026-06-19T11:31:56.626Z"
+  },
+  {
+    "prompt": "Fix the compilation error",
+    "audience": "Existing Audience",
+    "emotion": "Luxury",
+    "storyboard": [],
+    "finalScore": 93,
+    "timestamp": "2026-06-19T11:48:12.344Z"
+  },
+  {
+    "prompt": "Generate a bold motion graphic ad with kinetic typography",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "storyboard": [
+      {
+        "beat": "HOOK",
+        "time_start_pct": 0,
+        "time_end_pct": 15,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Slow push-in",
+          "lighting_style": "Volumetric glow"
+        },
+        "copy_text": "Discover the Future of Motion",
+        "action_detail": "Centered typography fades in with a soft radial background glow."
+      },
+      {
+        "beat": "EMOTIONAL_BUILD",
+        "time_start_pct": 15,
+        "time_end_pct": 35,
+        "shot": {
+          "camera_type": "Medium Shot",
+          "movement_style": "Pan left",
+          "lighting_style": "Dramatic spotlight"
+        },
+        "copy_text": "Fluid, Premium and Dynamic",
+        "action_detail": "Subtle spring slide animation revealing key feature details."
+      },
+      {
+        "beat": "PRODUCT_REVEAL",
+        "time_start_pct": 35,
+        "time_end_pct": 55,
+        "shot": {
+          "camera_type": "Macro Push-In",
+          "movement_style": "Dolly push",
+          "lighting_style": "Rim light highlights"
+        },
+        "copy_text": "Engineered for Excellence",
+        "action_detail": "Smooth scale and fade revealing product layout."
+      },
+      {
+        "beat": "BENEFIT_AMPLIFICATION",
+        "time_start_pct": 55,
+        "time_end_pct": 75,
+        "shot": {
+          "camera_type": "Close-Up",
+          "movement_style": "Slow rotation",
+          "lighting_style": "Soft diffuse"
+        },
+        "copy_text": "Get Results in Seconds",
+        "action_detail": "Dynamic bullet points appearing with staggered spring entry."
+      },
+      {
+        "beat": "SOCIAL_TRUST",
+        "time_start_pct": 75,
+        "time_end_pct": 90,
+        "shot": {
+          "camera_type": "Wide Shot",
+          "movement_style": "Ken Burns zoom",
+          "lighting_style": "Clean studio light"
+        },
+        "copy_text": "Trusted by Top Creators",
+        "action_detail": "Social proof text fades in with secondary subtle subtitle."
+      },
+      {
+        "beat": "CTA",
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "shot": {
+          "camera_type": "Centered",
+          "movement_style": "Stationary",
+          "lighting_style": "High contrast spotlight"
+        },
+        "copy_text": "Start Creating Now",
+        "action_detail": "Large headline scales up with primary accent glow buttons."
+      }
+    ],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T12:11:37.330Z"
+  },
+  {
+    "prompt": "Generate a bold motion graphic ad with kinetic typography",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "template": "Luxury Reveal",
+    "colorPalette": "Midnight Royal",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Attention-grabbing introduction: Hook viewer, establish style, create curiosity.",
+        "hookElement": "Bold kinetic typography with rapid atmospheric glow shift",
+        "objectives": {
+          "visual": "Stunning centered typography with moving particle field background",
+          "emotional": "Curiosity and excitement",
+          "typography": "Ultra-bold display font reveal with accent subtext",
+          "motion": "Dynamic spring scale-up and word-by-word reveal"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "none",
+          "assetPrompt": ""
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 25,
+        "copy_text": "Discover the Future of Motion",
+        "subtext": "Volviq Premium Engine V4"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Core message: Explain value and present key information.",
+        "hookElement": "Staggered feature card reveal",
+        "objectives": {
+          "visual": "Asymmetric split layout displaying product core value props",
+          "emotional": "Ambition and confidence",
+          "typography": "Clean sans-serif typography with high-contrast text layout",
+          "motion": "Slide-up masks and staggered card entries"
+        },
+        "layout": {
+          "direction": "split-left",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "product_showcase",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "3d render of a sleek metallic geometric device on a dark futuristic floating stage"
+        },
+        "time_start_pct": 25,
+        "time_end_pct": 50,
+        "copy_text": "Production-Ready Designs",
+        "subtext": "Create agency-grade graphics in seconds without manual keyframing."
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Proof / Feature showcase: Reinforce message and build confidence.",
+        "hookElement": "Interactive data viz or user interface showcase",
+        "objectives": {
+          "visual": "Layered overlap UI mockup showing live rendering and code integration",
+          "emotional": "Trust and achievement",
+          "typography": "Structured label tags and fine detail indicators",
+          "motion": "Elastic spring pop reveals and drift animations"
+        },
+        "layout": {
+          "direction": "layered-overlap",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "cinematic dashboard glowing tech interface user data graphs HUD overlay dark slate base"
+        },
+        "time_start_pct": 50,
+        "time_end_pct": 75,
+        "copy_text": "Engineered for Conversion",
+        "subtext": "Performant, GPU-accelerated motion components ready to ship."
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Strong CTA: Drive action and deliver a memorable ending.",
+        "hookElement": "Pulsing spotlight focused on the primary CTA button",
+        "objectives": {
+          "visual": "Minimalist centered layout with a bold accent action button",
+          "emotional": "Power and belonging",
+          "typography": "Large bold display text paired with a high-contrast uppercase button label",
+          "motion": "Magnetic CTA entrance with continuous soft breathing pulse"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "none",
+          "assetPrompt": ""
+        },
+        "time_start_pct": 75,
+        "time_end_pct": 100,
+        "copy_text": "Start Creating Now",
+        "subtext": "Join the future of motion graphics design today."
+      }
+    ],
+    "finalScore": 85,
+    "timestamp": "2026-06-19T15:31:12.840Z"
+  },
+  {
+    "prompt": "Generate a Black Friday promotion video with countdown and sale highlights",
+    "audience": "Affluent professionals",
+    "emotion": "Luxury",
+    "template": "Luxury Reveal",
+    "colorPalette": "Midnight Royal",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Brand reveal",
+        "hookElement": "Logo animation",
+        "objectives": {
+          "visual": "Elegant typography",
+          "emotional": "Sophistication",
+          "typography": "Serif font",
+          "motion": "Smooth transitions"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "generated_background",
+          "assetPrompt": "Abstract gold particles"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 20,
+        "copy_text": "Introducing Elegance",
+        "subtext": "The new standard"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Product showcase",
+        "hookElement": "Product close-up",
+        "objectives": {
+          "visual": "High contrast",
+          "emotional": "Desire",
+          "typography": "Bold sans-serif",
+          "motion": "Dynamic zoom"
+        },
+        "layout": {
+          "direction": "split-left",
+          "ctaPlacement": "bottom-right"
+        },
+        "motion": {
+          "motionStyle": "product_showcase",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "Luxury watch on marble"
+        },
+        "time_start_pct": 20,
+        "time_end_pct": 50,
+        "copy_text": "Crafted for Perfection",
+        "accent_text": "Limited Edition"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Feature highlight",
+        "hookElement": "Text overlay",
+        "objectives": {
+          "visual": "Minimalist",
+          "emotional": "Trust",
+          "typography": "Clean lines",
+          "motion": "Subtle fade"
+        },
+        "layout": {
+          "direction": "asymmetric-grid",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "editorial",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "abstract_visual",
+          "assetPrompt": "Geometric patterns"
+        },
+        "time_start_pct": 50,
+        "time_end_pct": 70,
+        "copy_text": "Precision Engineering"
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Emotional connection",
+        "hookElement": "Lifestyle imagery",
+        "objectives": {
+          "visual": "Warm tones",
+          "emotional": "Aspiration",
+          "typography": "Handwritten accent",
+          "motion": "Cinematic pan"
+        },
+        "layout": {
+          "direction": "layered-overlap",
+          "ctaPlacement": "action-strip"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "City skyline at dusk"
+        },
+        "time_start_pct": 70,
+        "time_end_pct": 90,
+        "copy_text": "Elevate Your World"
+      },
+      {
+        "sceneNumber": 5,
+        "purpose": "Call to action",
+        "hookElement": "Button reveal",
+        "objectives": {
+          "visual": "High impact",
+          "emotional": "Urgency",
+          "typography": "Strong CTA",
+          "motion": "Quick snap"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "clean-button-reveal"
+        },
+        "motion": {
+          "motionStyle": "social_reel",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "decorative_element",
+          "assetPrompt": "Glowing border"
+        },
+        "time_start_pct": 90,
+        "time_end_pct": 100,
+        "copy_text": "Shop Now",
+        "subtext": "Exclusive Offer"
+      }
+    ],
+    "finalScore": 84,
+    "timestamp": "2026-06-19T16:15:17.302Z"
+  },
+  {
+    "prompt": "Design an ecommerce flash sale alert with pulsing badge, discount tags, and shop now CTA",
+    "audience": "Existing & Retargeted Shoppers",
+    "emotion": "Excitement",
+    "template": "E-Commerce Showcase",
+    "colorPalette": "Crimson Luxury",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Introduce the flash‑sale alert and capture attention",
+        "hookElement": "Pulsing crimson badge with rose outline",
+        "objectives": {
+          "visual": "Bold badge centered on a deep crimson background with a glowing radial bloom",
+          "emotional": "Instant urgency and excitement",
+          "typography": "Condensed sans‑serif, all caps, black weight",
+          "motion": "Scale pulse (1.0 → 1.12 → 1.0) looping, radial glow bloom, silhouettes slide in from bottom"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "decorative_element",
+          "assetPrompt": "Pulsing crimson badge with rose outline and subtle glow"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 0.2,
+        "copy_text": "FLASH SALE"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Reveal discount percentages to build desire",
+        "hookElement": "Staggered discount tags cascading from left and right",
+        "objectives": {
+          "visual": "Large percentage tags (40% OFF, 60% OFF, UP TO 70% OFF) with drop shadows and micro‑shimmer",
+          "emotional": "Heightened excitement and perceived value",
+          "typography": "Bold geometric sans, extra‑bold, large display",
+          "motion": "Spring‑bounce lateral entry, shimmer sweep, micro‑rotation settle"
+        },
+        "layout": {
+          "direction": "split-left",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "decorative_element",
+          "assetPrompt": "Discount tags with subtle drop shadow and shimmer effect"
+        },
+        "time_start_pct": 0.2,
+        "time_end_pct": 0.45,
+        "copy_text": "40% OFF | 60% OFF | UP TO 70% OFF"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Showcase product lineup with sale pricing",
+        "hookElement": "3×2 product card grid with mini discount badges",
+        "objectives": {
+          "visual": "Product placeholders, rose‑accent discount badge overlay, original price strikethrough, white sale price",
+          "emotional": "Drive desire and highlight savings",
+          "typography": "Monospace for prices, medium weight",
+          "motion": "80 ms staggered pop‑in, parallax drift, slow vignette pulse"
+        },
+        "layout": {
+          "direction": "asymmetric-grid",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "product_showcase",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "Placeholder product images with rose discount badge overlay"
+        },
+        "time_start_pct": 0.45,
+        "time_end_pct": 0.75,
+        "copy_text": "Product Name – $99 → $49"
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Deliver final CTA and encourage conversion",
+        "hookElement": "Full‑width \"SHOP NOW\" button with live countdown timer",
+        "objectives": {
+          "visual": "White text on rose‑to‑crimson gradient button, soft outer glow, countdown timer below",
+          "emotional": "Prompt immediate action before time runs out",
+          "typography": "Rounded sans‑serif, bold, title case",
+          "motion": "Cards slide apart, CTA scales up with intensified glow, countdown digits tick"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "\"SHOP NOW\" button with gradient fill and subtle glow"
+        },
+        "time_start_pct": 0.75,
+        "time_end_pct": 1,
+        "copy_text": "SHOP NOW",
+        "subtext": "Sale ends in 00:02:14:33"
+      }
+    ],
+    "finalScore": 88,
+    "timestamp": "2026-06-19T16:18:37.940Z"
+  },
+  {
+    "prompt": "Design a multi-scene brand campaign with logo reveal",
+    "audience": "Stakeholders, Investors, New & Existing Customers",
+    "emotion": "Luxury",
+    "template": "Luxury Reveal",
+    "colorPalette": "Monochrome Premium",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Brand Promise Statement",
+        "hookElement": "Authoritative copy line",
+        "objectives": {
+          "visual": "Fade from black with precise letter‑form resolution",
+          "emotional": "Establish prestige and confidence",
+          "typography": "High‑contrast serif for headline",
+          "motion": "Deliberate fade, slow gravitational ease"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Vector‑native logo teaser, monogram isolation for mid‑scene tease"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 20,
+        "copy_text": "Brand Promise Statement"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Value Pillars",
+        "hookElement": "Three staggered reveals",
+        "objectives": {
+          "visual": "Three pillars appear with editorial spacing and subtle parallax depth",
+          "emotional": "Reinforce authority and trust",
+          "typography": "Clean sans for supporting copy",
+          "motion": "Staggered motion with slight parallax"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "abstract_visual",
+          "assetPrompt": "Generated background that emphasizes negative space between pillars"
+        },
+        "time_start_pct": 20,
+        "time_end_pct": 40,
+        "copy_text": "Value Pillars"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Emotional Crescendo",
+        "hookElement": "Typographical apex",
+        "objectives": {
+          "visual": "Largest typographic frame holds longest, breath before reveal",
+          "emotional": "Awe and heightened prestige",
+          "typography": "Largest serif headline with extended hold",
+          "motion": "Slowest hold, subtle easing before reveal"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Focused typographic element emphasizing scale and negative space"
+        },
+        "time_start_pct": 40,
+        "time_end_pct": 70,
+        "copy_text": "Emotional Crescendo"
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Logo Manifestation",
+        "hookElement": "Logo materializes through dimensional dissolve or light bloom",
+        "objectives": {
+          "visual": "Dimensional dissolve with optional metallic specular hit",
+          "emotional": "Culmination of prestige and confidence",
+          "typography": "N/A",
+          "motion": "Subtle dissolve, light bloom, deliberate mass and momentum"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Vector‑native logo, prepped with alpha; optional metallic specular highlight"
+        },
+        "time_start_pct": 70,
+        "time_end_pct": 85,
+        "copy_text": "Logo Manifestation"
+      },
+      {
+        "sceneNumber": 5,
+        "purpose": "Lockup & Tagline",
+        "hookElement": "Logo rests in golden‑ratio position; tagline settles beneath",
+        "objectives": {
+          "visual": "Final composition safe for 16:9 and 1:1 crops",
+          "emotional": "Lasting confidence and authority",
+          "typography": "Tagline in clean sans, measured delicacy",
+          "motion": "Measured settle, no snap, gentle ease"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Full‑size logo lockup with tagline, compositional safe zones indicated"
+        },
+        "time_start_pct": 85,
+        "time_end_pct": 100,
+        "copy_text": "Lockup & Tagline"
+      }
+    ],
+    "finalScore": 86,
+    "timestamp": "2026-06-19T17:06:39.747Z"
+  },
+  {
+    "prompt": "Design an ecommerce flash sale alert with pulsing badge, discount tags, and shop now CTA",
+    "audience": "Existing & retargeted shoppers, mobile-first, value-seeker",
+    "emotion": "Excitement",
+    "template": "E-Commerce Showcase",
+    "colorPalette": "Crimson Luxury",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Badge & Countdown - Establish core promo hook",
+        "hookElement": "Pulsing flash-sale ⚡️ badge with high contrast background glow",
+        "objectives": {
+          "visual": "Full-bleed deep crimson background with a glowing rose-gold pulsing badge",
+          "emotional": "Excitement and immediate intrigue",
+          "typography": "Montserrat Bold, uppercase, light pink text to establish high energetic impact",
+          "motion": "Scale pulse (0.8 to 1.2) on the primary badge paired with an ease-out slide-in for headlines"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "generated_background",
+          "assetPrompt": "Deep crimson luxurious background with subtle, slow-drifting metallic gold particle highlights"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 25,
+        "copy_text": "Flash Sale",
+        "subtext": "30% OFF",
+        "accent_text": "⚡️"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Product Grid Reveal - Showcase curated value",
+        "hookElement": "Staggered 3-column grid pop with dramatic discount tag sweeps",
+        "objectives": {
+          "visual": "3-column staggered cards displaying crisp hero items with soft shadows",
+          "emotional": "Strong desire for curated high-value physical goods",
+          "typography": "Clean, highly readable Montserrat Regular for secondary descriptors",
+          "motion": "Staggered product pop-ups with a 0.15s delay offset, coupled with a fast 0.4s slide-up for discount indicators"
+        },
+        "layout": {
+          "direction": "asymmetric-grid",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "product_showcase",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "Clean premium product renders floating dynamically over subtle drop shadows, transparent alpha channel"
+        },
+        "time_start_pct": 25,
+        "time_end_pct": 50,
+        "copy_text": "Curated Classics",
+        "subtext": "Best-sellers on sale",
+        "accent_text": "-30% TAGS"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Urgency Escalation - Trigger FOMO",
+        "hookElement": "Dynamic digital flip timer ticking down rapidly",
+        "objectives": {
+          "visual": "Slightly darkened screen overlay overlayed with a bold, digital-style countdown interface",
+          "emotional": "Fear of missing out, immediate drive to secure the deal",
+          "typography": "Aggressive, high-flicker digital display style typography in bright pink",
+          "motion": "Flickering text elements and animated digital flip numbers changing sequentially"
+        },
+        "layout": {
+          "direction": "layered-overlap",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "futuristic_ui",
+          "energyLevel": "aggressive"
+        },
+        "assetStrategy": {
+          "assetType": "decorative_element",
+          "assetPrompt": "Minimalist digital counter design with modern UI vector elements"
+        },
+        "time_start_pct": 50,
+        "time_end_pct": 75,
+        "copy_text": "Limited time only!",
+        "subtext": "Cart expires soon",
+        "accent_text": "00:15"
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "CTA & Conversion Spotlight - Final Action Prompt",
+        "hookElement": "Blooming rose-gold action button with continuous hover pulse",
+        "objectives": {
+          "visual": "Rounded rose-gold highlighted CTA card centered against the dark crimson brand canvas",
+          "emotional": "Instant satisfaction and purchase confidence",
+          "typography": "Uppercase sans-serif font optimized for high call-to-action click rates",
+          "motion": "A dramatic expansion bloom (scale 0.9 to 1.1) settling into a gentle continuous pulsing loop"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "clean-button-reveal"
+        },
+        "motion": {
+          "motionStyle": "social_reel",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Clean brand vector logo with high-contrast metallic overlay details"
+        },
+        "time_start_pct": 75,
+        "time_end_pct": 100,
+        "copy_text": "Shop Now",
+        "subtext": "Secure checkout enabled",
+        "accent_text": "Tap to Save"
+      }
+    ],
+    "finalScore": 88,
+    "timestamp": "2026-06-19T17:26:05.353Z"
+  },
+  {
+    "prompt": "Generate a Black Friday promotion video with countdown and sale highlights",
+    "audience": "Existing & Retargeted Shoppers, Deal‑Hunters, B2C Retail Partners",
+    "emotion": "Excitement",
+    "template": "E-Commerce Showcase",
+    "colorPalette": "Crimson Luxury",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Introduce Black Friday branding",
+        "hookElement": "Animated BLACK FRIDAY stamp drops in",
+        "objectives": {
+          "visual": "Full‑bleed dark crimson background with kinetic serif title",
+          "emotional": "Generate excitement and urgency",
+          "typography": "Serif headline in ivory, all caps, tight tracking",
+          "motion": "Stamp drops with a whoosh sound"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Dark crimson backdrop with bold serif ‘BLACK FRIDAY’ stamp"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 0.2,
+        "copy_text": "BLACK FRIDAY"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Show live countdown timer",
+        "hookElement": "Circular timer sweeping down",
+        "objectives": {
+          "visual": "Rose‑accent circular rim with ivory digits",
+          "emotional": "Create urgency",
+          "typography": "Large sans‑serif numbers",
+          "motion": "Timer sweep at 0.5 Hz"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "abstract_visual",
+          "assetPrompt": "Animated circular countdown timer, rose accent rim, JSON‑driven"
+        },
+        "time_start_pct": 0.2,
+        "time_end_pct": 0.4,
+        "copy_text": "Deal ends in..."
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Highlight top deals",
+        "hookElement": "Product cards slide in with pulsing –70% badge",
+        "objectives": {
+          "visual": "2‑3 product cards from opposite edges, deep‑crimson shadows",
+          "emotional": "Excitement for savings",
+          "typography": "Bold sans‑serif “‑70%” badge",
+          "motion": "Slide‑in and pulse at 1 Hz"
+        },
+        "layout": {
+          "direction": "asymmetric-grid",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "product_showcase",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "Product images with –70% pulsing badge"
+        },
+        "time_start_pct": 0.4,
+        "time_end_pct": 0.6,
+        "copy_text": "Up to 70% OFF",
+        "accent_text": "-70%"
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Show limited‑stock alert",
+        "hookElement": "Flashing “Only X Left!” text with shake",
+        "objectives": {
+          "visual": "Flash text with shaking effect",
+          "emotional": "FOMO urgency",
+          "typography": "Bold sans‑serif",
+          "motion": "Flash and shake"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "abstract_visual",
+          "assetPrompt": "Flashing limited‑stock graphic with shake animation"
+        },
+        "time_start_pct": 0.6,
+        "time_end_pct": 0.8,
+        "copy_text": "Limited Stock",
+        "subtext": "Only X Left!"
+      },
+      {
+        "sceneNumber": 5,
+        "purpose": "Brand CTA",
+        "hookElement": "Brand logo and glowing “Shop Now” button",
+        "objectives": {
+          "visual": "Central logo, deep‑crimson fade, rose‑glow on CTA button",
+          "emotional": "Confident final push",
+          "typography": "Ivory CTA text",
+          "motion": "Glow pulse and fade‑in"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Brand logo with glowing ‘Shop Now’ button on crimson background"
+        },
+        "time_start_pct": 0.8,
+        "time_end_pct": 1,
+        "copy_text": "Shop Now"
+      }
+    ],
+    "finalScore": 86,
+    "timestamp": "2026-06-19T17:49:19.678Z"
+  },
+  {
+    "prompt": "Create a luxury product advertisement with elegant motion typography and soft lighting",
+    "audience": "Affluent 30‑55 yr, style‑savvy, early‑adopters, both genders, urban & cosmopolitan",
+    "emotion": "Luxury",
+    "template": "Luxury Reveal",
+    "colorPalette": "Luxury Gold",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Opening Whisper",
+        "hookElement": "Product silhouette emerges with soft rim‑light against a dark velvety backdrop with drifting gold particles.",
+        "objectives": {
+          "visual": "Dark backdrop, subtle gold particles, silhouette reveal in soft rim‑light.",
+          "emotional": "Establishes sophisticated luxury and quiet confidence.",
+          "typography": "Feather‑soft kinetic text unfurls like silk, converging at center.",
+          "motion": "Slow, graceful glide‑in of type and product silhouette."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "3D model of the product with rim‑lighting on a dark, velvety background."
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 0.2,
+        "copy_text": "Introducing… the epitome of timeless elegance."
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Material Drama",
+        "hookElement": "Macro close‑up of signature material (brushed gold / sapphire crystal) with a light sweep.",
+        "objectives": {
+          "visual": "Extreme close‑up of texture, light caressing the surface, subtle gold sparkle.",
+          "emotional": "Tactile awe and refined elegance.",
+          "typography": "Single‑letter reveals synced to a delicate ping as light passes.",
+          "motion": "Precise, delicate reveal synchronized with sound cue."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "abstract_visual",
+          "assetPrompt": "Macro texture of brushed gold (or sapphire) with dynamic lighting sweep."
+        },
+        "time_start_pct": 0.2,
+        "time_end_pct": 0.4,
+        "copy_text": "Crafted from the finest…"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Feature Highlight",
+        "hookElement": "Split‑screen: left hand wearing the product; right animated vector outline of key feature.",
+        "objectives": {
+          "visual": "Elegant hand on left, animated feature outline on right; product rotates subtly.",
+          "emotional": "Confidence in precision and poise.",
+          "typography": "Bottom‑slide kinetic text.",
+          "motion": "3‑D rotation of product paired with smooth slide‑in text."
+        },
+        "layout": {
+          "direction": "split-left",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Product on a hand with an animated vector overlay illustrating the feature."
+        },
+        "time_start_pct": 0.4,
+        "time_end_pct": 0.6,
+        "copy_text": "Precision meets poise."
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Emotional Anchor",
+        "hookElement": "Twilight cityscape vignette, product placed on marble pedestal, warm gold‑glow bloom.",
+        "objectives": {
+          "visual": "Soft‑focused city lights, marble base, gold halo gradually blooming.",
+          "emotional": "Moments that deserve more – aspirational lifestyle.",
+          "typography": "Gentle word‑by‑word fade‑in.",
+          "motion": "Subtle glow bloom surrounding the product."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "generated_background",
+          "assetPrompt": "Twilight cityscape background with a marble pedestal for the product."
+        },
+        "time_start_pct": 0.6,
+        "time_end_pct": 0.8,
+        "copy_text": "For moments that deserve more."
+      },
+      {
+        "sceneNumber": 5,
+        "purpose": "Signature Close",
+        "hookElement": "Full‑frame product with slow push‑in, gold halo pulse; brand logo fades in with metallic scratch‑off effect, CTA underline pulses.",
+        "objectives": {
+          "visual": "Centered product, gold halo pulse, brand logo reveal.",
+          "emotional": "Final affirmation of timeless luxury.",
+          "typography": "Metallic scratch‑off transition for brand name; luminous underline CTA.",
+          "motion": "Slow push‑in, halo pulse, logo fade, single pulse CTA."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "product_render",
+          "assetPrompt": "High‑resolution 3D render of the product with gold halo effect."
+        },
+        "time_start_pct": 0.8,
+        "time_end_pct": 1,
+        "copy_text": "[Brand Name] – Redefine Luxury.",
+        "subtext": "Discover Now"
+      }
+    ],
+    "finalScore": 29,
+    "timestamp": "2026-06-19T18:03:13.885Z"
+  },
+  {
+    "prompt": "Create a YouTube Short with hook text in the first 2 seconds and kinetic typography",
+    "audience": "Social‑media viewers",
+    "emotion": "Power",
+    "template": "Bold Kinetic Typography",
+    "colorPalette": "Cyber Neon",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Capture attention with a bold headline",
+        "hookElement": "Headline text",
+        "objectives": {
+          "visual": "Bold headline fills the frame with a snap‑in kinetic reveal and light‑streak accent",
+          "emotional": "Generate excitement and curiosity",
+          "typography": "Montserrat Bold, white on obsidian background",
+          "motion": "Snap‑in kinetic reveal, each word pops on beat"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "generated_background",
+          "assetPrompt": "Obsidian background with neon emerald & purple light‑streaks"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 0.1333,
+        "copy_text": "UNLOCK YOUR POWER"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Introduce brand logo and micro‑tagline",
+        "hookElement": "Logo animation",
+        "objectives": {
+          "visual": "Logo slides in from left with a neon pulse; micro‑tagline appears underneath",
+          "emotional": "Reinforce brand identity and trust",
+          "typography": "Roboto Medium for the micro‑tagline",
+          "motion": "Slide‑in with neon pulse sync"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "hero_visual",
+          "assetPrompt": "Brand logo with flickering neon pulse effect"
+        },
+        "time_start_pct": 0.1333,
+        "time_end_pct": 0.3333,
+        "copy_text": "YourBrand",
+        "subtext": "Innovate Everyday"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Communicate key benefits",
+        "hookElement": "Bullet statements",
+        "objectives": {
+          "visual": "2‑3 short statements appear with staggered offsets, rotating/scaling in rhythm",
+          "emotional": "Convey speed, freedom and fun",
+          "typography": "Montserrat Bold, white",
+          "motion": "Rotate & scale tweens on each line"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "none",
+          "assetPrompt": ""
+        },
+        "time_start_pct": 0.3333,
+        "time_end_pct": 0.8,
+        "copy_text": "Fast. Free. Fun."
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Drive action with a CTA",
+        "hookElement": "CTA text + animated tap icon",
+        "objectives": {
+          "visual": "CTA fades in/out; tap ▶ icon ripples with neon glow",
+          "emotional": "Prompt immediate interaction",
+          "typography": "Roboto Medium, white",
+          "motion": "Looping kinetic ripple, CTA repeats every 3 s"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "decorative_element",
+          "assetPrompt": "Animated tap ▶ icon with neon pulse"
+        },
+        "time_start_pct": 0.8,
+        "time_end_pct": 1,
+        "copy_text": "Tap ▶ to learn more",
+        "subtext": "Follow for the secret."
+      }
+    ],
+    "finalScore": 63,
+    "timestamp": "2026-06-19T18:12:11.663Z"
+  },
+  {
+    "prompt": "can you add a blob SVG decoration fixed in the corners of the background , it should be unique not common and should look elegant , beautiful , royal and premium",
+    "audience": "Existing Audience",
+    "emotion": "Luxury",
+    "storyboard": [],
+    "finalScore": 90,
+    "timestamp": "2026-06-19T19:09:34.652Z"
+  },
+  {
+    "prompt": "Create an Instagram reel for my startup with energetic text animations and brand colors",
+    "audience": "Social media creators, digital marketers, and brand managers looking for high-engagement Instagram content.",
+    "emotion": "Excitement",
+    "template": "Bold Kinetic Typography",
+    "colorPalette": "Cyber Neon",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Hook the viewer immediately with high-energy kinetic text flashing on screen.",
+        "hookElement": "Rapidly scaling bold typography flashing on beat.",
+        "objectives": {
+          "visual": "Vibrant Cyber Neon text against a dark, high-contrast digital background.",
+          "emotional": "Curiosity and instant attention grab.",
+          "typography": "Extra bold, condensed sans-serif filling the screen.",
+          "motion": "Fast snap zooms and minor glitch displacements synchronized with the audio track."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "aggressive"
+        },
+        "assetStrategy": {
+          "assetType": "generated_background",
+          "assetPrompt": "A dark, textured background with subtle digital grid lines and electric blue neon noise overlays."
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 30,
+        "copy_text": "STOP SCROLLING",
+        "subtext": "This is what you've been waiting for.",
+        "accent_text": "ATTENTION"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Deliver the core value proposition and outline the simple process.",
+        "hookElement": "Asymmetric text splitting dynamically to reveal product key values.",
+        "objectives": {
+          "visual": "Split-screen layout contrasting neon text against minimal vector layers.",
+          "emotional": "Excitement to try a simple, effective solution.",
+          "typography": "Clean, bold headlines with light, high-tracking support text.",
+          "motion": "Fluid horizontal slides and elastic bounces."
+        },
+        "layout": {
+          "direction": "split-left",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "assetType": "abstract_visual",
+          "assetPrompt": "Abstract looping neon waveforms and glowing geometric shapes representing speed and efficiency."
+        },
+        "time_start_pct": 30,
+        "time_end_pct": 70,
+        "copy_text": "SWIFT ITERATION",
+        "subtext": "Clearly labeled layers in our dynamic drive folder.",
+        "accent_text": "FAST"
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Drive conversions with a direct, high-impact call to action.",
+        "hookElement": "Bold button reveal with a pulsating glow effect.",
+        "objectives": {
+          "visual": "Clean, uncluttered vertical stack focusing entirely on the CTA.",
+          "emotional": "Confidence to take action and click through.",
+          "typography": "Clean uppercase sans-serif with strong kerning on the CTA.",
+          "motion": "Ease-in reveal of the action button with a continuous neon pulse loop."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "clean-button-reveal"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "assetType": "decorative_element",
+          "assetPrompt": "Minimalistic neon pink arrow indicator pointing downward towards the action button."
+        },
+        "time_start_pct": 70,
+        "time_end_pct": 100,
+        "copy_text": "TAP LINK IN BIO",
+        "subtext": "Get instant access to all template assets.",
+        "accent_text": "START"
+      }
+    ],
+    "finalScore": 86,
+    "timestamp": "2026-06-20T07:18:32.452Z"
+  },
+  {
+    "prompt": "Create an Instagram reel for my startup with energetic text animations and brand colors",
+    "audience": "Social-media creators & digital marketers; brand-aware millennials who favour fast, kinetic visuals.",
+    "emotion": "Excitement",
+    "template": "Bold Kinetic Typography",
+    "colorPalette": "Cyber Neon",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Hook – grab attention instantly with a high-energy opening line synced to the beat.",
+        "hookElement": "Large kinetic sans text 'Ideas move fast.' sliding in from left with bounce-out, over a futuristic neon-grid background.",
+        "objectives": {
+          "visual": "Futuristic neon-grid background with obsidian base, glowing purple and emerald circuit lines, subtle volumetric light sweep.",
+          "emotional": "Immediate excitement and curiosity – the viewer feels the pace of the reel from the first frame.",
+          "typography": "Montserrat ExtraBold uppercase, neon-stroke in purple #9B59B6, large scale dominating the frame.",
+          "motion": "Punchy beat-sync, on-beat scale-pop, quick slide-in from left with elastic bounce-out."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "aggressive"
+        },
+        "assetStrategy": {
+          "requiresAssets": true,
+          "assetType": "background-illustration",
+          "assetCount": 1,
+          "style": "Tech",
+          "prompt": "Futuristic neon-grid background, obsidian base, glowing purple and emerald circuit lines, subtle volumetric light sweep, cyber-tech aesthetic, ultra-sharp 8k, low-poly abstract, suitable for kinetic typography backdrop.",
+          "placement": "fullscreen",
+          "animationRole": "ambient",
+          "imageUrl": "/generated-assets/deea06d10361eb6d71a34eb5efd2e01d471e7db381131b6ba6812455dec4844a.png"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 25,
+        "copy_text": "Ideas move fast."
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Problem – create tension by highlighting the friction point the audience relates to.",
+        "hookElement": "Type-writer glitch text 'Your vision gets stuck.' with fragment dissolve over an abstract data-stream vortex.",
+        "objectives": {
+          "visual": "Abstract data-stream vortex, dark metallic texture, swirling neon emerald particles, soft pulse lighting, cinematic depth of field.",
+          "emotional": "Frustration and recognition – the viewer feels the pain of stalled ideas.",
+          "typography": "Montserrat ExtraBold with glitch-split effect, on-beat offset, emerald #2ECC71 accent stroke.",
+          "motion": "Glitch-split animation, on-beat offset, fragment dissolve transition."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "requiresAssets": true,
+          "assetType": "abstract-graphic",
+          "assetCount": 1,
+          "style": "Tech",
+          "prompt": "Abstract data-stream vortex, dark metallic texture, swirling neon emerald particles, soft pulse lighting, cinematic depth of field, 8k, cyber-tech visual, loops seamlessly.",
+          "placement": "background",
+          "animationRole": "ambient",
+          "imageUrl": "/generated-assets/33b84170fe150ec72cf29004163de785559a76b7bf1901eb3a7160e10d68a3ef.svg"
+        },
+        "time_start_pct": 25,
+        "time_end_pct": 50,
+        "copy_text": "Your vision gets stuck."
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Solution (Hero) – reveal the startup as the answer with a dramatic hero moment.",
+        "hookElement": "Hero-type burst '[Startup] fuels you instantly.' with letters exploding outward then converging, centered on a 3D product/logo render.",
+        "objectives": {
+          "visual": "High-detail 3D render of a sleek minimalist startup logo/device (stylised glowing sphere) on obsidian pedestal, surrounded by neon purple and emerald light ribbons, cinematic studio lighting.",
+          "emotional": "Empowerment and momentum – the viewer feels the solution is powerful and immediate.",
+          "typography": "Montserrat ExtraBold uppercase, radial burst animation, letters explode outward then converge, purple #9B59B6 and emerald #2ECC71 neon strokes.",
+          "motion": "Hero-centric kinetic burst, radial motion, slow-mo settle, glitch dissolve transition from previous scene."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "aggressive"
+        },
+        "assetStrategy": {
+          "requiresAssets": true,
+          "assetType": "hero-product",
+          "assetCount": 1,
+          "style": "Tech",
+          "prompt": "High-detail 3-D render of a sleek, minimalist startup logo/device (e.g., stylised glowing sphere), perched on obsidian pedestal, surrounded by neon purple and emerald light ribbons, cinematic studio lighting, reflective surface, 8k, tech-luxury aesthetic.",
+          "placement": "center",
+          "animationRole": "hero",
+          "imageUrl": "/generated-assets/c6b8834e1e506fa06a354a051f09e21f5f91c10cd9a651ca9fc57479dbcf594a.svg"
+        },
+        "time_start_pct": 50,
+        "time_end_pct": 75,
+        "copy_text": "[Startup] fuels you instantly."
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "CTA – drive action with a clear, punchy call-to-action and final energy burst.",
+        "hookElement": "Rapid kinetic flip text 'Tap-Follow. Power up now!' with neon underline pulse over a clean obsidian canvas with faint neon grid.",
+        "objectives": {
+          "visual": "Clean obsidian canvas with faint neon grid, subtle moving light-particles, soft vignette edges, space for kinetic text.",
+          "emotional": "Urgency and excitement – the viewer is compelled to act immediately.",
+          "typography": "Montserrat ExtraBold uppercase, rapid kinetic flip, neon underline pulse in purple #9B59B6 and emerald #2ECC71.",
+          "motion": "Flash-cut, on-beat pulse, final glow-out, quick cut transitions."
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "aggressive"
+        },
+        "assetStrategy": {
+          "requiresAssets": true,
+          "assetType": "background-illustration",
+          "assetCount": 1,
+          "style": "Tech",
+          "prompt": "Clean obsidian canvas with faint neon grid, subtle moving light-particles, space for kinetic text, soft vignette edges, 8k, cyber-neon ambience, loops quietly.",
+          "placement": "fullscreen",
+          "animationRole": "ambient",
+          "imageUrl": "/generated-assets/9aff5a904cfa647e0d2eacda77c5b3b1382651de5b78de07e5a99f54536a813a.svg"
+        },
+        "time_start_pct": 75,
+        "time_end_pct": 100,
+        "copy_text": "Tap-Follow. Power up now!"
+      }
+    ],
+    "finalScore": 89,
+    "timestamp": "2026-06-20T08:44:26.983Z"
+  },
+  {
+    "prompt": "Create a 20-second ultra-premium cinematic motion graphics advertisement for Volviq AI, a futuristic AI platform that transforms simple text prompts into stunning professional motion graphics and advertisements.\n\nStyle\nFuturistic luxury tech aesthetic\nDark cinematic environment\nGlassmorphism UI\nHolographic interfaces\nVolumetric lighting\nPremium motion design\nDynamic typography\nParticle simulations\nApple launch event × Tesla × futuristic AI commercial style\nColor Palette\nDeep Black (#050505)\nElectric Purple (#8A2EFF)\nNeon Cyan (#00F5FF)\nMetallic Silver\nSoft White highlights\nStoryboard\nScene 1 (0–4 sec)\n\nDark screen.\n\nComplex editing timelines, hundreds of keyframes, and cluttered design software windows rapidly appear.\n\nEverything freezes.\n\nText appears dramatically:\n\n\"Creating ads is complicated.\"\n\nThe entire scene shatters into glowing particles.\n\nScene 2 (4–8 sec)\n\nA beam of light reveals the glowing VOLVIQ AI logo.\n\nFuturistic prompt input appears.\n\nUser types:\n\n\"Luxury perfume advertisement\"\n\nAs the prompt is completed, stunning motion graphics instantly generate around the screen.\n\nTypography:\n\n\"From Prompt to Motion.\"\n\nScene 3 (8–15 sec)\n\nFast cinematic montage showcasing multiple AI-generated advertisements:\n\nLuxury Brand Ad\nTech Product Launch\nFashion Commercial\nSports Promo\nFood Advertisement\n\nUse seamless morph transitions, dynamic cameras, and premium typography.\n\nText overlays:\n\n\"Create.\"\n\n\"Animate.\"\n\n\"Captivate.\"\n\nScene 4 (15–20 sec)\n\nMassive hero shot.\n\nA futuristic holographic workspace filled with animated advertisements transforms into the glowing Volviq logo.\n\nFinal text:\n\n\"Turn Ideas Into Motion\"\n\nSubtext:\n\n\"Professional Motion Graphics. Powered by AI.\"\n\nFinal CTA:\n\n\"volviq.xyz\"\n\nHold logo for the final 2 seconds.\n\nMotion Requirements\nCinematic camera movements\nSmooth easing\nHigh-end kinetic typography\nDynamic light streaks\nParticle explosions\nSeamless transitions\n4K Quality\n60 FPS\nNo stock footage\nNo cartoon visuals",
+    "audience": "General Audience",
+    "emotion": "Trust",
+    "template": "Luxury Reveal",
+    "colorPalette": "Midnight Royal",
+    "storyboard": [
+      {
+        "sceneNumber": 1,
+        "purpose": "Attention-grabbing introduction: Hook viewer, establish style, create curiosity.",
+        "hookElement": "Bold kinetic typography with rapid atmospheric glow shift",
+        "objectives": {
+          "visual": "Stunning centered typography with moving particle field background",
+          "emotional": "Curiosity and excitement",
+          "typography": "Ultra-bold display font reveal with accent subtext",
+          "motion": "Dynamic spring scale-up and word-by-word reveal"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "kinetic_typography",
+          "energyLevel": "high"
+        },
+        "assetStrategy": {
+          "requiresAssets": false,
+          "assetType": "none",
+          "assetCount": 0,
+          "style": "none",
+          "prompt": "",
+          "placement": "center",
+          "animationRole": "supporting"
+        },
+        "time_start_pct": 0,
+        "time_end_pct": 25,
+        "copy_text": "Discover the Future of Motion",
+        "subtext": "Volviq Premium Engine V4"
+      },
+      {
+        "sceneNumber": 2,
+        "purpose": "Core message: Explain value and present key information.",
+        "hookElement": "Staggered feature card reveal",
+        "objectives": {
+          "visual": "Asymmetric split layout displaying product core value props",
+          "emotional": "Ambition and confidence",
+          "typography": "Clean sans-serif typography with high-contrast text layout",
+          "motion": "Slide-up masks and staggered card entries"
+        },
+        "layout": {
+          "direction": "split-left",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "product_showcase",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "requiresAssets": true,
+          "assetType": "3d-render",
+          "assetCount": 1,
+          "style": "Tech",
+          "prompt": "3d render of a sleek metallic geometric device on a dark futuristic floating stage, rim lighting, neon purple glows, dark ambient base, tech aesthetic",
+          "placement": "left",
+          "animationRole": "hero",
+          "imageUrl": "/generated-assets/63d6e1080bc94c843d4c97a1a7caeec3cfded14d9f98e1bee28381ca423f13f2.png"
+        },
+        "time_start_pct": 25,
+        "time_end_pct": 50,
+        "copy_text": "Production-Ready Designs",
+        "subtext": "Create agency-grade graphics in seconds without manual keyframing."
+      },
+      {
+        "sceneNumber": 3,
+        "purpose": "Proof / Feature showcase: Reinforce message and build confidence.",
+        "hookElement": "Interactive data viz or user interface showcase",
+        "objectives": {
+          "visual": "Layered overlap UI mockup showing live rendering and code integration",
+          "emotional": "Trust and achievement",
+          "typography": "Structured label tags and fine detail indicators",
+          "motion": "Elastic spring pop reveals and drift animations"
+        },
+        "layout": {
+          "direction": "layered-overlap",
+          "ctaPlacement": "none"
+        },
+        "motion": {
+          "motionStyle": "cinematic_reveal",
+          "energyLevel": "medium"
+        },
+        "assetStrategy": {
+          "requiresAssets": true,
+          "assetType": "device-mockup",
+          "assetCount": 1,
+          "style": "SaaS",
+          "prompt": "Cinematic dashboard glowing tech interface mockup showing user data graphs and analytics charts on a floating glassmorphic panel, soft ambient gradient lighting, clean modern UI SaaS style",
+          "placement": "right",
+          "animationRole": "supporting",
+          "imageUrl": "/generated-assets/40988558712169a2fa13f833031501f2b9bf0fdf942b838739567f83c3ee3ebe.svg"
+        },
+        "time_start_pct": 50,
+        "time_end_pct": 75,
+        "copy_text": "Engineered for Conversion",
+        "subtext": "Performant, GPU-accelerated motion components ready to ship."
+      },
+      {
+        "sceneNumber": 4,
+        "purpose": "Strong CTA: Drive action and deliver a memorable ending.",
+        "hookElement": "Pulsing spotlight focused on the primary CTA button",
+        "objectives": {
+          "visual": "Minimalist centered layout with a bold accent action button",
+          "emotional": "Power and belonging",
+          "typography": "Large bold display text paired with a high-contrast uppercase button label",
+          "motion": "Magnetic CTA entrance with continuous soft breathing pulse"
+        },
+        "layout": {
+          "direction": "centered",
+          "ctaPlacement": "centered"
+        },
+        "motion": {
+          "motionStyle": "luxury_motion",
+          "energyLevel": "low"
+        },
+        "assetStrategy": {
+          "requiresAssets": false,
+          "assetType": "none",
+          "assetCount": 0,
+          "style": "none",
+          "prompt": "",
+          "placement": "center",
+          "animationRole": "supporting"
+        },
+        "time_start_pct": 75,
+        "time_end_pct": 100,
+        "copy_text": "Start Creating Now",
+        "subtext": "Join the future of motion graphics design today."
+      }
+    ],
+    "finalScore": 85,
+    "timestamp": "2026-06-20T09:54:41.955Z"
+  }
+]

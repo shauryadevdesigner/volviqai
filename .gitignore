@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+volviq-motion-engine/.env
+volviq-motion-engine/.env.*
+!volviq-motion-engine/.env.example
+node_modules/
+dist/
+.next/
+*.log

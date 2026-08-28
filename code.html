@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>VOLVIQ AI - THE FUTURE OF MOTION</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#20201f",
+                        "secondary-fixed-dim": "#c7c6c6",
+                        "tertiary-container": "#e2e2e2",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary": "#c7c6c6",
+                        "on-surface": "#e5e2e1",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "tertiary": "#ffffff",
+                        "inverse-primary": "#5d5f5f",
+                        "surface": "#131313",
+                        "on-secondary-container": "#b5b5b5",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353535",
+                        "secondary-fixed": "#e3e2e2",
+                        "primary-container": "#e2e2e2",
+                        "on-tertiary-container": "#636565",
+                        "secondary-container": "#464747",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary": "#2f3131",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-tint": "#c6c6c7",
+                        "on-primary-fixed-variant": "#454747",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-background": "#e5e2e1",
+                        "on-primary-container": "#636565",
+                        "surface-bright": "#393939",
+                        "on-secondary": "#303031",
+                        "on-secondary-fixed-variant": "#464747",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "inverse-surface": "#e5e2e1",
+                        "outline": "#8e9192",
+                        "on-primary-fixed": "#1a1c1c",
+                        "on-surface-variant": "#c4c7c8",
+                        "primary": "#ffffff",
+                        "background": "#131313",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#313030",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-primary": "#2f3131",
+                        "surface-variant": "#353535",
+                        "outline-variant": "#444748"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Sora"],
+                        "headline-lg": ["Sora"],
+                        "label-md": ["Sora"],
+                        "headline-xl": ["Sora"],
+                        "body-md": ["Sora"],
+                        "headline-lg-mobile": ["Sora"],
+                        "body-lg": ["Sora"],
+                        "code-md": ["Sora"],
+                        "display-massive": ["Sora"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.08em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "code-md": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display-massive": ["clamp(3rem, 8vw, 10rem)", { "lineHeight": "0.9", "letterSpacing": "-0.04em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+
+        /* Monochome filter for images */
+        .img-mono {
+            filter: grayscale(100%) contrast(1.2);
+        }
+
+        /* Technical Grid Background with animation */
+        .bg-tech-grid {
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 64px 64px;
+            animation: backgroundDrift 60s linear infinite;
+        }
+
+        @keyframes backgroundDrift {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
+        }
+
+        /* Scanning Line Effect */
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+            position: absolute;
+            top: -10px;
+            left: 0;
+            animation: scan 4s linear infinite;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        @keyframes scan {
+            0% {
+                top: -10px;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Blueprint Lines */
+        .blueprint-line-h {
+            width: 100%;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            position: absolute;
+        }
+
+        .blueprint-line-v {
+            width: 1px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            position: absolute;
+        }
+
+        /* Text Reveal Animation Setup */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-element.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #131313;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #353535;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8e9192;
+        }
+    </style>
+</head>
+
+<body class="antialiased bg-tech-grid font-body-md text-body-md selection:bg-primary selection:text-surface">
+    <!-- TopNavBar -->
+    <nav
+        class="fixed top-0 left-1/2 -translate-x-1/2 z-50 flex justify-between items-center w-[calc(100%-64px)] max-w-container-max px-8 py-4 bg-surface/80 dark:bg-surface/80 backdrop-blur-md rounded-full border border-outline-variant mt-margin-desktop">
+        <div class="font-headline-lg text-headline-lg font-bold tracking-tight text-primary dark:text-primary">
+            VOLVIQ AI
+        </div>
+        <div class="hidden md:flex gap-8 items-center">
+            <a class="text-on-surface-variant dark:text-on-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-primary transition-all duration-300"
+                href="#">Engine</a>
+            <a class="text-on-surface-variant dark:text-on-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-primary transition-all duration-300"
+                href="#">Capabilities</a>
+            <a class="text-on-surface-variant dark:text-on-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-primary transition-all duration-300"
+                href="#">Workflow</a>
+            <a class="text-on-surface-variant dark:text-on-surface-variant font-label-md text-label-md hover:text-primary dark:hover:text-primary transition-all duration-300"
+                href="#">Future</a>
+        </div>
+        <button
+            class="bg-primary text-surface px-6 py-2 rounded-full font-label-md text-label-md hover:bg-secondary-fixed transition-colors">
+            Access System
+        </button>
+    </nav>
+    <!-- Telemetry Overlays (Fixed) -->
+    <div class="fixed top-4 left-4 z-40 font-code-md text-code-md text-surface-variant pointer-events-none">
+        SYS.REQ.001 <br />
+        LAT: 34.0522 N <br />
+        LONG: 118.2437 W
+    </div>
+    <div
+        class="fixed bottom-4 right-4 z-40 font-code-md text-code-md text-surface-variant pointer-events-none text-right">
+        v.9.4.01 <br />
+        RENDER: ACTIVE
+    </div>
+    <!-- Hero Section -->
+    <section
+        class="relative min-h-screen flex items-center justify-center pt-32 pb-24 px-margin-mobile md:px-margin-desktop overflow-hidden border-b border-outline-variant">
+        <div class="scanline"></div>
+        <!-- Blueprint structural lines -->
+        <div class="blueprint-line-v left-1/4 top-0 z-0"></div>
+        <div class="blueprint-line-v right-1/4 top-0 z-0"></div>
+        <div class="absolute inset-0 z-0 flex items-center justify-center opacity-40">
+            <div class="w-full max-w-5xl aspect-video bg-surface-dim border border-outline-variant relative">
+                <!-- Abstract representation -->
+                <div class="absolute inset-0 bg-cover bg-center img-mono opacity-50"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida/ADBb0ugSKHrAfc7ZFMxbh3KcuoGCZVQIYKA47rM0E3lV2gGw8Cn4BNwpLQhU63oanki_4v5YwwtxLThXFJOPEIpsfe9c3t2XIjTlkvimpQZWMCB2yeYv2hnUaKOx8YMwIxf1oJby4s_d8i0ityAKQbCc3ABbntrrbyCBCtjm9OLH4xL43TCJFjuj06v143DGd59_ZbnLkITcVStq356axky5y1GCBbKUWXvlkJ1fKlojG9Dk-4gOQC0QDJJlTGA');">
+                </div>
+                <!-- Corner crosshairs -->
+                <div
+                    class="absolute top-0 left-0 w-4 h-4 border-t border-l border-primary -translate-x-1/2 -translate-y-1/2">
+                </div>
+                <div
+                    class="absolute top-0 right-0 w-4 h-4 border-t border-r border-primary translate-x-1/2 -translate-y-1/2">
+                </div>
+                <div
+                    class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-primary -translate-x-1/2 translate-y-1/2">
+                </div>
+                <div
+                    class="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-primary translate-x-1/2 translate-y-1/2">
+                </div>
+            </div>
+        </div>
+        <div class="relative z-10 w-full max-w-container-max mx-auto text-center flex flex-col items-center">
+            <div
+                class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase mb-8 reveal-element">
+                01 // DIRECTIVE
+            </div>
+            <h1 class="font-display-massive text-display-massive text-primary uppercase leading-none reveal-element">
+                THE FUTURE
+            </h1>
+            <h1 class="font-display-massive text-display-massive text-primary uppercase leading-none reveal-element"
+                style="transition-delay: 100ms;">
+                OF MOTION.
+            </h1>
+            <p class="mt-12 font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-center reveal-element"
+                style="transition-delay: 200ms;">
+                Autonomous motion architecture for high-end cinematic production. Absolute precision. Zero compromise.
+                Your AI Motion Graphics Studio.
+            </p>
+            <div class="mt-12 flex gap-4 reveal-element" style="transition-delay: 300ms;">
+                <button
+                    class="bg-primary text-surface px-8 py-4 font-label-md text-label-md uppercase tracking-widest hover:bg-secondary-fixed transition-colors">
+                    Start Creating
+                </button>
+                <button
+                    class="border border-outline-variant text-primary px-8 py-4 font-label-md text-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors">
+                    View Gallery
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- Features: Generator Section -->
+    <section class="relative py-32 px-margin-mobile md:px-margin-desktop border-b border-outline-variant">
+        <div class="max-w-container-max mx-auto">
+            <div class="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
+                <div class="w-full md:w-1/2 relative reveal-element">
+                    <!-- Image container with technical borders -->
+                    <div class="p-4 border border-outline-variant bg-surface-dim relative group">
+                        <img alt="Holographic data streams and nodes"
+                            class="w-full h-auto img-mono transition-all duration-700 group-hover:filter-none"
+                            src="https://lh3.googleusercontent.com/aida/ADBb0uis_c65DSFgwxgtnpI7v562zMiw1uxr6Alqb6U1PU4GE3TmK-f_W80tzUelrJEfNuAaLGKCmhpXgEYSldnpL_PQdWyYXumO_k5sM6pBtK9tLPsOxr6Iq7DrHb7vs3SGBP9CcdrviBWLIYhnzqeVzKshNeBsP4id-3hT8-5gDt0wATEzqxyFG2h97QRY9HPbspsRNI3n1kxn8UeAh5aDmSmiX3TB6wKEtqOvnU_ikRq8s3qScwzVkzvt1Q" />
+                        <div
+                            class="absolute top-8 left-8 font-code-md text-code-md text-primary bg-black/50 px-2 py-1 backdrop-blur-sm">
+                            SYS.GEN.01</div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 space-y-8">
+                    <div
+                        class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase reveal-element">
+                        02 // SYNTHESIS
+                    </div>
+                    <h2 class="font-headline-xl text-headline-xl text-primary uppercase reveal-element">
+                        AI MOTION GRAPHIC<br />AD GENERATOR
+                    </h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant reveal-element">
+                        Create Cinematic Ads With AI. Upload your base assets—image, logo, and headline—and watch as the
+                        engine autonomously constructs a high-fidelity cinematic ad in seconds.
+                    </p>
+                    <ul class="space-y-4 pt-8 border-t border-surface-variant reveal-element">
+                        <li class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary">upload_file</span>
+                            <span class="font-label-md text-label-md text-on-surface">Seamless Asset Ingestion</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary">auto_awesome</span>
+                            <span class="font-label-md text-label-md text-on-surface">Algorithmic Composition</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary">movie</span>
+                            <span class="font-label-md text-label-md text-on-surface">Cinematic Output</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Features: Templates Section -->
+    <section
+        class="relative py-32 px-margin-mobile md:px-margin-desktop border-b border-outline-variant bg-surface-container-low">
+        <div class="max-w-container-max mx-auto text-center mb-24 reveal-element">
+            <div class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase mb-4">
+                03 // MATRICES
+            </div>
+            <h2 class="font-display-massive text-display-massive text-primary uppercase leading-none">
+                PREMIUM<br />TEMPLATE ENGINE
+            </h2>
+            <p class="mt-8 font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Pre-calibrated logic matrices for every industry. Deployable instantly. Motion Graphics. Reimagined.
+            </p>
+        </div>
+        <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Template Cards -->
+            <div
+                class="border border-outline-variant bg-surface p-8 group hover:bg-surface-variant transition-colors reveal-element">
+                <div class="flex justify-between items-start mb-12">
+                    <span class="font-code-md text-code-md text-on-surface-variant">TPL-LX</span>
+                    <span class="material-symbols-outlined text-primary">diamond</span>
+                </div>
+                <h3 class="font-headline-lg text-headline-lg text-primary uppercase mb-4">Luxury</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">Absolute material fidelity and ray-traced
+                    reflections.</p>
+            </div>
+            <div class="border border-outline-variant bg-surface p-8 group hover:bg-surface-variant transition-colors reveal-element"
+                style="transition-delay: 100ms;">
+                <div class="flex justify-between items-start mb-12">
+                    <span class="font-code-md text-code-md text-on-surface-variant">TPL-FT</span>
+                    <span class="material-symbols-outlined text-primary">rocket_launch</span>
+                </div>
+                <h3 class="font-headline-lg text-headline-lg text-primary uppercase mb-4">Futuristic</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">Neon accents, holograms, and cybernetic
+                    layouts.</p>
+            </div>
+            <div class="border border-outline-variant bg-surface p-8 group hover:bg-surface-variant transition-colors reveal-element"
+                style="transition-delay: 200ms;">
+                <div class="flex justify-between items-start mb-12">
+                    <span class="font-code-md text-code-md text-on-surface-variant">TPL-EC</span>
+                    <span class="material-symbols-outlined text-primary">shopping_cart</span>
+                </div>
+                <h3 class="font-headline-lg text-headline-lg text-primary uppercase mb-4">Ecommerce</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">High-conversion product showcases with
+                    dynamic motion.</p>
+            </div>
+            <div class="border border-outline-variant bg-surface p-8 group hover:bg-surface-variant transition-colors reveal-element"
+                style="transition-delay: 300ms;">
+                <div class="flex justify-between items-start mb-12">
+                    <span class="font-code-md text-code-md text-on-surface-variant">TPL-GM</span>
+                    <span class="material-symbols-outlined text-primary">sports_esports</span>
+                </div>
+                <h3 class="font-headline-lg text-headline-lg text-primary uppercase mb-4">Gaming</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">High-octane transitions and aggressive
+                    typography.</p>
+            </div>
+            <div class="border border-outline-variant bg-surface p-8 group hover:bg-surface-variant transition-colors reveal-element"
+                style="transition-delay: 400ms;">
+                <div class="flex justify-between items-start mb-12">
+                    <span class="font-code-md text-code-md text-on-surface-variant">TPL-SU</span>
+                    <span class="material-symbols-outlined text-primary">lightbulb</span>
+                </div>
+                <h3 class="font-headline-lg text-headline-lg text-primary uppercase mb-4">Startup</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">Clean, minimal, and impactful messaging
+                    structures.</p>
+            </div>
+        </div>
+    </section>
+    <!-- Workflow Section -->
+    <section class="relative py-32 px-margin-mobile md:px-margin-desktop border-b border-outline-variant">
+        <div class="max-w-container-max mx-auto">
+            <div
+                class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase mb-16 text-center reveal-element">
+                04 // SEQUENCE
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                <!-- Connecting Line -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-px bg-outline-variant -z-10"></div>
+                <!-- Steps -->
+                <div
+                    class="bg-surface border border-outline-variant p-8 text-center reveal-element group hover:border-primary transition-colors">
+                    <div
+                        class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mx-auto mb-6 text-primary font-headline-lg">
+                        1</div>
+                    <h3 class="font-label-md text-label-md uppercase text-primary mb-4">Upload</h3>
+                    <p class="text-label-sm text-on-surface-variant">Input raw assets.</p>
+                </div>
+                <div class="bg-surface border border-outline-variant p-8 text-center reveal-element group hover:border-primary transition-colors"
+                    style="transition-delay: 100ms;">
+                    <div
+                        class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mx-auto mb-6 text-primary font-headline-lg">
+                        2</div>
+                    <h3 class="font-label-md text-label-md uppercase text-primary mb-4">Style</h3>
+                    <p class="text-label-sm text-on-surface-variant">Select matrix logic.</p>
+                </div>
+                <div class="bg-surface border border-outline-variant p-8 text-center reveal-element group hover:border-primary transition-colors"
+                    style="transition-delay: 200ms;">
+                    <div
+                        class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mx-auto mb-6 text-primary font-headline-lg">
+                        3</div>
+                    <h3 class="font-label-md text-label-md uppercase text-primary mb-4">Generate</h3>
+                    <p class="text-label-sm text-on-surface-variant">Engine processing.</p>
+                </div>
+                <div class="bg-surface border border-outline-variant p-8 text-center reveal-element group hover:border-primary transition-colors"
+                    style="transition-delay: 300ms;">
+                    <div
+                        class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mx-auto mb-6 text-primary font-headline-lg">
+                        4</div>
+                    <h3 class="font-label-md text-label-md uppercase text-primary mb-4">Export</h3>
+                    <p class="text-label-sm text-on-surface-variant">Deploy to network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Export & Future Capabilities Section -->
+    <section class="relative py-32 px-margin-mobile md:px-margin-desktop border-b border-outline-variant">
+        <div class="max-w-container-max mx-auto flex flex-col md:flex-row gap-16 md:gap-24">
+            <div class="w-full md:w-1/2 space-y-12 reveal-element">
+                <div class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">
+                    05 // DISTRIBUTION
+                </div>
+                <h2 class="font-headline-xl text-headline-xl text-primary uppercase">
+                    ONE-CLICK SOCIAL<br />MEDIA EXPORT
+                </h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                    Optimized aspect ratios and bitrates generated simultaneously. Deploy across all networks instantly.
+                </p>
+                <div class="flex gap-4 flex-wrap">
+                    <span
+                        class="border border-outline-variant px-4 py-2 text-label-sm uppercase tracking-widest text-on-surface">Reels</span>
+                    <span
+                        class="border border-outline-variant px-4 py-2 text-label-sm uppercase tracking-widest text-on-surface">TikTok</span>
+                    <span
+                        class="border border-outline-variant px-4 py-2 text-label-sm uppercase tracking-widest text-on-surface">Shorts</span>
+                    <span
+                        class="border border-outline-variant px-4 py-2 text-label-sm uppercase tracking-widest text-on-surface">LinkedIn</span>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 border-l border-outline-variant pl-8 md:pl-16 space-y-12 reveal-element"
+                style="transition-delay: 200ms;">
+                <div class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">
+                    06 // HORIZON
+                </div>
+                <h2 class="font-headline-xl text-headline-xl text-primary uppercase">
+                    FUTURE CAPABILITIES
+                </h2>
+                <div class="space-y-6">
+                    <div class="border-b border-surface-variant pb-4">
+                        <h4 class="font-label-md text-primary uppercase mb-2">AI Website-to-Ad</h4>
+                        <p class="text-label-sm text-on-surface-variant">Automatic extraction of brand assets from URLs.
+                        </p>
+                    </div>
+                    <div class="border-b border-surface-variant pb-4">
+                        <h4 class="font-label-md text-primary uppercase mb-2">Script-to-Video</h4>
+                        <p class="text-label-sm text-on-surface-variant">Text-driven narrative generation.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-label-md text-primary uppercase mb-2">Team Collaboration</h4>
+                        <p class="text-label-sm text-on-surface-variant">Shared workspaces for creative squads.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section
+        class="relative min-h-[70vh] flex items-center justify-center py-32 px-margin-mobile md:px-margin-desktop overflow-hidden">
+        <!-- Background elements -->
+        <div class="absolute inset-0 z-0 bg-tech-grid opacity-30"></div>
+        <div class="absolute inset-0 z-0 flex items-center justify-center">
+            <div
+                class="w-[80vw] h-[80vw] rounded-full border border-surface-variant opacity-20 animate-[spin_60s_linear_infinite]">
+            </div>
+            <div
+                class="w-[60vw] h-[60vw] rounded-full border border-surface-variant opacity-20 absolute animate-[spin_40s_linear_infinite_reverse]">
+            </div>
+        </div>
+        <div class="relative z-10 w-full max-w-container-max mx-auto text-center flex flex-col items-center">
+            <h2
+                class="font-display-massive text-display-massive text-primary uppercase leading-none reveal-element mb-12 cursor-pointer hover:text-surface-variant transition-colors duration-500">
+                JOIN THE<br />MOVEMENT.
+            </h2>
+            <button
+                class="group relative px-8 py-4 bg-primary text-surface font-label-md text-label-md uppercase tracking-widest overflow-hidden reveal-element">
+                <span class="relative z-10 flex items-center gap-2">
+                    Initialize Sequence
+                    <span
+                        class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+                </span>
+                <div
+                    class="absolute inset-0 bg-secondary-fixed transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300">
+                </div>
+            </button>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer
+        class="w-full max-w-container-max mx-auto px-margin-desktop py-24 flex flex-col items-start gap-12 border-t border-outline-variant bg-background dark:bg-background">
+        <div class="font-headline-xl text-headline-xl font-bold tracking-tighter text-primary dark:text-primary">
+            VOLVIQ AI
+        </div>
+        <div class="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div class="flex gap-8 opacity-80 hover:opacity-100 transition-opacity">
+                <a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary underline transition-all"
+                    href="#">Documentation</a>
+                <a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary underline transition-all"
+                    href="#">Privacy</a>
+                <a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary underline transition-all"
+                    href="#">Protocol</a>
+                <a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary underline transition-all"
+                    href="#">Security</a>
+            </div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant">
+                © 2026 VOLVIQ AI. ALL SYSTEMS OPERATIONAL.
+            </div>
+        </div>
+    </footer>
+    <!-- Scroll Interaction Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const revealElements = document.querySelectorAll('.reveal-element');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            revealElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

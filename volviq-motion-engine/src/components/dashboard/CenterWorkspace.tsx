@@ -1,0 +1,320 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Box, Megaphone, Sparkles, Video } from "lucide-react";
+import { MotionWorkspace } from "@/components/workspace/MotionWorkspace";
+import type { UserProfile } from "@/types/profile";
+import BorderGlow from "@/components/animations/BorderGlow";
+import GlareHover from "@/components/animations/GlareHover";
+import { AssetUploader } from "@/components/dashboard/AssetUploader";
+import type { UploadedAsset } from "@/types/assets";
+import { fusePromptWithAssets } from "@/lib/asset-fusion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { getPlanLimit } from "@/lib/plans";
+import {
+  DEFAULT_MODEL_ID,
+  GENERATION_MODE_PRESETS,
+  MODELS,
+  type GenerationMode,
+  type ModelId,
+} from "@/types/generation";
+
+interface CenterWorkspaceProps {
+  profile: UserProfile | null;
+  accessToken: string | null;
+  onRefreshProfile: () => void;
+  externalPrompt?: string;
+}
+
+export function CenterWorkspace({
+  profile,
+  accessToken,
+  onRefreshProfile,
+  externalPrompt,
+}: CenterWorkspaceProps) {
+  const [prompt, setPrompt] = useState("");
+  const [assets, setAssets] = useState<UploadedAsset[]>([]);
+  const [workspaceActive, setWorkspaceActive] = useState(false);
+  const [startPrompt, setStartPrompt] = useState("");
+  const [model, setModel] = useState<ModelId>(DEFAULT_MODEL_ID);
+  const [modeDialogOpen, setModeDialogOpen] = useState(false);
+  const [pendingPrompt, setPendingPrompt] = useState("");
+  const [generationMode, setGenerationMode] = useState<GenerationMode>("ad");
+
+  const requestGeneration = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed && assets.length === 0) return;
+    const finalPrompt = fusePromptWithAssets(trimmed || "Create a cinematic motion graphic advertisement with the attached visual assets", assets);
+    setPrompt(trimmed);
+    setPendingPrompt(finalPrompt);
+    setModeDialogOpen(true);
+  };
+
+  const beginGeneration = (mode: GenerationMode) => {
+    if (!pendingPrompt) return;
+    setGenerationMode(mode);
+    setStartPrompt(pendingPrompt);
+    setModeDialogOpen(false);
+    setWorkspaceActive(true);
+  };
+
+  useEffect(() => {
+    if (externalPrompt?.trim()) {
+      requestGeneration(externalPrompt);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when external prompt changes
+  }, [externalPrompt]);
+
+  if (workspaceActive) {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-background/20">
+        <div className="flex items-center justify-between border-b border-border px-4 py-2 bg-background-elevated/40 backdrop-blur-sm">
+          <p className="truncate text-sm text-muted-foreground">
+            {startPrompt}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setWorkspaceActive(false);
+              setStartPrompt("");
+              setPrompt("");
+            }}
+            className="text-xs text-primary hover:text-primary-hover font-semibold transition-colors"
+          >
+            New prompt
+          </button>
+        </div>
+        <MotionWorkspace
+          initialPrompt={startPrompt}
+          initialModel={model}
+          initialGenerationMode={generationMode}
+          initialDurationInFrames={GENERATION_MODE_PRESETS[generationMode].durationInFrames}
+          initialFps={GENERATION_MODE_PRESETS[generationMode].fps}
+          autoStart
+          accessToken={accessToken}
+          compact
+          onGenerationComplete={onRefreshProfile}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative flex flex-1 flex-col h-full overflow-hidden p-6 md:p-8 justify-between">
+      {/* Top Header Row with Usage Gauge */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-6 w-full shrink-0 z-10">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground tracking-tight">Creative Engine</h2>
+          <p className="text-xs text-muted-foreground font-mono">Calibration state: Active // Multimodal Node 0x9f</p>
+        </div>
+        {profile && (
+          <div className="flex flex-col gap-1.5 w-full sm:w-60 bg-muted/20 border border-border/40 rounded-lg p-3">
+            <div className="flex justify-between text-[10px] font-mono">
+              <span className="text-muted-foreground uppercase">Generations</span>
+              <span className="text-primary font-bold">
+                {profile.generations_used_this_month} / {getPlanLimit(profile.plan)} used
+              </span>
+            </div>
+            <div className="h-1.5 w-full bg-muted-foreground-dim/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-primary to-primary-hover shadow-[0_0_8px_rgba(255,255,255,0.4)] transition-all duration-500"
+                style={{
+                  width: `${Math.min(
+                    100,
+                    (profile.generations_used_this_month / getPlanLimit(profile.plan)) * 100
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Centered Prompt Box Area */}
+      <div className="max-w-2xl w-full mx-auto flex flex-col gap-6 items-center justify-center flex-1 z-10">
+        <div className="flex items-center gap-2 text-primary">
+          <Sparkles className="h-5 w-5 animate-pulse" />
+          <span className="text-xs font-semibold uppercase tracking-widest font-mono">
+            Multimodal Motion Console
+          </span>
+        </div>
+        <h1 className="text-2xl font-bold text-foreground tracking-tight md:text-3xl text-center leading-tight">
+          What would you like Volviq to create today?
+        </h1>
+
+        {/* Glowing Glass Input Box */}
+        <BorderGlow
+          backgroundColor="#1c1b1b"
+          borderRadius={12}
+          glowColor="270 100 50"
+          glowIntensity={0.5}
+          glowRadius={50}
+          colors={["#ffffff", "#8e9192", "#353535"]}
+          fillOpacity={0.08}
+          className="w-full shadow-2xl transition-all duration-300"
+        >
+          <GlareHover
+            width="100%"
+            height="100%"
+            background="transparent"
+            borderRadius="12px"
+            borderColor="transparent"
+            glareColor="#ffffff"
+            glareOpacity={0.08}
+            glareSize={150}
+            className="p-3 flex flex-col gap-2"
+          >
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  requestGeneration(prompt);
+                }
+              }}
+              placeholder="Describe your motion graphic, ad, or reel in natural language, or attach product assets below..."
+              rows={4}
+              className="w-full resize-none bg-transparent px-2 py-1 text-foreground placeholder:text-muted-foreground/60 focus:outline-none text-base"
+            />
+
+            {/* Multimodal Asset Uploader Component */}
+            <div className="border-t border-border/20 pt-2 px-1">
+              <AssetUploader
+                accessToken={accessToken}
+                assets={assets}
+                onAssetsChange={setAssets}
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/30 pt-3 px-1">
+              <span className="text-[10px] text-muted-foreground font-mono">Press Enter to generate</span>
+              <div className="flex items-center gap-2">
+                <Select
+                  value={model}
+                  onValueChange={(value) => setModel(value as ModelId)}
+                >
+                  <SelectTrigger
+                    className="h-8 w-[230px] border-border/70 bg-secondary/50 px-3 text-xs text-foreground"
+                    aria-label="Choose AI model"
+                  >
+                    <SelectValue placeholder="Choose AI model" />
+                  </SelectTrigger>
+                  <SelectContent className="border-border bg-background-elevated">
+                    {MODELS.map((option) => (
+                      <SelectItem
+                        key={option.id}
+                        value={option.id}
+                        className="text-xs text-foreground focus:bg-secondary focus:text-foreground"
+                      >
+                        {option.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <button
+                  type="button"
+                  onClick={() => requestGeneration(prompt)}
+                  disabled={!prompt.trim() && assets.length === 0}
+                  className="rounded-md bg-primary hover:bg-primary-hover px-5 py-1.5 text-xs font-semibold text-primary-foreground transition-all duration-200 disabled:opacity-40 shadow-[0_0_12px_rgba(255,255,255,0.15)] active:scale-95 cursor-pointer"
+                >
+                  Generate
+                </button>
+              </div>
+            </div>
+          </GlareHover>
+        </BorderGlow>
+      </div>
+
+      {/* Decorative SVG Vector in the corner */}
+      <div className="absolute bottom-0 right-0 w-[45%] max-w-[340px] aspect-[687/622] pointer-events-none select-none z-0 opacity-4 text-muted-foreground-dim/20 translate-x-8 translate-y-8">
+        <svg viewBox="0 0 687 622" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+          <path
+            d="M125.136 130.841C273.234 23.0822 591.391 -112.114 715.876 -122.738C871.483 -136.018 34.561 359.185 76.5296 439.562C118.498 519.94 692.632 35.2218 799.814 35.2218C906.995 35.2218 231.871 444.088 294.501 531.455C357.131 618.822 692.936 332.522 833.074 280.623C836.34 334.765 817.475 460.729 715.876 531.455"
+            stroke="currentColor"
+            strokeWidth="147.997"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      {/* Spacer to push prompt box exactly to the vertical center (balancing header) */}
+      <div className="h-16 w-full shrink-0" />
+
+      <Dialog open={modeDialogOpen} onOpenChange={setModeDialogOpen}>
+        <DialogContent className="max-w-2xl border-border bg-background-elevated text-foreground">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">What are you creating?</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Choose the format so Volviq can set the right pacing, duration, and creative structure.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => beginGeneration("ad")}
+              className="group flex min-h-52 flex-col items-start rounded-xl border border-border bg-muted/20 p-5 text-left transition hover:border-primary hover:bg-secondary/70 focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <div className="mb-5 rounded-lg border border-border bg-background p-3 text-primary">
+                <Megaphone className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold">Create an Ad</h3>
+              <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                A 20-second promotional video for startups, founders, and ecommerce brands.
+              </p>
+              <span className="mt-5 rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold text-foreground">
+                20s · 60 FPS
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => beginGeneration("motion_asset")}
+              className="group flex min-h-52 flex-col items-start rounded-xl border border-border bg-muted/20 p-5 text-left transition hover:border-primary hover:bg-secondary/70 focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <div className="mb-5 rounded-lg border border-border bg-background p-3 text-primary">
+                <Video className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold">Create a Motion Graphic Asset</h3>
+              <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                A seamless 5-second loop for CapCut, Premiere Pro, and other editing software.
+              </p>
+              <span className="mt-5 rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold text-foreground">
+                5s Loop · 60 FPS
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => beginGeneration("3d")}
+              className="group flex min-h-52 flex-col items-start rounded-xl border border-border bg-muted/20 p-5 text-left transition hover:border-primary hover:bg-secondary/70 focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <div className="mb-5 rounded-lg border border-border bg-background p-3 text-primary">
+                <Box className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold">Create a 3D Animation</h3>
+              <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                A stunning 3D scene with floating shapes, particles, and camera movements.
+              </p>
+              <span className="mt-5 rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold text-foreground">
+                10s · 60 FPS · 3D
+              </span>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
