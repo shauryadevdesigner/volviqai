@@ -131,7 +131,7 @@ export const HeroHeadline: React.FC<{
           style={{
             fontFamily: accentFont,
             fontStyle: "italic",
-            fontSize: "64px",
+            fontSize: "80px",
             color: colorPalette.accent,
             opacity: interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             transform: `translateY(${interpolate(frame, [delay, delay + 15], [15, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
@@ -147,7 +147,7 @@ export const HeroHeadline: React.FC<{
         style={{
           fontFamily: heroFont,
           fontWeight: 800,
-          fontSize: "140px",
+          fontSize: "160px",
           lineHeight: 1.1,
           color: colorPalette.text,
           margin: 0,
@@ -200,7 +200,7 @@ export const HeroHeadline: React.FC<{
           style={{
             fontFamily: secondaryFont,
             fontWeight: 400,
-            fontSize: "52px",
+            fontSize: "64px",
             color: "rgba(248, 250, 252, 0.7)",
             maxWidth: "1800px",
             margin: 0,
@@ -301,7 +301,7 @@ export const FeatureGrid: React.FC<{
               style={{
                 fontFamily: heroFont,
                 fontWeight: 700,
-                fontSize: "56px",
+                fontSize: "72px",
                 color: "#f8fafc",
                 marginBottom: SPACING.xs,
               }}
@@ -312,7 +312,7 @@ export const FeatureGrid: React.FC<{
               style={{
                 fontFamily: secondaryFont,
                 fontWeight: 400,
-                fontSize: "36px",
+                fontSize: "48px",
                 color: "rgba(248, 250, 252, 0.6)",
                 lineHeight: 1.5,
               }}
@@ -380,7 +380,7 @@ export const PremiumCTA: React.FC<{
         style={{
           fontFamily: secondaryFont,
           fontWeight: 700,
-          fontSize: "38px",
+          fontSize: "48px",
           letterSpacing: "0.08em",
           color: colorPalette.text,
           backgroundColor: colorPalette.accent,
@@ -522,7 +522,7 @@ export const LogoWall: React.FC<{
       <div
         style={{
           fontFamily: secondaryFont,
-          fontSize: "28px",
+          fontSize: "36px",
           fontWeight: 600,
           letterSpacing: "0.15em",
           color: "rgba(248, 250, 252, 0.4)",
@@ -557,7 +557,7 @@ export const LogoWall: React.FC<{
               style={{
                 fontFamily: secondaryFont,
                 fontWeight: 600,
-                fontSize: "44px",
+                fontSize: "56px",
                 color: "rgba(248, 250, 252, 0.6)",
                 display: "inline-block",
                 width: "240px",
@@ -572,3 +572,403 @@ export const LogoWall: React.FC<{
     </div>
   );
 };
+
+// ============================================================================
+// COMMERCIAL AD PRIMITIVES (V5 Studio Quality)
+// ============================================================================
+
+/**
+ * 9. KineticHeadline
+ * High-impact hero headline with 3D Y-axis character flip, blur clearing,
+ * scale overshoot, and optional multi-stop gradient fill.
+ */
+export const KineticHeadline: React.FC<{
+  title: string;
+  subtitle?: string;
+  heroFont?: string;
+  secondaryFont?: string;
+  accentColor?: string;
+  delay?: number;
+  gradientText?: boolean;
+}> = ({
+  title,
+  subtitle,
+  heroFont = "Space Grotesk",
+  secondaryFont = "Inter",
+  accentColor = "#38bdf8",
+  delay = 0,
+  gradientText = true,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const words = title.split(" ");
+
+  const textGradientStyle: React.CSSProperties = gradientText
+    ? {
+        background: `linear-gradient(135deg, #ffffff 0%, ${accentColor} 55%, #a855f7 100%)`,
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+      }
+    : { color: "#ffffff" };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        gap: SPACING.sm,
+        zIndex: 10,
+        position: "relative",
+      }}
+    >
+      <FontLoader fonts={[heroFont, secondaryFont]} />
+      <h1
+        style={{
+          fontFamily: heroFont,
+          fontWeight: 900,
+          fontSize: "160px",
+          lineHeight: 1.05,
+          margin: 0,
+          letterSpacing: "-0.03em",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "0.28em",
+          ...textGradientStyle,
+        }}
+      >
+        {words.map((word, wordIdx) => {
+          const charOffset = words.slice(0, wordIdx).join("").length + wordIdx;
+          return (
+            <span key={wordIdx} style={{ display: "inline-flex", overflow: "hidden", perspective: "1000px" }}>
+              {[...word].map((char, charIdx) => {
+                const charDelay = delay + 4 + (charOffset + charIdx) * 2;
+                const charSpring = spring({
+                  frame: frame - charDelay,
+                  fps,
+                  config: { damping: 16, stiffness: 220 },
+                });
+                const ty = interpolate(charSpring, [0, 1], [90, 0]);
+                const rx = interpolate(charSpring, [0, 1], [60, 0]);
+                const sc = interpolate(charSpring, [0, 0.6, 1], [0.5, 1.08, 1.0]);
+                const blur = interpolate(charSpring, [0, 1], [10, 0]);
+                const op = interpolate(charSpring, [0, 0.3, 1], [0, 1, 1]);
+
+                return (
+                  <span
+                    key={charIdx}
+                    style={{
+                      display: "inline-block",
+                      transform: `translateY(${ty}px) rotateX(${rx}deg) scale(${sc})`,
+                      opacity: op,
+                      filter: `blur(${blur}px)`,
+                    }}
+                  >
+                    {char}
+                  </span>
+                );
+              })}
+            </span>
+          );
+        })}
+      </h1>
+
+      {subtitle && (
+        <p
+          style={{
+            fontFamily: secondaryFont,
+            fontWeight: 400,
+            fontSize: "64px",
+            color: "rgba(248, 250, 252, 0.75)",
+            maxWidth: "1800px",
+            margin: 0,
+            lineHeight: 1.55,
+            opacity: interpolate(frame, [delay + 22, delay + 38], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            transform: `translateY(${interpolate(frame, [delay + 22, delay + 38], [24, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
+            filter: `blur(${interpolate(frame, [delay + 22, delay + 34], [6, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
+          }}
+        >
+          {subtitle}
+        </p>
+      )}
+    </div>
+  );
+};
+
+/**
+ * 10. ProductGlassCard
+ * Showcase card for product renders, mockups, or hero images with elevated glass effect,
+ * glowing animated border, and floating feature pills.
+ */
+export const ProductGlassCard: React.FC<{
+  children: React.ReactNode;
+  title?: string;
+  badgeText?: string;
+  accentColor?: string;
+  delay?: number;
+  style?: React.CSSProperties;
+}> = ({
+  children,
+  title,
+  badgeText,
+  accentColor = "#38bdf8",
+  delay = 10,
+  style,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const cardSpring = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 20, stiffness: 120 },
+  });
+
+  const scale = interpolate(cardSpring, [0, 0.7, 1], [0.85, 1.04, 1.0]);
+  const opacity = interpolate(cardSpring, [0, 1], [0, 1]);
+  const translateY = interpolate(cardSpring, [0, 1], [50, 0]);
+  const floatY = Math.sin(frame * 0.03) * 6;
+
+  return (
+    <div
+      style={{
+        background: "rgba(255, 255, 255, 0.04)",
+        backdropFilter: "blur(24px) saturate(200%)",
+        WebkitBackdropFilter: "blur(24px) saturate(200%)",
+        border: `1px solid rgba(255, 255, 255, 0.12)`,
+        borderRadius: BORDER_RADIUS.xl,
+        boxShadow: `0 24px 64px rgba(0, 0, 0, 0.45), 0 0 60px ${accentColor}33, inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+        padding: SPACING.md,
+        opacity,
+        transform: `scale(${scale}) translateY(${translateY + floatY}px)`,
+        position: "relative",
+        overflow: "hidden",
+        zIndex: 10,
+        ...style,
+      }}
+    >
+      {badgeText && (
+        <div
+          style={{
+            position: "absolute",
+            top: 24,
+            right: 24,
+            background: `linear-gradient(135deg, ${accentColor} 0%, rgba(168,85,247,0.9) 100%)`,
+            color: "#ffffff",
+            padding: "8px 20px",
+            borderRadius: 9999,
+            fontSize: "32px",
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            boxShadow: `0 0 20px ${accentColor}66`,
+            zIndex: 20,
+          }}
+        >
+          {badgeText}
+        </div>
+      )}
+
+      {title && (
+        <div
+          style={{
+            fontSize: "56px",
+            fontWeight: 800,
+            color: "#ffffff",
+            marginBottom: SPACING.xs,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          {title}
+        </div>
+      )}
+
+      {children}
+    </div>
+  );
+};
+
+/**
+ * 11. AdHookBanner
+ * Animated hook tag / category badge with neon glow borders.
+ */
+export const AdHookBanner: React.FC<{
+  text: string;
+  accentColor?: string;
+  delay?: number;
+}> = ({ text, accentColor = "#38bdf8", delay = 0 }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const bannerSpring = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 18, stiffness: 180 },
+  });
+
+  const translateY = interpolate(bannerSpring, [0, 1], [-30, 0]);
+  const opacity = interpolate(bannerSpring, [0, 1], [0, 1]);
+  const glowPulse = 0.4 + Math.sin(frame * 0.08) * 0.2;
+
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 12,
+        padding: "14px 32px",
+        borderRadius: 9999,
+        background: "rgba(255, 255, 255, 0.05)",
+        backdropFilter: "blur(16px)",
+        border: `1px solid ${accentColor}88`,
+        boxShadow: `0 0 30px ${accentColor}${Math.round(glowPulse * 255).toString(16).padStart(2, "0")}`,
+        opacity,
+        transform: `translateY(${translateY}px)`,
+        zIndex: 15,
+        marginBottom: 16,
+      }}
+    >
+      <div
+        style={{
+          width: 12,
+          height: 12,
+          borderRadius: "50%",
+          backgroundColor: accentColor,
+          boxShadow: `0 0 12px ${accentColor}`,
+        }}
+      />
+      <span
+        style={{
+          fontSize: "36px",
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "#ffffff",
+        }}
+      >
+        {text}
+      </span>
+    </div>
+  );
+};
+
+/**
+ * 12. AdCTAButton
+ * High-conversion action button with shine sweep overlay and pulsing urgency.
+ */
+export const AdCTAButton: React.FC<{
+  label: string;
+  accentColor?: string;
+  textColor?: string;
+  delay?: number;
+}> = ({ label, accentColor = "#ff3366", textColor = "#ffffff", delay = 30 }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const btnSpring = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 14, stiffness: 200 },
+  });
+
+  const scaleEntrance = interpolate(btnSpring, [0, 0.7, 1], [0.6, 1.08, 1.0]);
+  const opacity = interpolate(btnSpring, [0, 1], [0, 1]);
+  const pulse = 1 + Math.sin((frame - delay) * 0.09) * 0.035;
+  const finalScale = scaleEntrance * (frame > delay ? pulse : 1);
+
+  const sweepX = ((frame - delay) * 2) % 220 - 60;
+
+  return (
+    <div
+      style={{
+        zIndex: 20,
+        position: "relative",
+        opacity,
+        transform: `scale(${finalScale})`,
+      }}
+    >
+      <button
+        style={{
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 800,
+          fontSize: "52px",
+          letterSpacing: "0.06em",
+          color: textColor,
+          background: `linear-gradient(135deg, ${accentColor} 0%, #ff6b35 100%)`,
+          border: "none",
+          borderRadius: BORDER_RADIUS.xl,
+          padding: "26px 76px",
+          cursor: "pointer",
+          boxShadow: `0 12px 40px ${accentColor}66, 0 0 0 1px rgba(255,255,255,0.2)`,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {label}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            width: "60px",
+            left: sweepX,
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)",
+            transform: "skewX(-20deg)",
+            pointerEvents: "none",
+          }}
+        />
+      </button>
+    </div>
+  );
+};
+
+/**
+ * 13. UrgencyTimer
+ * Animated countdown component (`{timeLeft}s LEFT`) with pulsing text glow for ad final beats.
+ */
+export const UrgencyTimer: React.FC<{
+  startSeconds?: number;
+  delay?: number;
+  accentColor?: string;
+}> = ({ startSeconds = 15, delay = 0, accentColor = "#ff3366" }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const elapsedSec = Math.floor(frame / fps);
+  const timeLeft = Math.max(1, startSeconds - elapsedSec);
+
+  const pulse = 1 + Math.sin(frame * 0.15) * 0.06;
+  const opacity = interpolate(frame, [delay, delay + 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 12,
+        transform: `scale(${pulse})`,
+        opacity,
+        zIndex: 20,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "Space Grotesk, sans-serif",
+          fontSize: "56px",
+          fontWeight: 900,
+          color: accentColor,
+          letterSpacing: "-0.02em",
+          textShadow: `0 0 24px ${accentColor}aa`,
+        }}
+      >
+        ⚡ LIMITED TIME: {timeLeft}s REMAINING
+      </span>
+    </div>
+  );
+};
+

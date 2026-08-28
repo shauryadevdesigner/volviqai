@@ -1,4 +1,4 @@
-import {detectSkillsLocally} from "../../skills";
+import {detectSkillsLocally, getCombinedSkillContent} from "../../skills";
 import {logger} from "../../lib/logger";
 import {startTimer} from "../../lib/monitoring";
 import {runStage8Unified} from "./stages/stage8-engineer";
@@ -39,6 +39,15 @@ export async function runOrchestrator(params: OrchestratorParams): Promise<strin
   });
 
   const skills = detectSkillsLocally(prompt);
+  // Ensure ad mode always has core ad skills included
+  if (generationMode === "ad") {
+    if (!skills.includes("cinematic-ad")) skills.push("cinematic-ad");
+    if (!skills.includes("lighting-composition")) skills.push("lighting-composition");
+    if (!skills.includes("typography")) skills.push("typography");
+    if (!skills.includes("spring-physics")) skills.push("spring-physics");
+  }
+
+  const skillContent = getCombinedSkillContent(skills);
   onEvent({type: "metadata", skills});
   onEvent({type: "reasoning-start", phase: "generating_draft"});
 
@@ -57,6 +66,7 @@ export async function runOrchestrator(params: OrchestratorParams): Promise<strin
     generationMode,
     fps,
     durationInFrames,
+    skillContent,
   });
 
   let draft = await generateDraft(enrichedPrompt, 0);

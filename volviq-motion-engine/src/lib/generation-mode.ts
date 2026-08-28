@@ -67,67 +67,46 @@ export function getGenerationModeDirective(
 - Available: FiberCanvas (as Canvas), Stars, Sparkles, Float, OrbitControls, Environment, Text3D, Center, MeshDistortMaterial, MeshWobbleMaterial, RoundedBox, ContactShadows, AccumulativeShadows from @react-three/drei; useCurrentFrame, useVideoConfig, interpolate, AbsoluteFill from remotion.`;
   }
 
-  return `GENERATION MODE: AD — PREMIUM CINEMATIC COMMERCIAL
+  return `GENERATION MODE: AD — HIGH-CONVERTING CINEMATIC COMMERCIAL
 - Render exactly ${durationInFrames} frames at ${fps} FPS (${seconds} seconds).
+- Do NOT use 3D elements (Canvas, Three.js). Use 2D HTML/CSS & Pre-built Commercial Primitives only.
 
-## CREATIVE DIRECTION
-You MUST generate a unique creative concept for this ad. Do NOT repeat the same layout/structure as previous generations. Each ad should feel like it was designed by a different creative agency.
+════════════════════════════════════════════════════════════
+## MANDATORY 6-BEAT COMMERCIAL AD RHYTHM
+════════════════════════════════════════════════════════════
 
-## VISUAL STYLE (choose one randomly each generation):
-- Minimalist luxury: Clean whitespace, single focal point, subtle motion
-- Maximalist energy: Dense compositions, multiple focal points, high-energy motion
-- Retro-futuristic: Neon grids, chrome textures, synthwave aesthetics
-- Organic flow: Curved shapes, natural gradients, fluid motion
-- Geometric precision: Sharp angles, grid-based layout, mathematical motion
-- Editorial magazine: Typography-driven, column layouts, elegant reveals
+Structure the advertisement into these exact 6 commercial beats:
+Beat 1 — HOOK (0%–15%): Arresting visual surprise (light sweep, zoom burst, or shockwave ring). Render <AdHookBanner text="..." /> at top.
+Beat 2 — CURIOSITY & PROBLEM (15%–30%): Slow push-in camera. Headline uses <KineticHeadline title="..." subtitle="..." /> with character 3D flip.
+Beat 3 — PRODUCT REVEAL (30%–55%): Hero product/value enters inside <ProductGlassCard badgeText="..."> with floating spec badges.
+Beat 4 — VALUE SHOWCASE (55%–75%): Render <FeatureGrid items={...} /> or staggered glass cards showcasing top benefits.
+Beat 5 — SIGNATURE CLIMAX (75%–88%): THE UNFORGETTABLE MOMENT. Use <LightBeam />, <TextReveal />, or SVG morph shape explosions.
+Beat 6 — CTA & URGENCY (88%–100%): Render high-converting <AdCTAButton label="..." /> accompanied by <UrgencyTimer startSeconds={15} />.
 
-## COLOR PALETTE (generate unique per ad):
-Do NOT default to blue/purple. Generate a unique palette for each ad:
-- Warm: Gold/amber + deep burgundy + cream
-- Cool: Teal/cyan + navy + silver
-- Bold: Electric coral + deep purple + white
-- Natural: Forest green + warm sand + earth brown
-- Monochromatic: Single hue with varying saturation/brightness
-- Complementary: Two opposing hues with neutral accents
+════════════════════════════════════════════════════════════
+## MANDATORY PRE-BUILT COMMERCIAL PRIMITIVES (USE THESE)
+════════════════════════════════════════════════════════════
 
-## CINEMATIC TECHNIQUES (use at least 3):
-- Rack focus: Blur shifts between depth layers
-- Lens flare: Bright light source with streak overlay
-- Film grain: Subtle animated noise overlay (opacity 0.03-0.05)
-- Light leak: Warm color bleed from edges
-- Anamorphic bokeh: Oval-shaped background blur
-- Chromatic aberration: RGB channel split on edges
-- Vignette: Darkened edges with radial gradient
-- Whip pan: Fast motion blur transition
-- Zoom burst: Rapid scale with radial lines
-- Shape morphing: One shape transforms into another
+You have direct access to these high-converting commercial components (DO NOT define or import them, use directly):
+1. <KineticHeadline title="Title" subtitle="Subtitle" accentColor="#38bdf8" delay={0} />
+   - 3D Y-axis character flip reveal, blur clearing, scale overshoot, and multi-stop gradient fill.
+2. <ProductGlassCard title="Title" badgeText="OFFER" accentColor="#38bdf8" delay={10}>...</ProductGlassCard>
+   - Elevated glass container for hero product images/renders with glowing borders and floating pills.
+3. <AdHookBanner text="LIMITED OFFER" accentColor="#38bdf8" delay={0} />
+   - Animated category/hook badge with glowing neon border and smooth entrance.
+4. <AdCTAButton label="GET STARTED NOW" accentColor="#ff3366" delay={30} />
+   - High-conversion pulsing action button with diagonal shine sweep overlays and glow ring.
+5. <UrgencyTimer startSeconds={15} delay={0} accentColor="#ff3366" />
+   - Animated countdown counter with pulsing glow for final ad frames.
+6. <CinematicScene cameraPushIn={true}>...</CinematicScene>
+   - Wraps scenes with camera dolly, film grain, vignette, and color grade.
 
-## TYPOGRAPHY (dramatic and varied):
-- Mix font weights: Ultra-thin + ultra-bold contrasts
-- Kinetic type: Words animate in with spring physics, not fades
-- Text masking: Reveal text through moving shapes
-- Variable size: 140px+ headlines, 60px+ subtitles
-- Letter animation: Individual letters stagger in with rotation/scale
-- Text path: Text follows a curved or diagonal path
-
-## COMPOSITION (varied layouts):
-- Asymmetric: Off-center focal point with negative space
-- Split-screen: Two contrasting halves that merge
-- Radial: Elements emanate from center
-- Diagonal: Dynamic 30-45 degree angles
-- Layered parallax: 5+ depth layers at different speeds
-- Frame-in-frame: Nested containers with different motion
-
-## STORYTELLING ARC:
-1. Hook (0-12%): Bold visual surprise — unexpected motion or reveal
-2. Intrigue (12-25%): Slow down, build curiosity with subtle motion
-3. Reveal (25-45%): Product/concept entrance with dramatic timing
-4. Showcase (45-70%): Features with staggered, varied reveals
-5. Climax (70-85%): Biggest visual moment — full energy
-6. CTA (85-100%): Clear action with pulsing urgency
-
-## IMPORTANT:
-- Do NOT use 3D elements (Canvas, Three.js, @react-three/fiber, @react-three/drei). Use 2D HTML/CSS only.
-- Each generation MUST look different — vary colors, layout, motion style, and composition.
-- Think like a creative director at a top agency: every ad should feel unique and intentional.`;
+════════════════════════════════════════════════════════════
+## VISUAL QUALITY MANDATES
+════════════════════════════════════════════════════════════
+- HUGE READABLE TEXT SCALE: Headlines = 140px–200px, Subtitles = 64px–90px, Body = 48px–64px, Labels/Badges = 36px–48px. MINIMUM FONT SIZE FOR ANY TEXT IS 36px. Never generate small text under 36px.
+- NO PLAIN UNSTYLED TEXT: Headlines MUST use <KineticHeadline> or <TextReveal>. Body text MUST be inside a <GlassCard> or <ProductGlassCard>.
+- MULTI-LAYER DEPTH: 5 layers minimum (z=0 bg, z=1 atmosphere, z=2 light beams, z=10 content, z=20 particles).
+- PARTICLES: Include 20+ floating particles in dual orbits (sin/cos drift).
+- SPRING PHYSICS: Use spring() with overshoot (damping 12-16, stiffness 180-240) for all entrances. NO linear interpolation for entrances.`;
 }

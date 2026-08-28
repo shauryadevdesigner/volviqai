@@ -45,16 +45,16 @@ export function detectVisualIssues(code: string): VisualIssue[] {
     });
   }
 
-  // Check for small font sizes
-  const fontSizeMatch = code.match(/fontSize:\s*(\d+)px/g);
+  // Check for small font sizes (4K resolution requirement: minimum font size is 36px, body 48px+, headlines 120px+)
+  const fontSizeMatch = code.match(/fontSize:\s*["']?(\d+)(?:px)?["']?/g);
   if (fontSizeMatch) {
     const smallSizes = fontSizeMatch
       .map(m => parseInt(m.match(/\d+/)?.[0] || "0"))
-      .filter(s => s < 28);
+      .filter(s => s > 0 && s < 44);
     if (smallSizes.length > 0) {
       issues.push({
         type: "small_text",
-        description: `Font sizes below 28px detected: ${smallSizes.join(", ")}px`,
+        description: `Font sizes below 44px detected: ${smallSizes.join(", ")}px`,
         autoFixable: true,
       });
     }
@@ -109,14 +109,20 @@ export function injectVisualFixes(code: string, issues: VisualIssue[]): string {
     }
 
     if (issue.type === "small_text") {
-      // Boost font sizes
-      fixed = fixed.replace(/fontSize:\s*(\d+)px/g, (match, size) => {
+      // Boost font sizes for 4K video canvas readability
+      fixed = fixed.replace(/fontSize:\s*["']?(\d+)(px)?["']?/g, (match, size, unit) => {
         const n = parseInt(size);
-        if (n < 24) return `fontSize: 36px`;
-        if (n < 28) return `fontSize: 48px`;
-        if (n < 36) return `fontSize: 56px`;
-        if (n < 48) return `fontSize: 64px`;
-        return match;
+        if (n <= 0) return match;
+        const quote = match.includes('"') ? '"' : match.includes("'") ? "'" : "";
+        let newSize = n;
+        if (n < 20) newSize = 38;
+        else if (n < 28) newSize = 48;
+        else if (n < 36) newSize = 64;
+        else if (n < 48) newSize = 88;
+        else if (n < 60) newSize = 130;
+        else return match;
+
+        return unit || quote ? `fontSize: ${quote}${newSize}px${quote}` : `fontSize: ${newSize}`;
       });
     }
   }

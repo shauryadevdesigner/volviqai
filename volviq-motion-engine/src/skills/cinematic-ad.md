@@ -59,11 +59,11 @@ const ctaGlow = 0.3 + Math.sin(frame * 0.08) * 0.15;
   style={{
     transform: `scale(${ctaBounce})`,
     background: "linear-gradient(135deg, #ff6b35 0%, #ff3366 100%)",
-    padding: "16px 40px",
-    borderRadius: 12,
+    padding: "24px 56px",
+    borderRadius: 16,
     boxShadow: `0 0 40px rgba(255, 107, 53, ${ctaGlow})`,
     color: "#ffffff",
-    fontSize: 28,
+    fontSize: 44,
     fontWeight: 700,
     letterSpacing: "0.02em",
   }}
@@ -146,10 +146,10 @@ const cardEntrance = spring({
     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
   }}
 >
-  <div style={{ fontSize: 22, color: "#e8e6e3", lineHeight: 1.5, fontWeight: 300 }}>
+  <div style={{ fontSize: 48, color: "#e8e6e3", lineHeight: 1.5, fontWeight: 300 }}>
     "This product changed everything."
   </div>
-  <div style={{ fontSize: 14, color: "#888", marginTop: 16, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+  <div style={{ fontSize: 36, color: "#aaa", marginTop: 16, letterSpacing: "0.08em", textTransform: "uppercase" }}>
     — Jane Smith, CEO
   </div>
 </div>;

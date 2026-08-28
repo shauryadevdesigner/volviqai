@@ -269,36 +269,36 @@ Never use arbitrary sizes or random font-family declarations. Use the following 
 const TYPO = {
   display: {
     fontFamily: "'Playfair Display', serif",
-    fontSize: 84,
+    fontSize: 160,
     fontWeight: 700,
-    lineHeight: 1.1,
-    letterSpacing: "-0.02em",
+    lineHeight: 1.05,
+    letterSpacing: "-0.03em",
   },
   headline: {
     fontFamily: "'Playfair Display', serif",
-    fontSize: 56,
+    fontSize: 100,
     fontWeight: 700,
-    lineHeight: 1.2,
-    letterSpacing: "-0.01em",
+    lineHeight: 1.15,
+    letterSpacing: "-0.02em",
   },
   subheadline: {
     fontFamily: "'Inter', sans-serif",
-    fontSize: 32,
+    fontSize: 64,
     fontWeight: 400,
     lineHeight: 1.4,
     color: "#a89e95",
   },
   body: {
     fontFamily: "'Inter', sans-serif",
-    fontSize: 24,
+    fontSize: 48,
     fontWeight: 300,
-    lineHeight: 1.6,
+    lineHeight: 1.5,
   },
   label: {
     fontFamily: "'Inter', sans-serif",
-    fontSize: 16,
+    fontSize: 36,
     fontWeight: 600,
-    letterSpacing: "0.1em",
+    letterSpacing: "0.12em",
     textTransform: "uppercase" as const,
   }
 };

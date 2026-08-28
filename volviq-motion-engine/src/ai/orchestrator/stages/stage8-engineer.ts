@@ -65,6 +65,7 @@ export async function runStage8Unified(params: {
   generationMode: GenerationMode;
   fps: number;
   durationInFrames: number;
+  skillContent?: string;
 }): Promise<string> {
   const scenes = params.resolvedBrief?.scenes.map((scene) => ({
     sceneNumber: scene.sceneNumber,
@@ -89,6 +90,7 @@ ${params.resolvedBrief ? `Template: ${params.resolvedBrief.template}
 Palette: ${params.resolvedBrief.colorPalette}
 Colors: ${JSON.stringify(params.resolvedBrief.colors)}
 Storyboard: ${JSON.stringify(scenes)}` : "Infer a distinctive art direction, palette, typography system, scene structure, and pacing directly from the request."}
+${params.skillContent ? `\n\n## COMMERCIAL AD CODE BLUEPRINTS & SKILL PATTERNS\nUse these professional Remotion motion graphics blueprints as reference for structure, spring physics curves, glass card containers, and typography reveals:\n${params.skillContent}` : ""}
 ${params.images?.length ? `The user supplied ${params.images.length} reference image(s). They are available to the component as userImages[0..${params.images.length - 1}]. Use them when relevant with <Img src={userImages[index]} />.` : ""}
 
 Derive every timing boundary from durationInFrames and the FPS supplied by useVideoConfig; never assume a fixed frame count or FPS. Keep the complete module concise (prefer under 350 lines), prioritize finishing valid code over excessive helper abstractions, and never stop mid-component.
@@ -119,7 +121,7 @@ ABSOLUTE REQUIREMENTS (NON-NEGOTIABLE):
 7. Use SPRING PHYSICS with overshoot (damping: 12-14, stiffness: 180-220) for bouncy, energetic motion
 8. Include SECONDARY MOTION: elements that react to primary animations with slight delays
 9. Add DEPTH with foreground bokeh (blur), midground content, background atmosphere (radial gradients)
-10. Make TEXT DRAMATIC: 120px+ headlines, kinetic reveals (word-by-word with staggered springs)
+10. Make TEXT DRAMATIC & HUGE: Headlines MUST be 140px–200px, Subtitles 64px–90px, Body text 48px–64px, Badges/Labels 36px–48px. ABSOLUTE MINIMUM font size for ANY text is 36px. Never use small unreadable text.
 11. Add AMBIENT LIGHT STREAKS: thin gradient lines that drift across the frame
 12. Use GLOWING EFFECTS: box-shadow with color, text-shadow for neon feel
 13. Include MICRO-DETAILS: subtle noise overlays, edge highlights, breathing animations
@@ -399,10 +401,10 @@ export function buildUnifiedComposition(
     "import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate, Img } from 'remotion';",
   );
   importLines.push(
-    "import { GradientBackground, HeroHeadline, GlassCard, FeatureGrid, PremiumCTA, KineticText, AnimatedNumber, LogoWall, RivePlayer, RiveLoader, MotionWrapper } from '../ai/components-library';",
+    "import { GradientBackground, HeroHeadline, GlassCard, FeatureGrid, PremiumCTA, KineticText, AnimatedNumber, LogoWall, KineticHeadline, ProductGlassCard, AdHookBanner, AdCTAButton, UrgencyTimer, CinematicScene, TextReveal, LightBeam, MorphShape, RivePlayer, RiveLoader, MotionWrapper } from '../ai/components-library';",
   );
   importLines.push(
-    "import { SPRINGS, SPACING, BORDER_RADIUS, SHADOWS, GLOWS, BLURS } from '../ai/design-tokens';",
+    "import { SPRINGS, SPACING, BORDER_RADIUS, SHADOWS, GLOWS, BLURS, FONT_SIZES, LETTER_SPACINGS, TRANSITIONS, GRADIENTS } from '../ai/design-tokens';",
   );
 
   const cleanedScenes = sceneCodes.map((code, idx) => {
