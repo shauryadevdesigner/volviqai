@@ -67,9 +67,67 @@ export function getGenerationModeDirective(
 - Available: FiberCanvas (as Canvas), Stars, Sparkles, Float, OrbitControls, Environment, Text3D, Center, MeshDistortMaterial, MeshWobbleMaterial, RoundedBox, ContactShadows, AccumulativeShadows from @react-three/drei; useCurrentFrame, useVideoConfig, interpolate, AbsoluteFill from remotion.`;
   }
 
-  return `GENERATION MODE: AD
-- Render exactly ${durationInFrames} frames at ${fps} FPS (${seconds} seconds). This format overrides any duration mentioned in the user's initial prompt.
-- Create a promotional video for startups, founders, or ecommerce brands.
-- Build multiple purposeful beats across the duration: a strong hook, product or offer storytelling, clear benefits, brand hierarchy, and a convincing call to action.
-- Maintain narrative progression and a composed ending; this video is not required to loop.`;
+  return `GENERATION MODE: AD — PREMIUM CINEMATIC COMMERCIAL
+- Render exactly ${durationInFrames} frames at ${fps} FPS (${seconds} seconds).
+
+## CREATIVE DIRECTION
+You MUST generate a unique creative concept for this ad. Do NOT repeat the same layout/structure as previous generations. Each ad should feel like it was designed by a different creative agency.
+
+## VISUAL STYLE (choose one randomly each generation):
+- Minimalist luxury: Clean whitespace, single focal point, subtle motion
+- Maximalist energy: Dense compositions, multiple focal points, high-energy motion
+- Retro-futuristic: Neon grids, chrome textures, synthwave aesthetics
+- Organic flow: Curved shapes, natural gradients, fluid motion
+- Geometric precision: Sharp angles, grid-based layout, mathematical motion
+- Editorial magazine: Typography-driven, column layouts, elegant reveals
+
+## COLOR PALETTE (generate unique per ad):
+Do NOT default to blue/purple. Generate a unique palette for each ad:
+- Warm: Gold/amber + deep burgundy + cream
+- Cool: Teal/cyan + navy + silver
+- Bold: Electric coral + deep purple + white
+- Natural: Forest green + warm sand + earth brown
+- Monochromatic: Single hue with varying saturation/brightness
+- Complementary: Two opposing hues with neutral accents
+
+## CINEMATIC TECHNIQUES (use at least 3):
+- Rack focus: Blur shifts between depth layers
+- Lens flare: Bright light source with streak overlay
+- Film grain: Subtle animated noise overlay (opacity 0.03-0.05)
+- Light leak: Warm color bleed from edges
+- Anamorphic bokeh: Oval-shaped background blur
+- Chromatic aberration: RGB channel split on edges
+- Vignette: Darkened edges with radial gradient
+- Whip pan: Fast motion blur transition
+- Zoom burst: Rapid scale with radial lines
+- Shape morphing: One shape transforms into another
+
+## TYPOGRAPHY (dramatic and varied):
+- Mix font weights: Ultra-thin + ultra-bold contrasts
+- Kinetic type: Words animate in with spring physics, not fades
+- Text masking: Reveal text through moving shapes
+- Variable size: 140px+ headlines, 60px+ subtitles
+- Letter animation: Individual letters stagger in with rotation/scale
+- Text path: Text follows a curved or diagonal path
+
+## COMPOSITION (varied layouts):
+- Asymmetric: Off-center focal point with negative space
+- Split-screen: Two contrasting halves that merge
+- Radial: Elements emanate from center
+- Diagonal: Dynamic 30-45 degree angles
+- Layered parallax: 5+ depth layers at different speeds
+- Frame-in-frame: Nested containers with different motion
+
+## STORYTELLING ARC:
+1. Hook (0-12%): Bold visual surprise — unexpected motion or reveal
+2. Intrigue (12-25%): Slow down, build curiosity with subtle motion
+3. Reveal (25-45%): Product/concept entrance with dramatic timing
+4. Showcase (45-70%): Features with staggered, varied reveals
+5. Climax (70-85%): Biggest visual moment — full energy
+6. CTA (85-100%): Clear action with pulsing urgency
+
+## IMPORTANT:
+- Do NOT use 3D elements (Canvas, Three.js, @react-three/fiber, @react-three/drei). Use 2D HTML/CSS only.
+- Each generation MUST look different — vary colors, layout, motion style, and composition.
+- Think like a creative director at a top agency: every ad should feel unique and intentional.`;
 }

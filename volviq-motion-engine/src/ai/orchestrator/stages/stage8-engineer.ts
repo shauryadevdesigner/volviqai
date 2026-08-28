@@ -5,6 +5,46 @@ import { GeneratedAssetItem, SceneLayoutItem } from "../types";
 import { getGenerationModeDirective } from "../../../lib/generation-mode";
 import type { GenerationMode } from "../../../types/generation";
 
+// ============================================================================
+// Style Variations — randomly selected per generation for visual diversity
+// ============================================================================
+interface StyleVariation {
+  name: string;
+  bg: string;
+  primary: string;
+  secondary: string;
+  accent: string;
+  text: string;
+  glow: string;
+}
+
+const STYLE_VARIATIONS: StyleVariation[] = [
+  { name: "Neon Cyberpunk", bg: "linear-gradient(135deg, #0a0a0a 0%, #1a0030 50%, #000a1a 100%)", primary: "#ff00ff", secondary: "#00ffff", accent: "#ffff00", text: "#ffffff", glow: "#ff00ff" },
+  { name: "Luxury Gold", bg: "linear-gradient(135deg, #0d0d0d 0%, #1a1510 50%, #0d0d0d 100%)", primary: "#d4af37", secondary: "#f5e6c8", accent: "#8b6914", text: "#f5e6c8", glow: "#d4af37" },
+  { name: "Arctic Minimal", bg: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)", primary: "#0f172a", secondary: "#38bdf8", accent: "#0284c7", text: "#0f172a", glow: "#38bdf8" },
+  { name: "Sunset Blaze", bg: "linear-gradient(135deg, #1a0a00 0%, #3d1500 30%, #5c1a00 60%, #2d0a00 100%)", primary: "#ff6b35", secondary: "#ffd700", accent: "#ff2200", text: "#fff5e6", glow: "#ff6b35" },
+  { name: "Deep Ocean", bg: "linear-gradient(135deg, #001122 0%, #002244 30%, #003366 60%, #001a33 100%)", primary: "#00d4ff", secondary: "#0088cc", accent: "#00ffaa", text: "#e0f7ff", glow: "#00d4ff" },
+  { name: "Forest Emerald", bg: "linear-gradient(135deg, #0a1a0a 0%, #0d2b0d 30%, #1a3a1a 60%, #0a1f0a 100%)", primary: "#00ff88", secondary: "#88cc66", accent: "#ffdd00", text: "#e8ffe8", glow: "#00ff88" },
+  { name: "Royal Purple", bg: "linear-gradient(135deg, #0d001a 0%, #1a0033 30%, #2d004d 60%, #1a0033 100%)", primary: "#aa55ff", secondary: "#ff55ff", accent: "#ffdd00", text: "#f0e0ff", glow: "#aa55ff" },
+  { name: "Monochrome Noir", bg: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2a2a2a 60%, #0a0a0a 100%)", primary: "#ffffff", secondary: "#888888", accent: "#ff0000", text: "#ffffff", glow: "#ffffff" },
+];
+
+function getRandomStyle(): StyleVariation {
+  return STYLE_VARIATIONS[Math.floor(Math.random() * STYLE_VARIATIONS.length)];
+}
+
+function getStyleDirective(style: StyleVariation): string {
+  return `## MANDATORY STYLE (MUST USE THIS EXACT PALETTE):
+Style: ${style.name}
+- Background: ${style.bg}
+- Primary: ${style.primary}
+- Secondary: ${style.secondary}
+- Accent: ${style.accent}
+- Text: ${style.text}
+- Glow: ${style.glow}
+Use these EXACT colors. Do NOT default to blue/purple.`;
+}
+
 export const SceneGenerationSchema = z.object({
   code: z
     .string()
@@ -36,10 +76,15 @@ export async function runStage8Unified(params: {
     motion: scene.motion.motionStyle,
   })) ?? [];
 
+  // Select a random style variation for visual diversity
+  const selectedStyle = getRandomStyle();
+  const styleDirective = getStyleDirective(selectedStyle);
+
   const generationPrompt = `Create the complete motion graphic requested below.
 
 User request: ${params.prompt}
 ${getGenerationModeDirective(params.generationMode, params.fps, params.durationInFrames)}
+${styleDirective}
 ${params.resolvedBrief ? `Template: ${params.resolvedBrief.template}
 Palette: ${params.resolvedBrief.colorPalette}
 Colors: ${JSON.stringify(params.resolvedBrief.colors)}
@@ -145,7 +190,67 @@ The component MUST render correctly at every frame. Output COMPLETE code only.`,
     schema: UnifiedGenerationSchema,
   });
 
-  return result.object.code;
+  // Post-process: enhance code with cinematic effects if missing
+  const enhanced = enhanceCode(result.object.code, selectedStyle);
+  return enhanced;
+}
+
+// ============================================================================
+// Post-Generation Code Enhancement
+// ============================================================================
+function enhanceCode(code: string, style: StyleVariation): string {
+  let enhanced = code;
+
+  // Add film grain if not present
+  if (!enhanced.includes("film") && !enhanced.includes("grain") && !enhanced.includes("noise")) {
+    const grainOverlay = `
+      {/* Film Grain Overlay */}
+      <div style={{ position: "absolute", inset: 0, opacity: 0.04, backgroundImage: "url('data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"100\\" height=\\"100\\"><filter id=\\"n\\"><feTurbulence type=\\"fractalNoise\\" baseFrequency=\\"0.8\\" numOctaves=\\"4\\"/></filter><rect width=\\"100\\" height=\\"100\\" filter=\\"url(%23n)\\"/></svg>')", backgroundPosition: "0 0", pointerEvents: "none", zIndex: 50 }} />`;
+    enhanced = injectBeforeReturn(enhanced, grainOverlay);
+  }
+
+  // Add vignette if not present
+  if (!enhanced.includes("vignette") && !enhanced.includes("Vignette")) {
+    const vignetteOverlay = `
+      {/* Vignette */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)", pointerEvents: "none", zIndex: 45 }} />`;
+    enhanced = injectBeforeReturn(enhanced, vignetteOverlay);
+  }
+
+  // Add floating particles if not present
+  if (!enhanced.includes("Array.from") && !enhanced.includes("particles")) {
+    const particlesCode = `
+      {/* Floating Particles */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        const px = Math.sin(frame * 0.015 + i * 1.2) * 150;
+        const py = Math.cos(frame * 0.012 + i * 0.8) * 100;
+        const size = 3 + Math.sin(frame * 0.04 + i) * 2;
+        return <div key={i} style={{ position: "absolute", left: "calc(50% + " + px + "px)", top: "calc(50% + " + py + "px)", width: size, height: size, borderRadius: "50%", background: "${style.glow}", filter: "blur(1px)", opacity: 0.3 + Math.sin(frame * 0.05 + i) * 0.2, zIndex: 20 }} />;
+      })}`;
+    enhanced = injectBeforeReturn(enhanced, particlesCode);
+  }
+
+  // Add camera movement if not present
+  if (!enhanced.includes("camZoom") && !enhanced.includes("cameraZoom") && !enhanced.includes("cameraDolly")) {
+    const cameraCode = `const camZoom = interpolate(frame, [0, durationInFrames], [1.0, 1.04], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });`;
+    const videoConfigDecl = enhanced.match(/const\s+\{\s*(?:fps\s*,\s*)?durationInFrames[^}]*\}\s*=\s*useVideoConfig\s*\(\s*\)\s*;/);
+    if (videoConfigDecl && videoConfigDecl.index !== undefined) {
+      const insertPos = videoConfigDecl.index + videoConfigDecl[0].length;
+      enhanced = enhanced.substring(0, insertPos) + "\n  " + cameraCode + enhanced.substring(insertPos);
+    }
+  }
+
+  return enhanced;
+}
+
+function injectBeforeReturn(code: string, injection: string): string {
+  const lastAbsoluteFill = code.lastIndexOf("</AbsoluteFill>");
+  if (lastAbsoluteFill === -1) {
+    const lastParen = code.lastIndexOf(");");
+    if (lastParen === -1) return code + injection;
+    return code.substring(0, lastParen) + injection + "\n  " + code.substring(lastParen);
+  }
+  return code.substring(0, lastAbsoluteFill) + injection + "\n    " + code.substring(lastAbsoluteFill);
 }
 
 export async function runStage8Scene(params: {
