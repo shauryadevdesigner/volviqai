@@ -7,7 +7,7 @@ const UPI_NAME = process.env.UPI_MERCHANT_NAME || "Volviq AI Motion Studio";
 export async function createUPIOrder(
   params: CreateOrderParams
 ): Promise<OrderCreationResult> {
-  const { plan, userId } = params;
+  const { plan } = params;
   const amountINR = PLAN_PRICES_INR[plan] || 499;
   const orderId = `UPI_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
