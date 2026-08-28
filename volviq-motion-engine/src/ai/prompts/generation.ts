@@ -276,6 +276,44 @@ Then wrap each scene: <Sequence from={f(0)} durationInFrames={f(25)-f(0)}>...</S
 ## §18 ABSOLUTE GOAL
 Every advertisement should make viewers believe it was produced by a world-class creative agency with months of work. The result should feel comparable in production value to launch videos from leading technology companies while maintaining its own original visual identity.
 
+## §19 DESIGN STYLE CODE PATTERNS
+When a design style is specified, use these patterns:
+
+MAXIMALISM (dense, packed, chaotic energy):
+- Fill the screen: multiple overlapping elements, grids of shapes, animated backgrounds
+- Layer 10+ animated divs with different sin/cos drift patterns
+- Use: Array.from({ length: 12 }).map((_, i) => <div ... />) for repeated elements
+- Multiple focal points, rich textures, particles everywhere
+- style={{ position: "absolute", left: Math.sin(frame * 0.02 + i) * 200 + "px", top: Math.cos(frame * 0.015 + i) * 150 + "px", ... }}
+
+MINIMALISM (clean, sparse, whitespace):
+- Single focal point centered or off-center
+- One headline + one subtitle + one accent element maximum
+- Generous padding: padding: "200px" or more
+- Subtle motion: const breathe = 1 + Math.sin(frame * 0.03) * 0.01;
+- style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: "48px" }}
+
+GLASSMORPHISM (frosted glass, blur, transparency):
+- Cards: style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "24px", padding: "48px", boxShadow: "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)" }}
+- Layer multiple translucent panels at different depths
+- Soft glow borders: boxShadow with rgba accent color
+- Background: always a gradient or image behind the glass
+
+BRUTALISM (raw, harsh, unpolished):
+- Thick borders: border: "6px solid #000000"
+- No border-radius: borderRadius: "0px"
+- Monospace fonts: fontFamily: "'Courier New', monospace"
+- High contrast: pure black on white or vice versa
+- No gradients, no shadows, no blur
+- Aggressive typography: fontWeight: 900, fontSize: "180px", textTransform: "uppercase"
+- Raw geometric shapes: sharp rectangles, harsh angles
+
+SLIDE-UP ANIMATION (primary reveal for all styles):
+const slideUp = spring({ frame: frame - delay, fps, config: { damping: 14, stiffness: 200 } });
+const translateY = interpolate(slideUp, [0, 1], [80, 0]);
+const opacity = interpolate(slideUp, [0, 1], [0, 1]);
+style={{ transform: "translateY(" + translateY + "px)", opacity }}
+
 REMEMBER: More particles. More camera movement. More spring physics. More glow. More depth layers. More everything. MEDIOCRE IS UNACCEPTABLE. Make it FLASHY.
 `;
 

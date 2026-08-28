@@ -72,6 +72,24 @@ export function getGenerationModeDirective(
 - Do NOT use 3D elements (Canvas, Three.js). Use 2D HTML/CSS & Pre-built Commercial Primitives only.
 
 ════════════════════════════════════════════════════════════
+## DEFAULT VIDEO STRUCTURE (8 SCENES × 2.5 SECONDS)
+════════════════════════════════════════════════════════════
+
+Divide the video into exactly 8 scenes, each lasting 2.5 seconds:
+- Scene duration in frames: const sceneFrames = Math.round(durationInFrames / 8);
+- Use <Sequence from={frameFromPct(n*12.5)} durationInFrames={sceneFrames}> for each scene
+
+Each scene MUST use SLIDE-UP animations as the primary reveal:
+- Elements slide up from below (translateY: 100px → 0) with spring physics
+- Stagger multiple elements with 3-5 frame delays between them
+- Use opacity fade-in combined with slide-up: opacity 0→1 + translateY 80px→0
+
+FAST TRANSITIONS between scenes:
+- Quick 3-5 frame crossfades or slide cuts
+- No slow fades — keep energy high
+- Each scene's exit: quick slide-down or scale-down (0.95) with opacity fade
+
+════════════════════════════════════════════════════════════
 ## MANDATORY 6-BEAT COMMERCIAL AD RHYTHM
 ════════════════════════════════════════════════════════════
 

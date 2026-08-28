@@ -16,17 +16,67 @@ interface StyleVariation {
   accent: string;
   text: string;
   glow: string;
+  designStyle: string;
+  description: string;
 }
 
 const STYLE_VARIATIONS: StyleVariation[] = [
-  { name: "Neon Cyberpunk", bg: "linear-gradient(135deg, #0a0a0a 0%, #1a0030 50%, #000a1a 100%)", primary: "#ff00ff", secondary: "#00ffff", accent: "#ffff00", text: "#ffffff", glow: "#ff00ff" },
-  { name: "Luxury Gold", bg: "linear-gradient(135deg, #0d0d0d 0%, #1a1510 50%, #0d0d0d 100%)", primary: "#d4af37", secondary: "#f5e6c8", accent: "#8b6914", text: "#f5e6c8", glow: "#d4af37" },
-  { name: "Arctic Minimal", bg: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)", primary: "#0f172a", secondary: "#38bdf8", accent: "#0284c7", text: "#0f172a", glow: "#38bdf8" },
-  { name: "Sunset Blaze", bg: "linear-gradient(135deg, #1a0a00 0%, #3d1500 30%, #5c1a00 60%, #2d0a00 100%)", primary: "#ff6b35", secondary: "#ffd700", accent: "#ff2200", text: "#fff5e6", glow: "#ff6b35" },
-  { name: "Deep Ocean", bg: "linear-gradient(135deg, #001122 0%, #002244 30%, #003366 60%, #001a33 100%)", primary: "#00d4ff", secondary: "#0088cc", accent: "#00ffaa", text: "#e0f7ff", glow: "#00d4ff" },
-  { name: "Forest Emerald", bg: "linear-gradient(135deg, #0a1a0a 0%, #0d2b0d 30%, #1a3a1a 60%, #0a1f0a 100%)", primary: "#00ff88", secondary: "#88cc66", accent: "#ffdd00", text: "#e8ffe8", glow: "#00ff88" },
-  { name: "Royal Purple", bg: "linear-gradient(135deg, #0d001a 0%, #1a0033 30%, #2d004d 60%, #1a0033 100%)", primary: "#aa55ff", secondary: "#ff55ff", accent: "#ffdd00", text: "#f0e0ff", glow: "#aa55ff" },
-  { name: "Monochrome Noir", bg: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2a2a2a 60%, #0a0a0a 100%)", primary: "#ffffff", secondary: "#888888", accent: "#ff0000", text: "#ffffff", glow: "#ffffff" },
+  {
+    name: "Neon Cyberpunk",
+    bg: "linear-gradient(135deg, #0a0a0a 0%, #1a0030 50%, #000a1a 100%)",
+    primary: "#ff00ff", secondary: "#00ffff", accent: "#ffff00", text: "#ffffff", glow: "#ff00ff",
+    designStyle: "maximalism",
+    description: "Dense compositions packed with glowing elements, neon grids, chrome textures, high-energy chaos. Fill the screen with animated shapes, particles, and layered effects.",
+  },
+  {
+    name: "Luxury Gold",
+    bg: "linear-gradient(135deg, #0d0d0d 0%, #1a1510 50%, #0d0d0d 100%)",
+    primary: "#d4af37", secondary: "#f5e6c8", accent: "#8b6914", text: "#f5e6c8", glow: "#d4af37",
+    designStyle: "minimalism",
+    description: "Clean, sparse, generous whitespace. Single focal point, elegant typography, subtle motion. Less is more — only essential elements with refined spacing.",
+  },
+  {
+    name: "Arctic Glass",
+    bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+    primary: "#38bdf8", secondary: "#818cf8", accent: "#f0f9ff", text: "#f0f9ff", glow: "#38bdf8",
+    designStyle: "glassmorphism",
+    description: "Frosted glass cards with backdrop-filter: blur(20px), rgba borders, soft shadows. Translucent layered panels floating over gradients. Subtle transparency everywhere.",
+  },
+  {
+    name: "Raw Brutalist",
+    bg: "#ffffff",
+    primary: "#000000", secondary: "#ff0000", accent: "#0000ff", text: "#000000", glow: "#ff0000",
+    designStyle: "brutalism",
+    description: "Raw, harsh, unpolished. Thick black borders (4-8px), no border-radius, high contrast, monospace fonts, exposed structure, no gradients, bold solid colors, aggressive typography.",
+  },
+  {
+    name: "Sunset Maximal",
+    bg: "linear-gradient(135deg, #1a0a00 0%, #3d1500 30%, #5c1a00 60%, #2d0a00 100%)",
+    primary: "#ff6b35", secondary: "#ffd700", accent: "#ff2200", text: "#fff5e6", glow: "#ff6b35",
+    designStyle: "maximalism",
+    description: "Dense, packed, fiery energy. Overlapping shapes, multiple focal points, rich textures, animated gradients, particles everywhere. Controlled chaos.",
+  },
+  {
+    name: "Deep Minimal",
+    bg: "linear-gradient(135deg, #001122 0%, #001a33 50%, #001122 100%)",
+    primary: "#00d4ff", secondary: "#0088cc", accent: "#00ffaa", text: "#e0f7ff", glow: "#00d4ff",
+    designStyle: "minimalism",
+    description: "Ultra-clean deep ocean minimalism. Single element, vast dark space, precise typography, whisper-subtle motion. Extreme restraint.",
+  },
+  {
+    name: "Emerald Glass",
+    bg: "linear-gradient(135deg, #0a1a0a 0%, #0d2b0d 50%, #0a1a0a 100%)",
+    primary: "#00ff88", secondary: "#88cc66", accent: "#ffdd00", text: "#e8ffe8", glow: "#00ff88",
+    designStyle: "glassmorphism",
+    description: "Nature-inspired glassmorphism. Frosted green-tinted glass panels, organic shapes with blur, soft glow effects, translucent cards over forest gradients.",
+  },
+  {
+    name: "Monochrome Brutal",
+    bg: "#000000",
+    primary: "#ffffff", secondary: "#888888", accent: "#ff0000", text: "#ffffff", glow: "#ffffff",
+    designStyle: "brutalism",
+    description: "Harsh black and white brutalism. Thick white borders on black, monospace text, no shadows, no gradients, raw geometric shapes, aggressive contrast.",
+  },
 ];
 
 function getRandomStyle(): StyleVariation {
@@ -34,15 +84,16 @@ function getRandomStyle(): StyleVariation {
 }
 
 function getStyleDirective(style: StyleVariation): string {
-  return `## MANDATORY STYLE (MUST USE THIS EXACT PALETTE):
-Style: ${style.name}
+  return `## MANDATORY STYLE (MUST USE THIS FOR THE ENTIRE VIDEO):
+Style: ${style.name} (${style.designStyle})
 - Background: ${style.bg}
 - Primary: ${style.primary}
 - Secondary: ${style.secondary}
 - Accent: ${style.accent}
 - Text: ${style.text}
 - Glow: ${style.glow}
-Use these EXACT colors. Do NOT default to blue/purple.`;
+- Design approach: ${style.description}
+Use these EXACT colors and this design approach for ALL scenes. Do NOT mix styles. Do NOT default to blue/purple.`;
 }
 
 export const SceneGenerationSchema = z.object({
