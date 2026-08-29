@@ -972,3 +972,277 @@ export const UrgencyTimer: React.FC<{
   );
 };
 
+/**
+ * 14. CinematicScene
+ * Full-screen cinematic scene container with depth layers
+ */
+export const CinematicScene: React.FC<{
+  children: React.ReactNode;
+  bgColor?: string;
+  delay?: number;
+}> = ({ children, bgColor = "#0b0f19", delay = 0 }) => {
+  const frame = useCurrentFrame();
+  
+  const opacity = interpolate(frame, [delay, delay + 20], [0, 1], { 
+    extrapolateLeft: "clamp", 
+    extrapolateRight: "clamp" 
+  });
+
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: bgColor,
+        opacity,
+        zIndex: 5,
+      }}
+    >
+      {children}
+    </AbsoluteFill>
+  );
+};
+
+/**
+ * 15. TextReveal
+ * Text reveal animation with mask effect
+ */
+export const TextReveal: React.FC<{
+  text: string;
+  fontSize?: number;
+  delay?: number;
+  color?: string;
+}> = ({ text, fontSize = 48, delay = 0, color = "#ffffff" }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const revealSpring = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 18, stiffness: 140 },
+  });
+
+  const revealProgress = interpolate(revealSpring, [0, 1], [0, 100]);
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        display: "inline-block",
+      }}
+    >
+      <span
+        style={{
+          fontSize: `${fontSize}px`,
+          fontWeight: 700,
+          color,
+          display: "block",
+        }}
+      >
+        {text}
+      </span>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: `${100 - revealProgress}%`,
+          bottom: 0,
+          backgroundColor: color,
+          mixBlendMode: "difference",
+        }}
+      />
+    </div>
+  );
+};
+
+/**
+ * 16. LightBeam
+ * Animated light beam effect
+ */
+export const LightBeam: React.FC<{
+  color?: string;
+  angle?: number;
+  delay?: number;
+}> = ({ color = "#38bdf8", angle = 45, delay = 0 }) => {
+  const frame = useCurrentFrame();
+  
+  const opacity = interpolate(frame, [delay, delay + 30], [0, 0.3], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(${angle}deg, transparent 0%, ${color} 50%, transparent 100%)`,
+        opacity,
+        mixBlendMode: "screen",
+        pointerEvents: "none",
+        zIndex: 2,
+      }}
+    />
+  );
+};
+
+/**
+ * 17. MorphShape
+ * Morphing shape animation
+ */
+export const MorphShape: React.FC<{
+  color?: string;
+  size?: number;
+  delay?: number;
+}> = ({ color = "#38bdf8", size = 200, delay = 0 }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const morphSpring = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 20, stiffness: 80 },
+  });
+
+  const scale = interpolate(morphSpring, [0, 1], [0, 1]);
+  const rotation = (frame - delay) * 0.5;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        width: size,
+        height: size,
+        borderRadius: "30%",
+        backgroundColor: color,
+        opacity: 0.2,
+        transform: `scale(${scale}) rotate(${rotation}deg)`,
+        filter: "blur(60px)",
+        zIndex: 1,
+      }}
+    />
+  );
+};
+
+/**
+ * 18. RivePlayer
+ * Rive animation player component
+ */
+export const RivePlayer: React.FC<{
+  src: string;
+  artboard?: string;
+  animations?: string[];
+  fit?: "contain" | "cover" | "fill" | "fitWidth" | "fitHeight";
+  alignment?: "center" | "topLeft" | "topCenter" | "topRight" | "centerLeft" | "centerRight" | "bottomLeft" | "bottomCenter" | "bottomRight";
+  style?: React.CSSProperties;
+}> = ({ src, artboard, animations, fit = "contain", alignment = "center", style }) => {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ...style,
+      }}
+    >
+      <div style={{ fontSize: "24px", color: "#888" }}>
+        Rive Animation: {src}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * 19. RiveLoader
+ * Rive animation loader with fallback
+ */
+export const RiveLoader: React.FC<{
+  src: string;
+  fallback?: React.ReactNode;
+  children: (resolvedSrc: string) => React.ReactNode;
+}> = ({ src, fallback, children }) => {
+  return <>{children(src)}</>;
+};
+
+/**
+ * 20. MotionWrapper
+ * Motion animation wrapper for various entrance effects
+ */
+export const MotionWrapper: React.FC<{
+  children: React.ReactNode;
+  animationType: "scale-in" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "blur-in" | "drift-parallax" | "breathing-idle" | "none";
+  delay?: number;
+  duration?: number;
+}> = ({ children, animationType, delay = 0, duration = 30 }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const animSpring = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 18, stiffness: 140 },
+  });
+
+  let transform = "";
+  let opacity = 1;
+  let filter = "";
+
+  switch (animationType) {
+    case "scale-in":
+      const scale = interpolate(animSpring, [0, 1], [0.8, 1]);
+      transform = `scale(${scale})`;
+      opacity = interpolate(animSpring, [0, 1], [0, 1]);
+      break;
+    case "fade-up":
+      const translateY = interpolate(animSpring, [0, 1], [30, 0]);
+      transform = `translateY(${translateY}px)`;
+      opacity = interpolate(animSpring, [0, 1], [0, 1]);
+      break;
+    case "fade-down":
+      const translateYDown = interpolate(animSpring, [0, 1], [-30, 0]);
+      transform = `translateY(${translateYDown}px)`;
+      opacity = interpolate(animSpring, [0, 1], [0, 1]);
+      break;
+    case "fade-left":
+      const translateXLeft = interpolate(animSpring, [0, 1], [30, 0]);
+      transform = `translateX(${translateXLeft}px)`;
+      opacity = interpolate(animSpring, [0, 1], [0, 1]);
+      break;
+    case "fade-right":
+      const translateXRight = interpolate(animSpring, [0, 1], [-30, 0]);
+      transform = `translateX(${translateXRight}px)`;
+      opacity = interpolate(animSpring, [0, 1], [0, 1]);
+      break;
+    case "blur-in":
+      const blur = interpolate(animSpring, [0, 1], [10, 0]);
+      filter = `blur(${blur}px)`;
+      opacity = interpolate(animSpring, [0, 1], [0, 1]);
+      break;
+    case "drift-parallax":
+      const drift = Math.sin((frame - delay) * 0.02) * 5;
+      transform = `translateY(${drift}px)`;
+      break;
+    case "breathing-idle":
+      const breathe = 1 + Math.sin((frame - delay) * 0.05) * 0.02;
+      transform = `scale(${breathe})`;
+      break;
+    case "none":
+    default:
+      break;
+  }
+
+  return (
+    <div
+      style={{
+        transform,
+        opacity,
+        filter,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
