@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, Megaphone, Sparkles, Video } from "lucide-react";
+import { Box, Megaphone, Sparkles, Video, Lock } from "lucide-react";
 import { MotionWorkspace } from "@/components/workspace/MotionWorkspace";
 import type { UserProfile } from "@/types/profile";
 import BorderGlow from "@/components/animations/BorderGlow";
@@ -28,6 +28,7 @@ import {
   DEFAULT_MODEL_ID,
   GENERATION_MODE_PRESETS,
   MODELS,
+  isModelAvailableForTier,
   type GenerationMode,
   type ModelId,
 } from "@/types/generation";
@@ -49,7 +50,18 @@ export function CenterWorkspace({
   const [assets, setAssets] = useState<UploadedAsset[]>([]);
   const [workspaceActive, setWorkspaceActive] = useState(false);
   const [startPrompt, setStartPrompt] = useState("");
-  const [model, setModel] = useState<ModelId>(DEFAULT_MODEL_ID);
+  
+  // Set default model based on user's plan tier
+  const userTier = profile?.plan || "free";
+  const getDefaultModelForTier = () => {
+    if (userTier === "free") {
+      // Free users default to 3.5 (faster than 3.1 but still available)
+      return "gemini-3.5-flash-lite" as ModelId;
+    }
+    return DEFAULT_MODEL_ID;
+  };
+  
+  const [model, setModel] = useState<ModelId>(getDefaultModelForTier());
   const [modeDialogOpen, setModeDialogOpen] = useState(false);
   const [pendingPrompt, setPendingPrompt] = useState("");
   const [generationMode, setGenerationMode] = useState<GenerationMode>("ad");
@@ -214,15 +226,28 @@ export function CenterWorkspace({
                     <SelectValue placeholder="Choose AI model" />
                   </SelectTrigger>
                   <SelectContent className="border-border bg-background-elevated">
-                    {MODELS.map((option) => (
-                      <SelectItem
-                        key={option.id}
-                        value={option.id}
-                        className="text-xs text-foreground focus:bg-secondary focus:text-foreground"
-                      >
-                        {option.name}
-                      </SelectItem>
-                    ))}
+                    {MODELS.map((option) => {
+                      const userTier = profile?.plan || "free";
+                      const isAvailable = isModelAvailableForTier(option.id, userTier);
+                      
+                      return (
+                        <SelectItem
+                          key={option.id}
+                          value={option.id}
+                          disabled={!isAvailable}
+                          className="text-xs text-foreground focus:bg-secondary focus:text-foreground disabled:opacity-50"
+                        >
+                          <div className="flex items-center justify-between w-full gap-2">
+                            <span className={!isAvailable ? "opacity-50" : ""}>
+                              {option.name}
+                            </span>
+                            {!isAvailable && (
+                              <Lock className="w-3 h-3 text-muted-foreground" />
+                            )}
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
                 <button

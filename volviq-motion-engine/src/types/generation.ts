@@ -1,10 +1,28 @@
 export const MODELS = [
-  { id: "gemini-3.6-flash", name: "Gemini 3.6 Flash — Best Quality" },
-  { id: "gemini-3.5-flash-lite", name: "Gemini 3.5 Flash Lite — Faster" },
-  { id: "gemini-3.1-flash-lite", name: "Gemini 3.1 Flash Lite — Fastest" },
+  { id: "gemini-3.6-flash", name: "Gemini 3.6 Flash — Best Quality", minTier: "pro" as const },
+  { id: "gemini-3.5-flash-lite", name: "Gemini 3.5 Flash Lite — Faster", minTier: "free" as const },
+  { id: "gemini-3.1-flash-lite", name: "Gemini 3.1 Flash Lite — Fastest", minTier: "free" as const },
 ] as const;
 
 export type ModelId = (typeof MODELS)[number]["id"];
+export type PlanTier = "free" | "pro" | "business";
+
+// Helper function to check if a model is available for a plan tier
+export function isModelAvailableForTier(modelId: ModelId, userTier: PlanTier): boolean {
+  const model = MODELS.find(m => m.id === modelId);
+  if (!model) return false;
+  
+  const tierHierarchy: Record<PlanTier, number> = { free: 0, pro: 1, business: 2 };
+  const modelTierLevel = tierHierarchy[model.minTier];
+  const userTierLevel = tierHierarchy[userTier];
+  
+  return userTierLevel >= modelTierLevel;
+}
+
+// Get available models for a plan tier
+export function getAvailableModelsForTier(userTier: PlanTier) {
+  return MODELS.filter(model => isModelAvailableForTier(model.id, userTier));
+}
 
 export type GenerationMode = "ad" | "motion_asset" | "3d";
 

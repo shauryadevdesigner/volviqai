@@ -1,7 +1,7 @@
 import type { PlanTier } from '../types/profile';
 
 export const PLAN_LIMITS: Record<PlanTier, number> = {
-  free: 3,
+  free: 5,
   pro: 50,
   business: 300,
 };

@@ -29,6 +29,7 @@ const PLANS: {
       `${PLAN_LIMITS.free} motion graphic ads / month`,
       "720p export",
       "Basic templates",
+      "Gemini 3.1 & 3.5 models only",
       "Volviq watermark",
     ],
   },
@@ -38,6 +39,7 @@ const PLANS: {
     price: PLAN_PRICES_INR.pro,
     features: [
       `${PLAN_LIMITS.pro} video generations / month`,
+      "All AI models (3.1, 3.5, 3.6)",
       "Premium templates",
       "1080p exports",
       "Faster rendering",
@@ -51,6 +53,7 @@ const PLANS: {
     price: PLAN_PRICES_INR.business,
     features: [
       `${PLAN_LIMITS.business} video generations / month`,
+      "All AI models (3.1, 3.5, 3.6)",
       "Priority rendering",
       "All premium templates",
       "Brand kits",
